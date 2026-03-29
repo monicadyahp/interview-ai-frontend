@@ -1,17 +1,20 @@
 import axios from 'axios';
+// Pastikan kamu mengimport dua URL ini dari constants
+import { API_BASE_URL, AI_URL } from '../utils/constants'; 
 
-const API_URL = "http://localhost:5000/api";
-
+// --- JALUR CEPAT (Langsung ke Hugging Face) ---
 export const sendFrameToPrediction = async (imageBlob, userId) => {
     const formData = new FormData();
     formData.append('file', imageBlob, 'frame.jpg');
-    formData.append('userId', userId); // Kirim userId ke backend
+    formData.append('userId', userId);
     
-    const response = await axios.post(`${API_URL}/predict`, formData);
+    // TEMBAK LANGSUNG KE HUGGING FACE
+    const response = await axios.post(`${AI_URL}/predict`, formData);
     return response.data;
 };
 
+// --- JALUR DATABASE (Ke Vercel) ---
 export const getHistory = async (userId) => {
-    const response = await axios.get(`${API_URL}/history?userId=${userId}`);
+    const response = await axios.get(`${API_BASE_URL}/history?userId=${userId}`);
     return response.data;
 };

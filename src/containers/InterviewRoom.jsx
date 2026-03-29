@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { API_BASE_URL, INTERVIEW_QUESTIONS } from '../utils/constants';
+import { API_BASE_URL, AI_URL, INTERVIEW_QUESTIONS } from '../utils/constants';
 import WebcamOverlay from '../components/WebcamOverlay';
 import Swal from 'sweetalert2';
 
@@ -168,19 +168,24 @@ const InterviewRoom = () => {
         if (!webcamRef.current || !user || status !== 'RECORDING') return;
         const imageSrc = webcamRef.current.getScreenshot();
         if (!imageSrc) return;
+
         try {
             const blob = await fetch(imageSrc).then(r => r.blob());
             const formData = new FormData();
             formData.append('userId', user.id); 
             formData.append('file', blob);
-            const response = await axios.post(`${API_BASE_URL}/predict`, formData);
+
+            // PASTIKAN TEMBAK KE AI_URL (Hugging Face)
+            const response = await axios.post(`${AI_URL}/predict`, formData);
+            
             if (response.data) {
                 setLiveEmotion(response.data.emotion);
-                const quote = response.data.motivation_quote || response.data.motivation;
-                if (quote) setLiveQuote(quote);
+                setLiveQuote(response.data.motivation_quote || response.data.motivation);
                 setEmotionLogs(prev => [...prev, response.data.emotion]);
             }
-        } catch (e) { console.error("AI Error:", e); }
+        } catch (e) {
+            console.error("AI Error (Hugging Face):", e);
+        }
     };
 
     // --- 5. FUNGSI HELPER ---
