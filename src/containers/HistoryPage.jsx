@@ -842,7 +842,7 @@ const HistoryPage = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #EEE', paddingTop: '20px', marginTop: '20px' }}>
                                     <div>
                                         <p style={{ margin: 0, fontSize: '0.7rem', color: '#AAA' }}>Coba simulasi mandiri di:</p>
-                                        <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1rem', color: '#8C5EAD' }}>interview-ai.vercel.app</p>
+                                        <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1rem', color: '#8C5EAD' }}>interview-ai-frontend-indol.vercel.app</p>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                         <div style={{ textAlign: 'right' }}>
