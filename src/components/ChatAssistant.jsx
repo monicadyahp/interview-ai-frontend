@@ -11,7 +11,6 @@ const ChatAssistant = () => {
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
 
-  // Daftar pertanyaan template yang lebih banyak & lengkap
   const quickReplies = [
     { label: "👋 Perkenalan", value: "Tips perkenalan diri" },
     { label: "😰 Gugup", value: "Cara mengatasi gugup" },
@@ -51,8 +50,8 @@ const ChatAssistant = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans antialiased">
-      {/* Tombol Launcher - Lebih Elegan */}
+    <div className="fixed bottom-6 right-6 z-[9999] font-sans antialiased text-slate-800">
+      {/* Tombol Launcher */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center rounded-2xl shadow-2xl transition-all duration-500 ${
@@ -68,38 +67,38 @@ const ChatAssistant = () => {
         )}
       </button>
 
-      {/* Jendela Chat - Desain Lebih Lega */}
+      {/* Jendela Chat */}
       {isOpen && (
-        <div className="absolute bottom-20 right-0 w-[360px] sm:w-[460px] h-[680px] max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="absolute bottom-20 right-0 w-[380px] sm:w-[480px] h-[700px] max-h-[85vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
           
           {/* Header */}
-          <div className="px-8 py-6 border-b border-slate-50 bg-white flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-xl border border-indigo-100 shadow-sm">
+          <div className="px-10 py-7 border-b border-slate-50 bg-white flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-2xl border border-indigo-100 shadow-sm">
               🤖
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-base tracking-tight">Interview-AI Assistant</h3>
-              <p className="text-[10px] text-emerald-500 font-bold flex items-center gap-1.5 uppercase tracking-widest mt-0.5">
-                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active Now
+              <h3 className="font-bold text-slate-900 text-lg tracking-tight">Interview-AI Assistant</h3>
+              <p className="text-[11px] text-emerald-500 font-bold flex items-center gap-1.5 uppercase tracking-[0.2em] mt-0.5">
+                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active
               </p>
             </div>
           </div>
 
-          {/* Area Pesan - Jarak space-y ditingkatkan */}
-          <div className="flex-1 overflow-y-auto px-8 py-8 space-y-10 bg-white no-scrollbar">
+          {/* Area Pesan */}
+          <div className="flex-1 overflow-y-auto px-10 py-10 space-y-12 bg-white no-scrollbar">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
-                <div className={`flex gap-4 max-w-[80%] ${msg.isBot ? 'flex-row' : 'flex-row-reverse'}`}>
+                <div className={`flex gap-5 max-w-[85%] ${msg.isBot ? 'flex-row' : 'flex-row-reverse'}`}>
                   {msg.isBot && (
-                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-xs border border-slate-200 mt-1">
+                    <div className="w-9 h-9 rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-sm border border-slate-200 mt-1">
                       🤖
                     </div>
                   )}
-                  {/* Bubble Chat - Padding p-5 agar teks punya ruang napas */}
-                  <div className={`p-5 text-[13px] leading-relaxed tracking-tight shadow-sm transition-all ${
+                  {/* Bubble Chat - Padding px-7 py-5 & Rounded XL (Tidak Terlalu Bulat) */}
+                  <div className={`px-7 py-5 text-[13px] leading-[1.8] tracking-normal shadow-sm transition-all ${
                     msg.isBot 
-                      ? 'bg-slate-50 text-slate-600 rounded-2xl rounded-tl-none border border-slate-100' 
-                      : 'bg-indigo-600 text-white rounded-2xl rounded-tr-none font-medium'
+                      ? 'bg-slate-50 text-slate-600 rounded-xl rounded-tl-none border border-slate-100' 
+                      : 'bg-indigo-600 text-white rounded-xl rounded-tr-none font-medium shadow-md shadow-indigo-100/50'
                   }`}>
                     {msg.text}
                   </div>
@@ -108,26 +107,26 @@ const ChatAssistant = () => {
             ))}
             
             {isLoading && (
-              <div className="flex items-center gap-2 pl-12">
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-indigo-300 rounded-full animate-bounce"></div>
-                  <div className="w-1.5 h-1.5 bg-indigo-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                  <div className="w-1.5 h-1.5 bg-indigo-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+              <div className="flex items-center gap-2 pl-14">
+                <div className="flex gap-1.5">
+                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                 </div>
               </div>
             )}
             <div ref={chatEndRef} />
           </div>
 
-          {/* Saran Pertanyaan - Disamakan dengan gaya bubble user */}
-          <div className="px-8 py-4 bg-white border-t border-slate-50">
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Mungkin kamu ingin tanya:</p>
-            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+          {/* Saran Pertanyaan - Ukuran & Desain disamakan dengan bubble user */}
+          <div className="px-10 py-6 bg-white border-t border-slate-50">
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-5">Quick Suggestions</p>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
               {quickReplies.map((q, i) => (
                 <button 
                   key={i}
                   onClick={() => sendMessage(q.value)}
-                  className="whitespace-nowrap px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-[11px] font-medium hover:bg-indigo-700 transition-all active:scale-95 shadow-sm shadow-indigo-100"
+                  className="whitespace-nowrap px-6 py-3.5 rounded-xl bg-indigo-600 text-white text-[11px] font-semibold hover:bg-indigo-700 transition-all active:scale-95 shadow-md shadow-indigo-100"
                 >
                   {q.label}
                 </button>
@@ -136,20 +135,20 @@ const ChatAssistant = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-8 bg-white pt-0">
-            <form onSubmit={handleSubmit} className="flex items-center gap-3 bg-slate-50 rounded-xl p-2.5 pl-5 border border-slate-100 focus-within:border-indigo-200 focus-within:ring-4 focus-within:ring-indigo-50/50 transition-all">
+          <div className="p-10 bg-white pt-0">
+            <form onSubmit={handleSubmit} className="flex items-center gap-4 bg-slate-50 rounded-xl p-3 pl-6 border border-slate-100 focus-within:border-indigo-200 focus-within:ring-8 focus-within:ring-indigo-50/30 transition-all">
               <input 
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tulis pesan..."
-                className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-slate-700 placeholder:text-slate-400"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-[14px] text-slate-700 placeholder:text-slate-400"
               />
               <button 
                 type="submit" 
-                className="w-11 h-11 flex items-center justify-center rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-md active:scale-90"
+                className="w-12 h-12 flex items-center justify-center rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-lg active:scale-90"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
