@@ -11,7 +11,7 @@ const ChatAssistant = () => {
   // State pesan awal dengan nama dinamis
   const [messages, setMessages] = useState([
     { 
-      text: `Halo ${user?.username || 'Monica'}! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?`, 
+      text: `Halo ${user?.username || ''}! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?`, 
       isBot: true 
     }
   ]);
