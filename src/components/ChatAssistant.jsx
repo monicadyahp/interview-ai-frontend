@@ -1,34 +1,44 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom'; // Untuk cek posisi halaman
 import { API_BASE_URL } from '../utils/constants';
-import { AuthContext } from '../context/AuthContext'; // Import AuthContext kamu
+import { AuthContext } from '../context/AuthContext';
 
 const ChatAssistant = () => {
-  const { user } = useContext(AuthContext); // Ambil data user dari context
+  const { user } = useContext(AuthContext);
+  const location = useLocation(); // Mendeteksi kita ada di halaman mana
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   
-  // State pesan awal dengan nama dinamis
-  const [messages, setMessages] = useState([
-    { 
-      text: `Halo ${user?.username || ''}! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?`, 
-      isBot: true 
-    }
-  ]);
-  
+  // Fungsi pembuat pesan awal agar tidak repot menulis ulang
+  const getInitialMessage = (name) => ({
+    text: `Halo ${name ? name : ''}! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?`,
+    isBot: true
+  });
+
+  const [messages, setMessages] = useState([getInitialMessage(user?.username)]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
+
+  // LOGIKA 1: Reset riwayat chat otomatis saat status Login berubah
+  useEffect(() => {
+    setMessages([getInitialMessage(user?.username)]);
+  }, [user]); // Akan jalan setiap kali 'user' berubah (login/logout)
+
+  // LOGIKA 2: Fitur Hapus Riwayat Manual
+  const handleClearHistory = () => {
+    setMessages([getInitialMessage(user?.username)]);
+  };
+
+  // LOGIKA 3: Sembunyikan Chatbot di halaman tertentu (Contoh: halaman interview)
+  const isHiddenPage = location.pathname === '/interview-session'; 
+  if (isHiddenPage) return null;
 
   const quickReplies = [
     { label: "👋 Perkenalan", value: "Tips perkenalan diri" },
     { label: "😰 Gugup", value: "Cara mengatasi gugup" },
     { label: "💰 Gaji", value: "Nego gaji fresh grad" },
     { label: "❓ Tanya Balik", value: "Pertanyaan untuk interviewer" },
-    { label: "📉 Kekurangan", value: "Cara menjawab kekurangan diri" },
-    { label: "👔 Pakaian", value: "Pakaian interview yang baik" },
-    { label: "🏢 Riset", value: "Cara riset perusahaan" },
-    { label: "🎯 Kelebihan", value: "Cara menceritakan kelebihan" },
-    { label: "🚀 Karir", value: "Tujuan karir 5 tahun ke depan" }
   ];
 
   useEffect(() => {
@@ -79,17 +89,29 @@ const ChatAssistant = () => {
       {isOpen && (
         <div className="absolute bottom-20 right-0 w-[380px] sm:w-[480px] h-[700px] max-h-[85vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
           
-          {/* Header */}
-          <div className="px-10 py-7 border-b border-slate-50 bg-white flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-2xl border border-indigo-100 shadow-sm">
-              🤖
+          {/* Header dengan Tombol Hapus */}
+          <div className="px-10 py-7 border-b border-slate-50 bg-white flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-2xl border border-indigo-100 shadow-sm">
+                🤖
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-lg tracking-tight">Interview-AI</h3>
+                <p className="text-[11px] text-emerald-500 font-bold flex items-center gap-1.5 uppercase tracking-[0.2em] mt-0.5">
+                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-slate-900 text-lg tracking-tight">Interview-AI Assistant</h3>
-              <p className="text-[11px] text-emerald-500 font-bold flex items-center gap-1.5 uppercase tracking-[0.2em] mt-0.5">
-                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active
-              </p>
-            </div>
+            {/* Tombol Hapus Riwayat */}
+            <button 
+              onClick={handleClearHistory}
+              className="p-2 text-slate-300 hover:text-red-500 transition-colors tooltip"
+              title="Hapus percakapan"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
           </div>
 
           {/* Area Pesan */}
@@ -102,8 +124,7 @@ const ChatAssistant = () => {
                       🤖
                     </div>
                   )}
-                  {/* Perbaikan Padding & Min-Width di sini agar bubble User seimbang */}
-                  <div className={`px-7 py-4 text-[13.5px] leading-[1.8] min-w-[70px] tracking-normal shadow-sm transition-all ${
+                  <div className={`px-7 py-5 text-[13px] leading-[1.8] min-w-[70px] tracking-normal shadow-sm transition-all ${
                     msg.isBot 
                       ? 'bg-slate-50 text-slate-600 rounded-xl rounded-tl-none border border-slate-100' 
                       : 'bg-indigo-600 text-white rounded-xl rounded-tr-none font-medium shadow-md shadow-indigo-100/50'
@@ -113,22 +134,11 @@ const ChatAssistant = () => {
                 </div>
               </div>
             ))}
-            
-            {isLoading && (
-              <div className="flex items-center gap-2 pl-14">
-                <div className="flex gap-1.5">
-                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                  <div className="w-2 h-2 bg-indigo-200 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                </div>
-              </div>
-            )}
             <div ref={chatEndRef} />
           </div>
 
-          {/* Quick Suggestions - Desain diperbaiki agar senada dengan bubble user */}
+          {/* Quick Suggestions */}
           <div className="px-10 py-6 bg-white border-t border-slate-50">
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-5 text-center">Butuh Bantuan? Pilih Topik:</p>
             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
               {quickReplies.map((q, i) => (
                 <button 
