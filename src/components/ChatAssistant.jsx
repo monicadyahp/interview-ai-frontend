@@ -33,12 +33,17 @@ const ChatAssistant = () => {
   // LOGIKA 3: Sembunyikan Chatbot di halaman tertentu (Contoh: halaman interview)
   const isHiddenPage = location.pathname === '/interview-session'; 
   if (isHiddenPage) return null;
-
+  
   const quickReplies = [
     { label: "👋 Perkenalan", value: "Tips perkenalan diri" },
     { label: "😰 Gugup", value: "Cara mengatasi gugup" },
     { label: "💰 Gaji", value: "Nego gaji fresh grad" },
     { label: "❓ Tanya Balik", value: "Pertanyaan untuk interviewer" },
+    { label: "📉 Kekurangan", value: "Cara menjawab kekurangan diri" },
+    { label: "👔 Pakaian", value: "Pakaian interview yang baik" },
+    { label: "🏢 Riset", value: "Cara riset perusahaan" },
+    { label: "🎯 Kelebihan", value: "Cara menceritakan kelebihan" },
+    { label: "🚀 Karir", value: "Tujuan karir 5 tahun ke depan" }
   ];
 
   useEffect(() => {
