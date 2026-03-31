@@ -1,13 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../utils/constants';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext kamu
 
 const ChatAssistant = () => {
+  const { user } = useContext(AuthContext); // Ambil data user dari context
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  
+  // State pesan awal dengan nama dinamis
   const [messages, setMessages] = useState([
-    { text: "Halo Monica! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?", isBot: true }
+    { 
+      text: `Halo ${user?.username || 'Monica'}! Aku asisten Interview-AI. Ada yang bisa aku bantu untuk persiapan karirmu hari ini?`, 
+      isBot: true 
+    }
   ]);
+  
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
 
@@ -94,8 +102,8 @@ const ChatAssistant = () => {
                       🤖
                     </div>
                   )}
-                  {/* Bubble Chat - Padding px-7 py-5 & Rounded XL (Tidak Terlalu Bulat) */}
-                  <div className={`px-7 py-5 text-[13px] leading-[1.8] tracking-normal shadow-sm transition-all ${
+                  {/* Perbaikan Padding & Min-Width di sini agar bubble User seimbang */}
+                  <div className={`px-7 py-4 text-[13.5px] leading-[1.8] min-w-[70px] tracking-normal shadow-sm transition-all ${
                     msg.isBot 
                       ? 'bg-slate-50 text-slate-600 rounded-xl rounded-tl-none border border-slate-100' 
                       : 'bg-indigo-600 text-white rounded-xl rounded-tr-none font-medium shadow-md shadow-indigo-100/50'
@@ -118,9 +126,9 @@ const ChatAssistant = () => {
             <div ref={chatEndRef} />
           </div>
 
-          {/* Saran Pertanyaan - Ukuran & Desain disamakan dengan bubble user */}
+          {/* Quick Suggestions - Desain diperbaiki agar senada dengan bubble user */}
           <div className="px-10 py-6 bg-white border-t border-slate-50">
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-5">Quick Suggestions</p>
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-5 text-center">Butuh Bantuan? Pilih Topik:</p>
             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
               {quickReplies.map((q, i) => (
                 <button 
