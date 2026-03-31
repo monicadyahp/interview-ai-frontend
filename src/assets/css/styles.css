@@ -1,7 +1,8 @@
 /* ==========================================================================
    KODE DASAR & VARIABLES
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap');
+    @import "tailwindcss";
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap');
 
 /* Tambahkan di baris paling atas agar semua pergerakan scroll jadi halus */
 html {

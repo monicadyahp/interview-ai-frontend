@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';import Header from './components/Header';
 import Footer from './components/Footer';
 import AppRoutes from './routes/AppRoutes';
+import ChatAssistant from './components/ChatAssistant';
 
 // Import CSS Global (Aesthetics Skin Design)
 import './assets/css/styles.css';
@@ -19,13 +20,16 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* 3. Masukkan komponen ScrollToTop di sini, di bawah Router */}
         <ScrollToTop />
         
         <Header />
         <main className="main">
           <AppRoutes />
         </main>
+
+        {/* Pindahkan ke sini, tepat di bawah main */}
+        <ChatAssistant /> 
+        
         <Footer />
       </div>
     </Router>

@@ -1,6 +1,5 @@
 export const API_BASE_URL = "https://interview-ai-fullstack-backend.vercel.app/api"; 
 
-// Pastikan ada kata 'export' di depan AI_URL
 export const AI_URL = "https://monicadyp-interview-ai-api.hf.space";
 
 export const INTERVIEW_QUESTIONS = [
@@ -8,3 +7,5 @@ export const INTERVIEW_QUESTIONS = [
     "Apa motivasi Anda...",
     "Bagaimana cara Anda menangani tekanan?"
 ];
+
+export const CHATBOT_URL = "https://monicadyp-interview-ai-chatbot.hf.space";
