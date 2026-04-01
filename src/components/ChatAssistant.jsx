@@ -42,7 +42,7 @@ const ChatAssistant = () => {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isLoading]); // Scroll juga saat loading muncul
 
   const sendMessage = async (text) => {
     const userMsg = { text: text, isBot: false };
@@ -68,7 +68,7 @@ const ChatAssistant = () => {
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] font-sans antialiased text-slate-800">
-      {/* Tombol Launcher - Ukuran disesuaikan untuk mobile */}
+      {/* Tombol Launcher */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center rounded-full sm:rounded-2xl shadow-2xl transition-all duration-500 ${
@@ -78,7 +78,7 @@ const ChatAssistant = () => {
         {isOpen ? <span className="text-lg">✕</span> : <span className="text-2xl sm:text-3xl">🤖</span>}
       </button>
 
-      {/* Jendela Chat - Responsive Width & Height */}
+      {/* Jendela Chat */}
       {isOpen && (
         <div className="absolute bottom-16 right-0 w-[85vw] sm:w-[400px] md:w-[460px] h-[70vh] sm:h-[600px] max-h-[680px] bg-white rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
           
@@ -96,14 +96,12 @@ const ChatAssistant = () => {
             </button>
           </div>
 
-          {/* Area Pesan - Padding lebih adaptif */}
+          {/* Area Pesan */}
           <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 sm:py-8 space-y-6 sm:space-y-8 bg-white no-scrollbar">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
                 <div className={`flex gap-3 sm:gap-4 max-w-[90%] sm:max-w-[85%] ${msg.isBot ? 'flex-row' : 'flex-row-reverse'}`}>
                   {msg.isBot && <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-[10px] border border-slate-200 mt-1">🤖</div>}
-                  
-                  {/* Bubble Chat - Padding p-4 untuk mobile, p-5 untuk desktop agar sama */}
                   <div className={`p-4 sm:p-5 text-[12px] sm:text-[13px] leading-relaxed shadow-sm break-words whitespace-pre-wrap ${
                     msg.isBot 
                       ? 'bg-slate-50 text-slate-600 rounded-2xl rounded-tl-none border border-slate-100' 
@@ -114,10 +112,29 @@ const ChatAssistant = () => {
                 </div>
               </div>
             ))}
+
+            {/* --- PENAMBAHAN TYPING INDICATOR DI SINI --- */}
+            {isLoading && (
+              <div className="flex justify-start animate-in fade-in duration-300">
+                <div className="flex gap-3 sm:gap-4 max-w-[90%] sm:max-w-[85%] flex-row">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-[10px] border border-slate-200 mt-1">🤖</div>
+                  <div className="p-4 sm:p-5 text-[12px] sm:text-[13px] bg-slate-50 text-slate-400 rounded-2xl rounded-tl-none border border-slate-100 italic flex items-center gap-2">
+                    <span>Inter-SIGHT sedang berpikir</span>
+                    <span className="flex gap-1">
+                      <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce"></span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* ------------------------------------------- */}
+
             <div ref={chatEndRef} />
           </div>
 
-          {/* Quick Suggestions - Scroll Horizontal & Style Konsisten */}
+          {/* Quick Suggestions */}
           <div className="px-4 py-3 sm:px-8 sm:py-4 bg-white border-t border-slate-50">
             <p className="text-[8px] sm:text-[9px] font-bold text-slate-300 uppercase tracking-widest mb-3">Mungkin kamu ingin tanya:</p>
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
