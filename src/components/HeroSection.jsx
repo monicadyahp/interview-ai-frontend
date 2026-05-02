@@ -6,11 +6,12 @@ export default function HeroSection() {
     <section className="relative mx-auto overflow-hidden w-[92%] h-[760px] md:w-[95%] md:w-[90%] lg:w-[90%] md:h-[980px] top-[23px] lg:h-[1020px] rounded-[30px] md:rounded-[40px] bg-[#F8F8FF] shadow-[0_10px_40px_rgba(140,94,173,0.08)]">
       {/* Background Layer - Diperbaiki agar tidak berantakan */}
       <div
-        className="absolute inset-0 w-full h-full z-0 opacity-80"
+        className="absolute left-0 top-0 w-full z-0 opacity-80"
         style={{
+          height: "110%",
           backgroundImage: "url('/hero/Rectangle.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center bottom",
           backgroundRepeat: "no-repeat",
         }}
       ></div>
