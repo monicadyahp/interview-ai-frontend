@@ -108,7 +108,7 @@ const LandingPage = () => {
       <HeroSection />
 
       {/* --- TEMPELKAN KODE TIPS DI SINI (DI LUAR SECTION) --- */}
-      <div
+      {/* <div
         className="container"
         style={{
           marginTop: "-1rem",
@@ -154,10 +154,10 @@ const LandingPage = () => {
             "{dailyTip}"
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* --- FEATURES SECTION (Penjelasan Ringkas) --- */}
-      <section className="section container" style={{ paddingBottom: "5rem" }}>
+      {/* <section className="section container" style={{ paddingBottom: "5rem" }}>
         <div style={{ textAlign: "center", marginBottom: "4rem" }}>
           <h2 className="section__title">Mengapa Memilih Interview AI?</h2>
           <p style={{ color: "#888" }}>
@@ -172,7 +172,6 @@ const LandingPage = () => {
             gap: "2rem",
           }}
         >
-          {/* Fitur 1 */}
           <div
             style={{
               background: "#FFF",
@@ -194,7 +193,6 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Fitur 2 */}
           <div
             style={{
               background: "#FFF",
@@ -216,7 +214,6 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Fitur 3 */}
           <div
             style={{
               background: "#FFF",
@@ -238,9 +235,9 @@ const LandingPage = () => {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* --- FINAL CTA BANNER --- */}
-      <section className="section container" style={{ paddingBottom: "7rem" }}>
+      {/* <section className="section container" style={{ paddingBottom: "7rem" }}>
         <div
           style={{
             background: "linear-gradient(135deg, #8C5EAD 0%, #6A4687 100%)",
@@ -296,7 +293,7 @@ const LandingPage = () => {
             ></i>
           </Link>
         </div>
-      </section>
+      </section> */}
     </>
   );
 };
