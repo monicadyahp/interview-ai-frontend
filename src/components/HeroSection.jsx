@@ -8,6 +8,7 @@ export default function HeroSection() {
       <div
         className="absolute top-0 z-0 opacity-80"
         style={{
+          left: "-5%",
           width: "110%",
           height: "110%",
           backgroundImage: "url('/hero/Rectangle.png')",
