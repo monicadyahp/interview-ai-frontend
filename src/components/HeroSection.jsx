@@ -11,7 +11,7 @@ export default function HeroSection() {
           width: "110%",
           height: "110%",
           backgroundImage: "url('/hero/Rectangle.png')",
-          backgroundSize: "100% 100%",
+          backgroundSize: "110% 110%",
           backgroundPosition: "center bottom",
           backgroundRepeat: "no-repeat",
         }}
