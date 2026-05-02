@@ -4,7 +4,6 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AppRoutes from "./routes/AppRoutes";
 import ChatAssistant from "./components/ChatAssistant";
-import Header2 from "./components/Header2";
 import { Navbar } from "./components/Navbar";
 
 // 2. Buat fungsi bantuan kecil di dalam file yang sama (di atas function App)
@@ -21,9 +20,8 @@ function App() {
     <Router>
       <div className="App">
         <ScrollToTop />
-
-        <Navbar />
         <main className="main">
+          <Navbar />
           <AppRoutes />
         </main>
 
