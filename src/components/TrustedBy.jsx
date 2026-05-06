@@ -11,7 +11,7 @@ export default function TrustedBy() {
     "/logo/unpad.png",
     "/logo/binus.png",
     "/logo/ipb.png",
-    "/logo/mercu.png",
+    "/logo/mercubuana.png",
     "/logo/ug.png",
     "/logo/up.png",
     "/logo/upn.png",
