@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import TrustedBy from "../components/TrustedBy";
+import WhyQualified from "../components/WhyQualified";
 
 const LandingPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -71,6 +72,7 @@ const LandingPage = () => {
       {/* HERO */}
       <HeroSection />
       <TrustedBy />
+      <WhyQualified />
 
       {/* DAILY TIP */}
       <div
