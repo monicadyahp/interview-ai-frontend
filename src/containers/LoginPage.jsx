@@ -31,6 +31,7 @@ const LoginPage = () => {
     });
   };
 
+  // GOOGLE LOGIN
   const handleGoogleSuccess = async (credentialResponse) => {
     setIsLoading(true);
 
@@ -55,8 +56,6 @@ const LoginPage = () => {
 
       localStorage.setItem("token", credentialResponse.credential);
 
-      setIsLoading(false);
-
       Swal.fire({
         title: "Berhasil!",
         text: `Halo, ${decoded.name}!`,
@@ -65,16 +64,17 @@ const LoginPage = () => {
         showConfirmButton: false,
       }).then(() => navigate(location.state?.from || "/"));
     } catch (err) {
-      setIsLoading(false);
-
       Swal.fire({
         title: "Gagal",
         text: "Gagal sinkronisasi data database",
         icon: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // LOGIN / REGISTER
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -95,6 +95,7 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
 
+      // REGISTER
       if (isRegister) {
         await axios.post(`${API_BASE_URL}/auth/register`, formData);
 
@@ -116,6 +117,7 @@ const LoginPage = () => {
         });
       }
 
+      // LOGIN
       else {
         const res = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
@@ -128,15 +130,13 @@ const LoginPage = () => {
 
         Swal.fire({
           title: "Selamat Datang!",
-          text: `Mari berlatih untuk interview kamu, ${res.data.user.username}!`,
+          text: `Mari berlatih interview kamu, ${res.data.user.username}!`,
           icon: "success",
           timer: 2000,
           showConfirmButton: false,
         });
 
-        const origin = location.state?.from || "/";
-
-        navigate(origin);
+        navigate(location.state?.from || "/interview");
       }
     } catch (err) {
       Swal.fire({
@@ -150,32 +150,69 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* CONTENT */}
-      <div className="flex-1 flex flex-col items-center pt-[140px] pb-20 px-4">
+      <div className="flex-1 flex items-center justify-center px-4 pt-[140px] pb-20">
         {/* CARD */}
-        <div className="w-full max-w-[520px] bg-white border border-[#E5E5E5] rounded-[20px] px-8 md:px-10 py-10 shadow-sm">
+        <div
+          className="
+            w-full
+            max-w-[520px]
+            bg-white
+            border
+            border-[#D9D9D9]
+            rounded-[12px]
+            px-8
+            py-10
+          "
+        >
           {/* TITLE */}
-          <h1 className="text-[32px] font-bold text-black leading-[100%]">
+          <h1
+            className="
+              text-[32px]
+              font-bold
+              text-[#000000]
+              leading-[100%]
+              font-['Plus_Jakarta_Sans']
+            "
+          >
             {isRegister ? "Create Account" : "Welcome Back!"}
           </h1>
 
           {/* SUBTITLE */}
-          <p className="text-[16px] font-medium text-black mt-4 leading-[160%]">
+          <p
+            className="
+              mt-3
+              text-[16px]
+              font-medium
+              text-[#000000]
+              leading-[160%]
+              font-['Plus_Jakarta_Sans']
+            "
+          >
             {isRegister
-              ? "Create your account and start practicing smarter interviews today."
+              ? "Sign up to continue reducing food waste and making a positive impact today."
               : "Sign in to continue reducing food waste and making a positive impact today."}
           </p>
 
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="mt-8 flex flex-col gap-6"
+            className="mt-8 flex flex-col gap-5"
           >
             {/* FULL NAME */}
             {isRegister && (
               <div>
-                <label className="text-[20px] font-bold text-black mb-3 block">
+                <label
+                  className="
+                    block
+                    text-[20px]
+                    font-bold
+                    text-[#000000]
+                    mb-2
+                    font-['Plus_Jakarta_Sans']
+                  "
+                >
                   Full Name
                 </label>
 
@@ -188,16 +225,16 @@ const LoginPage = () => {
                   value={formData.username}
                   className="
                     w-full
-                    h-[58px]
-                    rounded-[14px]
+                    h-[48px]
                     border
                     border-[#D9D9D9]
-                    px-5
-                    text-[16px]
+                    rounded-[8px]
+                    px-4
+                    text-[14px]
                     font-medium
                     outline-none
-                    focus:border-[#8C5EAD]
-                    transition-all
+                    focus:border-[#8039FF]
+                    font-['Plus_Jakarta_Sans']
                   "
                 />
               </div>
@@ -205,7 +242,16 @@ const LoginPage = () => {
 
             {/* EMAIL */}
             <div>
-              <label className="text-[20px] font-bold text-black mb-3 block">
+              <label
+                className="
+                  block
+                  text-[20px]
+                  font-bold
+                  text-[#000000]
+                  mb-2
+                  font-['Plus_Jakarta_Sans']
+                "
+              >
                 Email Address
               </label>
 
@@ -218,23 +264,32 @@ const LoginPage = () => {
                 value={formData.email}
                 className="
                   w-full
-                  h-[58px]
-                  rounded-[14px]
+                  h-[48px]
                   border
                   border-[#D9D9D9]
-                  px-5
-                  text-[16px]
+                  rounded-[8px]
+                  px-4
+                  text-[14px]
                   font-medium
                   outline-none
-                  focus:border-[#8C5EAD]
-                  transition-all
+                  focus:border-[#8039FF]
+                  font-['Plus_Jakarta_Sans']
                 "
               />
             </div>
 
             {/* PASSWORD */}
             <div>
-              <label className="text-[20px] font-bold text-black mb-3 block">
+              <label
+                className="
+                  block
+                  text-[20px]
+                  font-bold
+                  text-[#000000]
+                  mb-2
+                  font-['Plus_Jakarta_Sans']
+                "
+              >
                 Password
               </label>
 
@@ -251,16 +306,16 @@ const LoginPage = () => {
                 value={formData.password}
                 className="
                   w-full
-                  h-[58px]
-                  rounded-[14px]
+                  h-[48px]
                   border
                   border-[#D9D9D9]
-                  px-5
-                  text-[16px]
+                  rounded-[8px]
+                  px-4
+                  text-[14px]
                   font-medium
                   outline-none
-                  focus:border-[#8C5EAD]
-                  transition-all
+                  focus:border-[#8039FF]
+                  font-['Plus_Jakarta_Sans']
                 "
               />
             </div>
@@ -268,7 +323,16 @@ const LoginPage = () => {
             {/* CONFIRM PASSWORD */}
             {isRegister && (
               <div>
-                <label className="text-[20px] font-bold text-black mb-3 block">
+                <label
+                  className="
+                    block
+                    text-[20px]
+                    font-bold
+                    text-[#000000]
+                    mb-2
+                    font-['Plus_Jakarta_Sans']
+                  "
+                >
                   Confirm Password
                 </label>
 
@@ -287,18 +351,18 @@ const LoginPage = () => {
                   value={formData.confirmPassword}
                   className={`
                     w-full
-                    h-[58px]
-                    rounded-[14px]
+                    h-[48px]
                     border
-                    px-5
-                    text-[16px]
+                    rounded-[8px]
+                    px-4
+                    text-[14px]
                     font-medium
                     outline-none
-                    transition-all
+                    font-['Plus_Jakarta_Sans']
                     ${
                       passError
                         ? "border-red-500"
-                        : "border-[#D9D9D9] focus:border-[#8C5EAD]"
+                        : "border-[#D9D9D9] focus:border-[#8039FF]"
                     }
                   `}
                 />
@@ -307,10 +371,16 @@ const LoginPage = () => {
 
             {/* FORGOT PASSWORD */}
             {!isRegister && (
-              <div className="flex justify-end">
-                <p className="text-[16px] font-medium text-black cursor-pointer hover:text-[#8C5EAD] transition-all">
-                  Forgot your password?
-                </p>
+              <div
+                className="
+                  text-[16px]
+                  font-medium
+                  text-[#000000]
+                  cursor-pointer
+                  font-['Plus_Jakarta_Sans']
+                "
+              >
+                Forgot your password?
               </div>
             )}
 
@@ -320,15 +390,19 @@ const LoginPage = () => {
               disabled={isLoading}
               className="
                 w-full
-                h-[58px]
-                rounded-[16px]
-                bg-[#8C5EAD]
+                h-[52px]
+                rounded-full
                 text-white
-                text-[20px]
                 font-bold
-                mt-2
+                text-[24px]
+                bg-gradient-to-r
+                from-[#071097]
+                via-[#8039FF]
+                to-[#FE63C8]
                 hover:opacity-90
-                transition-all
+                transition
+                mt-2
+                font-['Plus_Jakarta_Sans']
               "
             >
               {isLoading
@@ -340,68 +414,81 @@ const LoginPage = () => {
           </form>
 
           {/* DIVIDER */}
-          <div className="flex items-center gap-3 my-8">
+          <div className="flex items-center gap-4 my-7">
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
 
-            <span className="text-[14px] text-[#999] font-medium">
-              Or continue with
+            <span
+              className="
+                text-[14px]
+                text-[#000000]
+                font-medium
+                font-['Plus_Jakarta_Sans']
+              "
+            >
+              Or sign up with
             </span>
 
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
           </div>
 
           {/* SOCIAL LOGIN */}
-          <div className="flex items-center justify-center gap-5">
-            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
-              <img
-                src="/icons/facebook.png"
-                alt="facebook"
-                className="w-7 h-7"
-              />
-            </button>
+          <div className="flex items-center justify-center gap-8">
+            <img
+              src="/icons/facebook.png"
+              alt="facebook"
+              className="w-9 h-9 cursor-pointer"
+            />
 
-            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
-              <img
-                src="/icons/google.png"
-                alt="google"
-                className="w-7 h-7"
-              />
-            </button>
+            <img
+              src="/icons/google.png"
+              alt="google"
+              className="w-9 h-9 cursor-pointer"
+            />
 
-            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
-              <img
-                src="/icons/icloud.png"
-                alt="icloud"
-                className="w-7 h-7"
-              />
-            </button>
+            <img
+              src="/icons/icloud.png"
+              alt="icloud"
+              className="w-9 h-9 cursor-pointer"
+            />
+          </div>
+
+          {/* GOOGLE LOGIN HIDDEN */}
+          <div className="hidden">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() =>
+                Swal.fire("Gagal", "Login Google gagal", "error")
+              }
+            />
           </div>
 
           {/* SWITCH */}
-          <p className="mt-8 text-center text-[18px] font-medium text-black">
+          <div
+            className="
+              text-center
+              mt-8
+              text-[16px]
+              font-medium
+              text-[#000000]
+              font-['Plus_Jakarta_Sans']
+            "
+          >
             {isRegister
               ? "Already have an account?"
-              : "Don’t have an account?"}
+              : "Don't have an account?"}
 
             <span
               onClick={() => setIsRegister(!isRegister)}
-              className="text-[#8C5EAD] font-bold cursor-pointer ml-2"
+              className="
+                ml-2
+                text-[#8039FF]
+                font-bold
+                cursor-pointer
+              "
             >
               {isRegister ? "Sign In" : "Sign Up"}
             </span>
-          </p>
-
-          {/* TERMS */}
-          {isRegister && (
-            <div className="flex items-start gap-3 mt-8">
-              <input type="checkbox" className="mt-1 accent-[#8C5EAD]" />
-
-              <p className="text-[13px] leading-[170%] text-[#666]">
-                By signing up, you agree to our Terms of Service and Privacy
-                Policy.
-              </p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
