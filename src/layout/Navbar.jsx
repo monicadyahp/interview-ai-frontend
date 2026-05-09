@@ -20,7 +20,13 @@ export const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  const menuItems = ["Home", "Interview AI", "Chatbot AI", "Insight", "About Us"];
+  const menuItems = [
+    "Home",
+    "Interview AI",
+    "Chatbot AI",
+    "Insight",
+    "About Us",
+  ];
 
   return (
     <>
