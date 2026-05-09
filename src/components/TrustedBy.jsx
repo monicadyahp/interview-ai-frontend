@@ -23,7 +23,7 @@ export default function TrustedBy() {
       <div className="max-w-[1280px] mx-auto px-6">
 
         {/* TEXT */}
-        <p className="text-center text-[#8E8E8E] text-[28px] font-semibold mb-10 leading-normal">
+        <p className="text-center text-[#8A8A8A] text-[34px] font-bold mb-10 leading-normal">
           Trusted by 15.000+ University Student in Indonesia
         </p>
 
@@ -60,7 +60,7 @@ export default function TrustedBy() {
                 <img
                   src={logo}
                   alt="University Logo"
-                  className="h-[82px] object-contain transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                  className="h-[82px] object-contain transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]"
                 />
               </div>
             </SwiperSlide>
