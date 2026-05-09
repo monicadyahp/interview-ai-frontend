@@ -38,7 +38,7 @@ export default function WhyQualified() {
           {data.map((item, index) => (
             <div
               key={index}
-              className="border border-[#E7E7E7] rounded-[28px] p-10 shadow-sm bg-white"
+              className="border border-[#E7E7E7] rounded-[28px] p-10 shadow-sm bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
             >
 
               {/* ICON */}
