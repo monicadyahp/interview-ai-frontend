@@ -150,20 +150,21 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-[#F7F7F7] flex flex-col">
       {/* CONTENT */}
-      <div className="flex-1 flex items-center justify-center px-4 pt-[140px] pb-20">
+      <div className="flex-1 flex justify-center px-4 pt-[130px] pb-32">
         {/* CARD */}
         <div
           className="
             w-full
-            max-w-[520px]
+            max-w-[565px]
             bg-white
             border
             border-[#D9D9D9]
-            rounded-[12px]
-            px-8
-            py-10
+            rounded-[14px]
+            px-[44px]
+            py-[38px]
+            h-fit
           "
         >
           {/* TITLE */}
@@ -176,13 +177,14 @@ const LoginPage = () => {
               font-['Plus_Jakarta_Sans']
             "
           >
-            {isRegister ? "Create Account" : "Welcome Back!"}
+            {isRegister ? "Welcome Back!" : "Welcome Back!"}
           </h1>
 
           {/* SUBTITLE */}
           <p
             className="
-              mt-3
+              mt-[10px]
+              max-w-[360px]
               text-[16px]
               font-medium
               text-[#000000]
@@ -190,9 +192,8 @@ const LoginPage = () => {
               font-['Plus_Jakarta_Sans']
             "
           >
-            {isRegister
-              ? "Sign up to continue reducing food waste and making a positive impact today."
-              : "Sign in to continue reducing food waste and making a positive impact today."}
+            Sign in to continue reducing food waste and making a positive
+            impact today.
           </p>
 
           {/* FORM */}
@@ -225,13 +226,14 @@ const LoginPage = () => {
                   value={formData.username}
                   className="
                     w-full
-                    h-[48px]
+                    h-[44px]
                     border
                     border-[#D9D9D9]
                     rounded-[8px]
                     px-4
                     text-[14px]
                     font-medium
+                    text-[#000000]
                     outline-none
                     focus:border-[#8039FF]
                     font-['Plus_Jakarta_Sans']
@@ -258,19 +260,20 @@ const LoginPage = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="Your Email"
                 required
                 onChange={handleChange}
                 value={formData.email}
                 className="
                   w-full
-                  h-[48px]
+                  h-[44px]
                   border
                   border-[#D9D9D9]
                   rounded-[8px]
                   px-4
                   text-[14px]
                   font-medium
+                  text-[#000000]
                   outline-none
                   focus:border-[#8039FF]
                   font-['Plus_Jakarta_Sans']
@@ -296,23 +299,20 @@ const LoginPage = () => {
               <input
                 type="password"
                 name="password"
-                placeholder={
-                  isRegister
-                    ? "Create a strong password"
-                    : "Enter your password"
-                }
+                placeholder="Create a strong password"
                 required
                 onChange={handleChange}
                 value={formData.password}
                 className="
                   w-full
-                  h-[48px]
+                  h-[44px]
                   border
                   border-[#D9D9D9]
                   rounded-[8px]
                   px-4
                   text-[14px]
                   font-medium
+                  text-[#000000]
                   outline-none
                   focus:border-[#8039FF]
                   font-['Plus_Jakarta_Sans']
@@ -351,12 +351,13 @@ const LoginPage = () => {
                   value={formData.confirmPassword}
                   className={`
                     w-full
-                    h-[48px]
+                    h-[44px]
                     border
                     rounded-[8px]
                     px-4
                     text-[14px]
                     font-medium
+                    text-[#000000]
                     outline-none
                     font-['Plus_Jakarta_Sans']
                     ${
@@ -370,19 +371,17 @@ const LoginPage = () => {
             )}
 
             {/* FORGOT PASSWORD */}
-            {!isRegister && (
-              <div
-                className="
-                  text-[16px]
-                  font-medium
-                  text-[#000000]
-                  cursor-pointer
-                  font-['Plus_Jakarta_Sans']
-                "
-              >
-                Forgot your password?
-              </div>
-            )}
+            <div
+              className="
+                text-[16px]
+                font-medium
+                text-[#000000]
+                mt-[-4px]
+                font-['Plus_Jakarta_Sans']
+              "
+            >
+              Forgot your password?
+            </div>
 
             {/* BUTTON */}
             <button
@@ -390,7 +389,7 @@ const LoginPage = () => {
               disabled={isLoading}
               className="
                 w-full
-                h-[52px]
+                h-[56px]
                 rounded-full
                 text-white
                 font-bold
@@ -401,7 +400,7 @@ const LoginPage = () => {
                 to-[#FE63C8]
                 hover:opacity-90
                 transition
-                mt-2
+                shadow-[0_8px_20px_rgba(128,57,255,0.25)]
                 font-['Plus_Jakarta_Sans']
               "
             >
@@ -419,8 +418,8 @@ const LoginPage = () => {
 
             <span
               className="
-                text-[14px]
-                text-[#000000]
+                text-[13px]
+                text-[#9E9E9E]
                 font-medium
                 font-['Plus_Jakarta_Sans']
               "
@@ -431,29 +430,32 @@ const LoginPage = () => {
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
           </div>
 
-          {/* SOCIAL LOGIN */}
-          <div className="flex items-center justify-center gap-8">
+          {/* SOCIAL */}
+          <div className="flex items-center justify-center gap-10">
             <img
               src="/icons/facebook.png"
               alt="facebook"
-              className="w-9 h-9 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
             />
 
             <img
               src="/icons/google.png"
               alt="google"
-              className="w-9 h-9 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
+              onClick={() =>
+                document.getElementById("googleLoginButton")?.click()
+              }
             />
 
             <img
               src="/icons/icloud.png"
               alt="icloud"
-              className="w-9 h-9 cursor-pointer"
+              className="w-10 h-10 cursor-pointer"
             />
           </div>
 
-          {/* GOOGLE LOGIN HIDDEN */}
-          <div className="hidden">
+          {/* HIDDEN GOOGLE LOGIN */}
+          <div className="hidden" id="googleLoginButton">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() =>
@@ -466,28 +468,44 @@ const LoginPage = () => {
           <div
             className="
               text-center
-              mt-8
-              text-[16px]
+              mt-7
+              text-[14px]
               font-medium
               text-[#000000]
               font-['Plus_Jakarta_Sans']
             "
           >
-            {isRegister
-              ? "Already have an account?"
-              : "Don't have an account?"}
+            Already have an account?
 
             <span
               onClick={() => setIsRegister(!isRegister)}
               className="
                 ml-2
                 text-[#8039FF]
-                font-bold
+                font-semibold
                 cursor-pointer
               "
             >
-              {isRegister ? "Sign In" : "Sign Up"}
+              Sign In
             </span>
+          </div>
+
+          {/* TERMS */}
+          <div className="flex items-start gap-2 mt-6">
+            <input type="checkbox" className="mt-[2px]" />
+
+            <p
+              className="
+                text-[10px]
+                leading-[160%]
+                text-[#666666]
+                font-medium
+                font-['Plus_Jakarta_Sans']
+              "
+            >
+              By signing up, you agree to our Terms of Service and Privacy
+              Policy.
+            </p>
           </div>
         </div>
       </div>
