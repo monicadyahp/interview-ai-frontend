@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import AppRoutes from "./routes/AppRoutes";
 import ChatAssistant from "./components/ChatAssistant";
-import { Navbar } from "./components/Navbar";
+import { Navbar } from "./layout/Navbar";
+import Footer from "./layout/Footer";
 
 // 2. Buat fungsi bantuan kecil di dalam file yang sama (di atas function App)
 const ScrollToTop = () => {
@@ -23,12 +23,11 @@ function App() {
         <main className="main">
           <Navbar />
           <AppRoutes />
+          <Footer />
         </main>
 
         {/* Pindahkan ke sini, tepat di bawah main */}
         <ChatAssistant />
-
-        <Footer />
       </div>
     </Router>
   );
