@@ -56,6 +56,8 @@ const LoginPage = () => {
 
       localStorage.setItem("token", credentialResponse.credential);
 
+      setIsLoading(false);
+
       Swal.fire({
         title: "Berhasil!",
         text: `Halo, ${decoded.name}!`,
@@ -64,17 +66,17 @@ const LoginPage = () => {
         showConfirmButton: false,
       }).then(() => navigate(location.state?.from || "/"));
     } catch (err) {
+      setIsLoading(false);
+
       Swal.fire({
         title: "Gagal",
         text: "Gagal sinkronisasi data database",
         icon: "error",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // LOGIN / REGISTER
+  // SUBMIT LOGIN / REGISTER
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -130,13 +132,15 @@ const LoginPage = () => {
 
         Swal.fire({
           title: "Selamat Datang!",
-          text: `Mari berlatih interview kamu, ${res.data.user.username}!`,
+          text: `Mari berlatih untuk interview kamu, ${res.data.user.username}!`,
           icon: "success",
           timer: 2000,
           showConfirmButton: false,
         });
 
-        navigate(location.state?.from || "/interview");
+        const origin = location.state?.from || "/";
+
+        navigate(origin);
       }
     } catch (err) {
       Swal.fire({
@@ -152,46 +156,15 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-[#F7F7F7] flex flex-col">
       {/* CONTENT */}
-      <div className="flex-1 flex justify-center px-4 pt-[130px] pb-32">
+      <div className="flex-1 flex flex-col items-center pt-[140px] pb-20 px-4">
         {/* CARD */}
-        <div
-          className="
-            w-full
-            max-w-[565px]
-            bg-white
-            border
-            border-[#D9D9D9]
-            rounded-[14px]
-            px-[44px]
-            py-[38px]
-            h-fit
-          "
-        >
+        <div className="w-full max-w-[500px] bg-white border border-[#D9D9D9] rounded-[12px] px-8 py-10 shadow-sm">
           {/* TITLE */}
-          <h1
-            className="
-              text-[32px]
-              font-bold
-              text-[#000000]
-              leading-[100%]
-              font-['Plus_Jakarta_Sans']
-            "
-          >
-            {isRegister ? "Welcome Back!" : "Welcome Back!"}
+          <h1 className="text-[36px] font-bold text-[#1F1F1F] leading-tight">
+            Welcome Back!
           </h1>
 
-          {/* SUBTITLE */}
-          <p
-            className="
-              mt-[10px]
-              max-w-[360px]
-              text-[16px]
-              font-medium
-              text-[#000000]
-              leading-[160%]
-              font-['Plus_Jakarta_Sans']
-            "
-          >
+          <p className="text-[13px] text-[#666] mt-2 leading-relaxed">
             Sign in to continue reducing food waste and making a positive
             impact today.
           </p>
@@ -204,56 +177,25 @@ const LoginPage = () => {
             {/* FULL NAME */}
             {isRegister && (
               <div>
-                <label
-                  className="
-                    block
-                    text-[20px]
-                    font-bold
-                    text-[#000000]
-                    mb-2
-                    font-['Plus_Jakarta_Sans']
-                  "
-                >
+                <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
                   Full Name
                 </label>
 
                 <input
                   type="text"
                   name="username"
-                  placeholder="Enter your full name"
+                  placeholder="Enter your fullname"
                   required
                   onChange={handleChange}
                   value={formData.username}
-                  className="
-                    w-full
-                    h-[44px]
-                    border
-                    border-[#D9D9D9]
-                    rounded-[8px]
-                    px-4
-                    text-[14px]
-                    font-medium
-                    text-[#000000]
-                    outline-none
-                    focus:border-[#8039FF]
-                    font-['Plus_Jakarta_Sans']
-                  "
+                  className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
                 />
               </div>
             )}
 
             {/* EMAIL */}
             <div>
-              <label
-                className="
-                  block
-                  text-[20px]
-                  font-bold
-                  text-[#000000]
-                  mb-2
-                  font-['Plus_Jakarta_Sans']
-                "
-              >
+              <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
                 Email Address
               </label>
 
@@ -264,75 +206,35 @@ const LoginPage = () => {
                 required
                 onChange={handleChange}
                 value={formData.email}
-                className="
-                  w-full
-                  h-[44px]
-                  border
-                  border-[#D9D9D9]
-                  rounded-[8px]
-                  px-4
-                  text-[14px]
-                  font-medium
-                  text-[#000000]
-                  outline-none
-                  focus:border-[#8039FF]
-                  font-['Plus_Jakarta_Sans']
-                "
+                className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
               />
             </div>
 
             {/* PASSWORD */}
             <div>
-              <label
-                className="
-                  block
-                  text-[20px]
-                  font-bold
-                  text-[#000000]
-                  mb-2
-                  font-['Plus_Jakarta_Sans']
-                "
-              >
+              <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
                 Password
               </label>
 
               <input
                 type="password"
                 name="password"
-                placeholder="Create a strong password"
+                placeholder={
+                  isRegister
+                    ? "Create a strong password"
+                    : "Enter your password"
+                }
                 required
                 onChange={handleChange}
                 value={formData.password}
-                className="
-                  w-full
-                  h-[44px]
-                  border
-                  border-[#D9D9D9]
-                  rounded-[8px]
-                  px-4
-                  text-[14px]
-                  font-medium
-                  text-[#000000]
-                  outline-none
-                  focus:border-[#8039FF]
-                  font-['Plus_Jakarta_Sans']
-                "
+                className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
               />
             </div>
 
             {/* CONFIRM PASSWORD */}
             {isRegister && (
               <div>
-                <label
-                  className="
-                    block
-                    text-[20px]
-                    font-bold
-                    text-[#000000]
-                    mb-2
-                    font-['Plus_Jakarta_Sans']
-                  "
-                >
+                <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
                   Confirm Password
                 </label>
 
@@ -349,37 +251,17 @@ const LoginPage = () => {
                     }
                   }}
                   value={formData.confirmPassword}
-                  className={`
-                    w-full
-                    h-[44px]
-                    border
-                    rounded-[8px]
-                    px-4
-                    text-[14px]
-                    font-medium
-                    text-[#000000]
-                    outline-none
-                    font-['Plus_Jakarta_Sans']
-                    ${
-                      passError
-                        ? "border-red-500"
-                        : "border-[#D9D9D9] focus:border-[#8039FF]"
-                    }
-                  `}
+                  className={`w-full h-[42px] border rounded-[6px] px-4 text-[13px] outline-none ${
+                    passError
+                      ? "border-red-500"
+                      : "border-[#D9D9D9] focus:border-[#8039FF]"
+                  }`}
                 />
               </div>
             )}
 
             {/* FORGOT PASSWORD */}
-            <div
-              className="
-                text-[16px]
-                font-medium
-                text-[#000000]
-                mt-[-4px]
-                font-['Plus_Jakarta_Sans']
-              "
-            >
+            <div className="text-[12px] text-[#666]">
               Forgot your password?
             </div>
 
@@ -389,7 +271,7 @@ const LoginPage = () => {
               disabled={isLoading}
               className="
                 w-full
-                h-[56px]
+                h-[52px]
                 rounded-full
                 text-white
                 font-bold
@@ -400,8 +282,7 @@ const LoginPage = () => {
                 to-[#FE63C8]
                 hover:opacity-90
                 transition
-                shadow-[0_8px_20px_rgba(128,57,255,0.25)]
-                font-['Plus_Jakarta_Sans']
+                mt-1
               "
             >
               {isLoading
@@ -413,17 +294,10 @@ const LoginPage = () => {
           </form>
 
           {/* DIVIDER */}
-          <div className="flex items-center gap-4 my-7">
+          <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
 
-            <span
-              className="
-                text-[13px]
-                text-[#9E9E9E]
-                font-medium
-                font-['Plus_Jakarta_Sans']
-              "
-            >
+            <span className="text-[12px] text-[#999]">
               Or sign up with
             </span>
 
@@ -431,82 +305,52 @@ const LoginPage = () => {
           </div>
 
           {/* SOCIAL */}
-          <div className="flex items-center justify-center gap-10">
+          <div className="flex items-center justify-center gap-6">
             <img
               src="/icons/facebook.png"
               alt="facebook"
-              className="w-10 h-10 cursor-pointer"
+              className="w-8 h-8 cursor-pointer"
             />
 
-            <img
-              src="/icons/google.png"
-              alt="google"
-              className="w-10 h-10 cursor-pointer"
-              onClick={() =>
-                document.getElementById("googleLoginButton")?.click()
-              }
-            />
-
-            <img
-              src="/icons/icloud.png"
-              alt="icloud"
-              className="w-10 h-10 cursor-pointer"
-            />
-          </div>
-
-          {/* HIDDEN GOOGLE LOGIN */}
-          <div className="hidden" id="googleLoginButton">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
               onError={() =>
-                Swal.fire("Gagal", "Login Google gagal", "error")
+                Swal.fire("Gagal", "Login Google Gagal", "error")
               }
+              theme="outline"
+              shape="circle"
             />
+
+            <div className="text-[11px] text-[#666] font-medium">
+               iCloud
+            </div>
           </div>
 
           {/* SWITCH */}
-          <div
-            className="
-              text-center
-              mt-7
-              text-[14px]
-              font-medium
-              text-[#000000]
-              font-['Plus_Jakarta_Sans']
-            "
-          >
-            Already have an account?
+          <div className="text-center mt-6 text-[13px] text-[#666]">
+            {isRegister
+              ? "Already have an account?"
+              : "Don't have an account?"}
 
             <span
               onClick={() => setIsRegister(!isRegister)}
-              className="
-                ml-2
-                text-[#8039FF]
-                font-semibold
-                cursor-pointer
-              "
+              className="ml-2 text-[#8039FF] font-semibold cursor-pointer"
             >
-              Sign In
+              {isRegister ? "Sign In" : "Sign Up"}
             </span>
           </div>
 
           {/* TERMS */}
-          <div className="flex items-start gap-2 mt-6">
-            <input type="checkbox" className="mt-[2px]" />
+          {isRegister && (
+            <div className="flex items-start gap-2 mt-6">
+              <input type="checkbox" className="mt-1" />
 
-            <p
-              className="
-                text-[10px]
-                leading-[160%]
-                text-[#666666]
-                font-medium
-                font-['Plus_Jakarta_Sans']
-              "
-            >
-              By signing up, you agree to our Terms of Service and Privacy
-              Policy.
-            </p>
-          </div>
+              <p className="text-[11px] leading-relaxed text-[#666]">
+                By signing up, you agree to our Terms of Service and Privacy
+                Policy.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
