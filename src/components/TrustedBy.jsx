@@ -7,6 +7,7 @@ export default function TrustedBy() {
     "/logo/ui.png",
     "/logo/ugm.png",
     "/logo/mercubuana.png",
+    "/logo/ipb.png",
     "/logo/ug.png",
     "/logo/itb.png",
     "/logo/binus.png",
@@ -14,31 +15,44 @@ export default function TrustedBy() {
   ];
 
   return (
-    <section className="pt-8 pb-20 bg-white text-center overflow-hidden">
-      
-      <p className="text-[#8E8E8E] text-[14px] font-medium mb-6">
-        Trusted by 15.000+ University Student in Indonesia
-      </p>
+    <section className="pt-10 pb-20 bg-white">
+      <div className="max-w-[1250px] mx-auto px-6">
+    
+        <p className="text-center text-[#8E8E8E] text-[16px] font-medium mb-8">
+          Trusted by 15.000+ University Student in Indonesia
+        </p>
 
-      <div className="max-w-[1400px] mx-auto">
         <Swiper
           modules={[Autoplay]}
-          slidesPerView={7}
-          spaceBetween={10}
+          slidesPerView={6}
+          spaceBetween={40}
           loop={true}
-          speed={2500}
           autoplay={{
-            delay: 0,
+            delay: 2200,
             disableOnInteraction: false,
           }}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+            },
+            640: {
+              slidesPerView: 3,
+            },
+            768: {
+              slidesPerView: 4,
+            },
+            1024: {
+              slidesPerView: 6,
+            },
+          }}
         >
-          {logos.map((logo, i) => (
-            <SwiperSlide key={i}>
-              <div className="flex justify-center items-center h-[90px]">
+          {logos.map((logo, index) => (
+            <SwiperSlide key={index}>
+              <div className="flex items-center justify-center h-[90px]">
                 <img
                   src={logo}
                   alt="University Logo"
-                  className="h-[85px] object-contain"
+                  className="h-[78px] object-contain"
                 />
               </div>
             </SwiperSlide>
