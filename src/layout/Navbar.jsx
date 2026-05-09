@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  // Tutup menu saat resize ke desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) setIsMenuOpen(false);
     };
+
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Lock body scroll saat menu mobile terbuka
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
+
     return () => {
       document.body.style.overflow = "";
     };
@@ -47,8 +48,10 @@ export const Navbar = () => {
       >
         {/* Logo Section */}
         <div
+          onClick={() => navigate("/")}
           className="
             flex items-center gap-2.5 px-3.5 h-[60px]
+            cursor-pointer
             md:gap-2.5 md:px-4 md:h-[68px]
             lg:gap-3 lg:px-5
             xl:gap-[17px] xl:w-[350px] xl:h-[76px] xl:px-[30px] xl:justify-center
@@ -64,6 +67,7 @@ export const Navbar = () => {
               xl:w-14 xl:h-14
             "
           />
+
           <h1
             className="
               font-bold leading-tight tracking-[0.02em] fontIntersight
@@ -107,7 +111,9 @@ export const Navbar = () => {
 
         {/* Hamburger Button (Mobile Only) */}
         <button
-          className={`navbar-hamburger mr-2.5 md:hidden ${isMenuOpen ? "active" : ""}`}
+          className={`navbar-hamburger mr-2.5 md:hidden ${
+            isMenuOpen ? "active" : ""
+          }`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -119,7 +125,9 @@ export const Navbar = () => {
 
       {/* Mobile Overlay */}
       <div
-        className={`navbar-mobile-overlay ${isMenuOpen ? "active" : ""}`}
+        className={`navbar-mobile-overlay ${
+          isMenuOpen ? "active" : ""
+        }`}
         onClick={() => setIsMenuOpen(false)}
       />
 
@@ -137,10 +145,14 @@ export const Navbar = () => {
             </li>
           ))}
         </ul>
+
         <div className="navbar-mobile-cta">
           <button
             className="buttonDashboard"
-            onClick={() => setIsMenuOpen(false)}
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate(user ? "/interview" : "/login");
+            }}
           >
             <p className="textButtonDashboard">Dashboard</p>
           </button>
