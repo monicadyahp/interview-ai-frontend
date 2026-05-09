@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 
 // Import semua halaman dari folder containers
 import LandingPage from '../containers/LandingPage';
@@ -18,13 +19,34 @@ const AppRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             
             {/* Halaman Utama Fitur AI (Interview) */}
-            <Route path="/interview" element={<InterviewRoom />} />
+            <Route
+                path="/interview"
+                element={
+                    <ProtectedRoute>
+                        <InterviewRoom />
+                    </ProtectedRoute>
+                }
+            />
             
             {/* Halaman Riwayat */}
-            <Route path="/history" element={<HistoryPage />} />
+            <Route
+                path="/history"
+                element={
+                    <ProtectedRoute>
+                        <HistoryPage />
+                </ProtectedRoute>
+                }
+            />
 
             {/* Halaman Profile */}
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                }
+            />
             
             {/* Halaman 404 (Opsional - Jika link tidak ditemukan) */}
             <Route path="*" element={<div className="section container"><h2>Halaman Tidak Ditemukan</h2></div>} />

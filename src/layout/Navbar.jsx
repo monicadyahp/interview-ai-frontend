@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   // Tutup menu saat resize ke desktop
   useEffect(() => {
@@ -92,7 +97,10 @@ export const Navbar = () => {
 
         {/* CTA Section (Desktop & Tablet) */}
         <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px]">
-          <button className="buttonDashboard">
+          <button
+            className="buttonDashboard"
+            onClick={() => navigate(user ? "/interview" : "/login")}
+          >
             <p className="textButtonDashboard">Dashboard</p>
           </button>
         </div>
