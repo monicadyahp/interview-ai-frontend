@@ -7,30 +7,38 @@ export default function TrustedBy() {
     "/logo/ui.png",
     "/logo/ugm.png",
     "/logo/mercubuana.png",
+    "/logo/ug.png",
+    "/logo/up.png",
     "/logo/ipb.png",
     "/logo/ug.png",
     "/logo/itb.png",
     "/logo/binus.png",
     "/logo/upn.png",
+    "/logo/unair.png",
+    "/logo/unpad.png",
   ];
 
   return (
-    <section className="pt-10 pb-20 bg-white">
-      <div className="max-w-[1250px] mx-auto px-6">
-    
-        <p className="text-center text-[#8E8E8E] text-[16px] font-medium mb-8">
+    <section className="pt-8 pb-24 bg-white overflow-hidden">
+      <div className="max-w-[1280px] mx-auto px-6">
+
+        {/* TEXT */}
+        <p className="text-center text-[#8E8E8E] text-[28px] font-semibold mb-10 leading-normal">
           Trusted by 15.000+ University Student in Indonesia
         </p>
 
+        {/* SLIDER */}
         <Swiper
           modules={[Autoplay]}
           slidesPerView={6}
-          spaceBetween={40}
+          spaceBetween={30}
           loop={true}
+          speed={2500}
           autoplay={{
-            delay: 2200,
+            delay: 0,
             disableOnInteraction: false,
           }}
+          allowTouchMove={false}
           breakpoints={{
             320: {
               slidesPerView: 2,
@@ -48,11 +56,11 @@ export default function TrustedBy() {
         >
           {logos.map((logo, index) => (
             <SwiperSlide key={index}>
-              <div className="flex items-center justify-center h-[90px]">
+              <div className="flex items-center justify-center h-[110px]">
                 <img
                   src={logo}
                   alt="University Logo"
-                  className="h-[78px] object-contain"
+                  className="h-[82px] object-contain transition-all duration-300 hover:scale-110 hover:-translate-y-1"
                 />
               </div>
             </SwiperSlide>

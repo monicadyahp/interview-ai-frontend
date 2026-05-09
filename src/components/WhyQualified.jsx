@@ -1,25 +1,25 @@
 import {
   Lightbulb,
-  Frown,
+  CircleAlert,
   MessageCircleWarning,
 } from "lucide-react";
 
 export default function WhyQualified() {
   const data = [
     {
-      icon: <Lightbulb size={28} className="text-[#7C3AED]" />,
+      icon: <Lightbulb size={30} className="text-[#7C3AED]" />,
       title: "Your freeze when answering",
       desc: "The pressure hits and your mind goes blank, leaving you stumbling for words.",
     },
     {
-      icon: <Frown size={28} className="text-[#7C3AED]" />,
+      icon: <CircleAlert size={30} className="text-[#7C3AED]" />,
       title: "You look nervous on camera",
       desc: "Micro-expressions and body language betray your confidence without you realizing it.",
     },
     {
       icon: (
         <MessageCircleWarning
-          size={28}
+          size={30}
           className="text-[#7C3AED]"
         />
       ),
@@ -29,38 +29,47 @@ export default function WhyQualified() {
   ];
 
   return (
-    <section className="pb-24 bg-white">
+    <section className="pb-28 bg-white">
       <div className="max-w-[1280px] mx-auto px-6">
-    
-        <h2 className="text-center text-[56px] leading-[1.1] font-bold text-black mb-5">
+
+        {/* HEADING */}
+        <h2 className="text-center text-[56px] leading-[1.15] font-bold text-[#000000] mb-6">
           Why Qualified Candidates Fail ?
         </h2>
 
-        <p className="text-center text-[24px] leading-[1.5] text-black max-w-[950px] mx-auto mb-16">
+        {/* SUBTITLE */}
+        <p className="text-center text-[32px] leading-[1.4] font-normal text-[#020617] max-w-[1100px] mx-auto mb-20">
           You're not alone. These are the struggles every candidate
           faces before their interview
         </p>
 
+        {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
           {data.map((item, index) => (
             <div
               key={index}
-              className="border border-[#E8E8E8] rounded-[24px] p-8 shadow-sm"
+              className="border border-[#E7E7E7] rounded-[28px] p-10 shadow-sm bg-white"
             >
 
-              <div className="mb-6">
+              {/* ICON */}
+              <div className="mb-8">
                 {item.icon}
               </div>
 
-              <h3 className="text-[22px] leading-[1.3] font-bold text-black mb-4">
+              {/* TITLE */}
+              <h3 className="text-[28px] leading-[1.3] font-bold text-[#020617] mb-5">
                 {item.title}
               </h3>
 
-              <p className="text-[18px] leading-[1.6] text-[#5F5F5F]">
+              {/* DESC */}
+              <p className="text-[24px] leading-[1.6] font-normal text-[#020617]">
                 {item.desc}
               </p>
+
             </div>
           ))}
+
         </div>
       </div>
     </section>
