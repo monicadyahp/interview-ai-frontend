@@ -31,7 +31,6 @@ const LoginPage = () => {
     });
   };
 
-  // GOOGLE LOGIN
   const handleGoogleSuccess = async (credentialResponse) => {
     setIsLoading(true);
 
@@ -76,7 +75,6 @@ const LoginPage = () => {
     }
   };
 
-  // SUBMIT LOGIN / REGISTER
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -97,7 +95,6 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
 
-      // REGISTER
       if (isRegister) {
         await axios.post(`${API_BASE_URL}/auth/register`, formData);
 
@@ -119,7 +116,6 @@ const LoginPage = () => {
         });
       }
 
-      // LOGIN
       else {
         const res = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
@@ -158,61 +154,87 @@ const LoginPage = () => {
       {/* CONTENT */}
       <div className="flex-1 flex flex-col items-center pt-[140px] pb-20 px-4">
         {/* CARD */}
-        <div className="w-full max-w-[500px] bg-white border border-[#D9D9D9] rounded-[12px] px-8 py-10 shadow-sm">
+        <div className="w-full max-w-[520px] bg-white border border-[#E5E5E5] rounded-[20px] px-8 md:px-10 py-10 shadow-sm">
           {/* TITLE */}
-          <h1 className="text-[36px] font-bold text-[#1F1F1F] leading-tight">
-            Welcome Back!
+          <h1 className="text-[32px] font-bold text-black leading-[100%]">
+            {isRegister ? "Create Account" : "Welcome Back!"}
           </h1>
 
-          <p className="text-[13px] text-[#666] mt-2 leading-relaxed">
-            Sign in to continue reducing food waste and making a positive
-            impact today.
+          {/* SUBTITLE */}
+          <p className="text-[16px] font-medium text-black mt-4 leading-[160%]">
+            {isRegister
+              ? "Create your account and start practicing smarter interviews today."
+              : "Sign in to continue reducing food waste and making a positive impact today."}
           </p>
 
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="mt-8 flex flex-col gap-5"
+            className="mt-8 flex flex-col gap-6"
           >
             {/* FULL NAME */}
             {isRegister && (
               <div>
-                <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
+                <label className="text-[20px] font-bold text-black mb-3 block">
                   Full Name
                 </label>
 
                 <input
                   type="text"
                   name="username"
-                  placeholder="Enter your fullname"
+                  placeholder="Enter your full name"
                   required
                   onChange={handleChange}
                   value={formData.username}
-                  className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
+                  className="
+                    w-full
+                    h-[58px]
+                    rounded-[14px]
+                    border
+                    border-[#D9D9D9]
+                    px-5
+                    text-[16px]
+                    font-medium
+                    outline-none
+                    focus:border-[#8C5EAD]
+                    transition-all
+                  "
                 />
               </div>
             )}
 
             {/* EMAIL */}
             <div>
-              <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
+              <label className="text-[20px] font-bold text-black mb-3 block">
                 Email Address
               </label>
 
               <input
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                placeholder="Enter your email"
                 required
                 onChange={handleChange}
                 value={formData.email}
-                className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
+                className="
+                  w-full
+                  h-[58px]
+                  rounded-[14px]
+                  border
+                  border-[#D9D9D9]
+                  px-5
+                  text-[16px]
+                  font-medium
+                  outline-none
+                  focus:border-[#8C5EAD]
+                  transition-all
+                "
               />
             </div>
 
             {/* PASSWORD */}
             <div>
-              <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
+              <label className="text-[20px] font-bold text-black mb-3 block">
                 Password
               </label>
 
@@ -227,14 +249,26 @@ const LoginPage = () => {
                 required
                 onChange={handleChange}
                 value={formData.password}
-                className="w-full h-[42px] border border-[#D9D9D9] rounded-[6px] px-4 text-[13px] outline-none focus:border-[#8039FF]"
+                className="
+                  w-full
+                  h-[58px]
+                  rounded-[14px]
+                  border
+                  border-[#D9D9D9]
+                  px-5
+                  text-[16px]
+                  font-medium
+                  outline-none
+                  focus:border-[#8C5EAD]
+                  transition-all
+                "
               />
             </div>
 
             {/* CONFIRM PASSWORD */}
             {isRegister && (
               <div>
-                <label className="block text-[14px] font-semibold text-[#1F1F1F] mb-2">
+                <label className="text-[20px] font-bold text-black mb-3 block">
                   Confirm Password
                 </label>
 
@@ -251,19 +285,34 @@ const LoginPage = () => {
                     }
                   }}
                   value={formData.confirmPassword}
-                  className={`w-full h-[42px] border rounded-[6px] px-4 text-[13px] outline-none ${
-                    passError
-                      ? "border-red-500"
-                      : "border-[#D9D9D9] focus:border-[#8039FF]"
-                  }`}
+                  className={`
+                    w-full
+                    h-[58px]
+                    rounded-[14px]
+                    border
+                    px-5
+                    text-[16px]
+                    font-medium
+                    outline-none
+                    transition-all
+                    ${
+                      passError
+                        ? "border-red-500"
+                        : "border-[#D9D9D9] focus:border-[#8C5EAD]"
+                    }
+                  `}
                 />
               </div>
             )}
 
             {/* FORGOT PASSWORD */}
-            <div className="text-[12px] text-[#666]">
-              Forgot your password?
-            </div>
+            {!isRegister && (
+              <div className="flex justify-end">
+                <p className="text-[16px] font-medium text-black cursor-pointer hover:text-[#8C5EAD] transition-all">
+                  Forgot your password?
+                </p>
+              </div>
+            )}
 
             {/* BUTTON */}
             <button
@@ -271,18 +320,15 @@ const LoginPage = () => {
               disabled={isLoading}
               className="
                 w-full
-                h-[52px]
-                rounded-full
+                h-[58px]
+                rounded-[16px]
+                bg-[#8C5EAD]
                 text-white
+                text-[20px]
                 font-bold
-                text-[24px]
-                bg-gradient-to-r
-                from-[#071097]
-                via-[#8039FF]
-                to-[#FE63C8]
+                mt-2
                 hover:opacity-90
-                transition
-                mt-1
+                transition-all
               "
             >
               {isLoading
@@ -294,58 +340,63 @@ const LoginPage = () => {
           </form>
 
           {/* DIVIDER */}
-          <div className="flex items-center gap-3 my-6">
+          <div className="flex items-center gap-3 my-8">
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
 
-            <span className="text-[12px] text-[#999]">
-              Or sign up with
+            <span className="text-[14px] text-[#999] font-medium">
+              Or continue with
             </span>
 
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
           </div>
 
-          {/* SOCIAL */}
-          <div className="flex items-center justify-center gap-6">
-            <img
-              src="/icons/facebook.png"
-              alt="facebook"
-              className="w-8 h-8 cursor-pointer"
-            />
+          {/* SOCIAL LOGIN */}
+          <div className="flex items-center justify-center gap-5">
+            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
+              <img
+                src="/icons/facebook.png"
+                alt="facebook"
+                className="w-7 h-7"
+              />
+            </button>
 
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() =>
-                Swal.fire("Gagal", "Login Google Gagal", "error")
-              }
-              theme="outline"
-              shape="circle"
-            />
+            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
+              <img
+                src="/icons/google.png"
+                alt="google"
+                className="w-7 h-7"
+              />
+            </button>
 
-            <div className="text-[11px] text-[#666] font-medium">
-               iCloud
-            </div>
+            <button className="w-[58px] h-[58px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:border-[#8C5EAD] transition-all">
+              <img
+                src="/icons/icloud.png"
+                alt="icloud"
+                className="w-7 h-7"
+              />
+            </button>
           </div>
 
           {/* SWITCH */}
-          <div className="text-center mt-6 text-[13px] text-[#666]">
+          <p className="mt-8 text-center text-[18px] font-medium text-black">
             {isRegister
               ? "Already have an account?"
-              : "Don't have an account?"}
+              : "Don’t have an account?"}
 
             <span
               onClick={() => setIsRegister(!isRegister)}
-              className="ml-2 text-[#8039FF] font-semibold cursor-pointer"
+              className="text-[#8C5EAD] font-bold cursor-pointer ml-2"
             >
               {isRegister ? "Sign In" : "Sign Up"}
             </span>
-          </div>
+          </p>
 
           {/* TERMS */}
           {isRegister && (
-            <div className="flex items-start gap-2 mt-6">
-              <input type="checkbox" className="mt-1" />
+            <div className="flex items-start gap-3 mt-8">
+              <input type="checkbox" className="mt-1 accent-[#8C5EAD]" />
 
-              <p className="text-[11px] leading-relaxed text-[#666]">
+              <p className="text-[13px] leading-[170%] text-[#666]">
                 By signing up, you agree to our Terms of Service and Privacy
                 Policy.
               </p>
