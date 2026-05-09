@@ -1,11 +1,9 @@
 <section className="pt-10 pb-20 bg-white text-center overflow-hidden">
 
-  {/* TITLE */}
-  <p className="text-[#9A9A9A] mb-4 text-[18px] font-semibold">
+  <p className="h-[95px] w-auto object-contain opacity-90 hover:opacity-100 hover:scale-105 transition-all duration-300">
     Trusted by 15.000+ University Student in Indonesia
   </p>
 
-  {/* LOGOS */}
   <div className="max-w-[1350px] mx-auto px-2">
     <Swiper
       modules={[Autoplay]}
