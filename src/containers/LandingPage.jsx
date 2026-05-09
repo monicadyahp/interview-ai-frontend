@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import HeroSection from "../components/HeroSection";
 import TrustedBy from "../components/TrustedBy";
 import WhyQualified from "../components/WhyQualified";
+=======
+import HeroSection from "../section/HeroSection";
+import { Everything } from "../section/Everything";
+import HowItWorks from "../section/HowItWorks";
+import Testimonials from "../section/Testimonials";
+import CTASection from "../section/CTASection";
+import FAQSection from "../section/FAQSection";
+>>>>>>> parent of e040827 (Revert "Update Full Landing Page Slicing UI")
 
 const LandingPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +67,7 @@ const LandingPage = () => {
   return (
     <>
       <style>{`
+<<<<<<< HEAD
         .reveal-scroll {
           opacity: 0;
           transform: translateY(30px);
@@ -180,6 +190,24 @@ const LandingPage = () => {
           </Link>
         </div>
       </section>
+=======
+                    .reveal-scroll {
+                        opacity: 0;
+                        transform: translateY(30px);
+                        transition: all 0.8s ease-out;
+                    }
+                    .reveal-visible {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+            `}</style>
+      <HeroSection />
+      <Everything />
+      <HowItWorks />
+      <Testimonials />
+      <FAQSection />
+      <CTASection />
+>>>>>>> parent of e040827 (Revert "Update Full Landing Page Slicing UI")
     </>
   );
 };
