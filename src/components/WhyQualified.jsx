@@ -1,28 +1,17 @@
-import {
-  Lightbulb,
-  CircleAlert,
-  MessageCircleWarning,
-} from "lucide-react";
-
 export default function WhyQualified() {
   const data = [
     {
-      icon: <Lightbulb size={30} className="text-[#7C3AED]" />,
+      icon: "/icons/qualified1.png",
       title: "Your freeze when answering",
       desc: "The pressure hits and your mind goes blank, leaving you stumbling for words.",
     },
     {
-      icon: <CircleAlert size={30} className="text-[#7C3AED]" />,
+      icon: "/icons/qualified2.png",
       title: "You look nervous on camera",
       desc: "Micro-expressions and body language betray your confidence without you realizing it.",
     },
     {
-      icon: (
-        <MessageCircleWarning
-          size={30}
-          className="text-[#7C3AED]"
-        />
-      ),
+      icon: "/icons/qualified3.png",
       title: "No one teels you what went wrong",
       desc: "Rejections come with generic emails, leaving you guesing how to improve.",
     },
@@ -53,9 +42,11 @@ export default function WhyQualified() {
             >
 
               {/* ICON */}
-              <div className="mb-8">
-                {item.icon}
-              </div>
+              <img
+                src={item.icon}
+                alt={item.title}
+                className="w-[42px] h-[42px] mb-8"
+              />
 
               {/* TITLE */}
               <h3 className="text-[28px] leading-[1.3] font-bold text-[#020617] mb-5">
@@ -63,7 +54,7 @@ export default function WhyQualified() {
               </h3>
 
               {/* DESC */}
-              <p className="text-[24px] leading-[1.6] font-normal text-[#020617]">
+              <p className="text-[18px] leading-[1.6] font-normal text-[#020617]">
                 {item.desc}
               </p>
 
