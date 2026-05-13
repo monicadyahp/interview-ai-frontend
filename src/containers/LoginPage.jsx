@@ -395,7 +395,7 @@ const LoginPage = () => {
               "
             >
               <img
-                public="/icons/facebook.png"
+                src="/icons/facebook.png"
                 alt="facebook"
                 className="w-[24px] h-[24px] object-contain"
               />
@@ -419,7 +419,7 @@ const LoginPage = () => {
               "
             >
               <img
-                public="/icons/google.png"
+                src="/icons/google.png"
                 alt="google"
                 className="w-[24px] h-[24px] object-contain"
               />
@@ -443,7 +443,7 @@ const LoginPage = () => {
               "
             >
               <img
-                public="/icons/icloud.png"
+                src="/icons/icloud.png"
                 alt="icloud"
                 className="w-[24px] h-[24px] object-contain"
               />
