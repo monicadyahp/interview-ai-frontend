@@ -27,11 +27,11 @@ export const Navbar = () => {
   }, [isMenuOpen]);
 
   const menuItems = [
-    "Home",
-    "Interview AI",
-    "Chatbot AI",
-    "Insight",
-    "About Us",
+    { name: "Home", path: "/" },
+    { name: "Interview AI", path: "/interview" },
+    { name: "Chatbot AI", path: "/chatbot" },
+    { name: "Insight", path: "/insight" },
+    { name: "About Us", path: "/about" },
   ];
 
   return (
@@ -46,7 +46,7 @@ export const Navbar = () => {
           xl:w-[1243px] xl:max-w-none xl:top-[39px]
         "
       >
-        {/* Logo Section */}
+        {/* LOGO */}
         <div
           onClick={() => navigate("/")}
           className="
@@ -80,26 +80,27 @@ export const Navbar = () => {
           </h1>
         </div>
 
-        {/* Menu Section (Desktop & Tablet) */}
+        {/* DESKTOP MENU */}
         <div className="hidden md:flex md:justify-center md:items-center md:py-1">
           <ul className="list-none nav-menu-item flex items-center md:gap-3.5 lg:gap-5 xl:gap-10">
             {menuItems.map((item) => (
-              <li key={item}>
+              <li key={item.name}>
                 <p
+                  onClick={() => navigate(item.path)}
                   className="
                     cursor-pointer whitespace-nowrap transition-colors duration-200
                     hover:text-[var(--primary-color)]
                     md:text-sm lg:text-base xl:text-xl
                   "
                 >
-                  {item}
+                  {item.name}
                 </p>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* CTA Section (Desktop & Tablet) */}
+        {/* DASHBOARD BUTTON */}
         <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px]">
           <button
             className="buttonDashboard"
@@ -109,7 +110,7 @@ export const Navbar = () => {
           </button>
         </div>
 
-        {/* Hamburger Button (Mobile Only) */}
+        {/* HAMBURGER */}
         <button
           className={`navbar-hamburger mr-2.5 md:hidden ${
             isMenuOpen ? "active" : ""
@@ -123,7 +124,7 @@ export const Navbar = () => {
         </button>
       </nav>
 
-      {/* Mobile Overlay */}
+      {/* MOBILE OVERLAY */}
       <div
         className={`navbar-mobile-overlay ${
           isMenuOpen ? "active" : ""
@@ -131,16 +132,19 @@ export const Navbar = () => {
         onClick={() => setIsMenuOpen(false)}
       />
 
-      {/* Mobile Dropdown Menu */}
+      {/* MOBILE MENU */}
       <div className={`navbar-mobile-menu ${isMenuOpen ? "active" : ""}`}>
         <ul className="navbar-mobile-menu-list">
           {menuItems.map((item) => (
-            <li key={item}>
+            <li key={item.name}>
               <p
                 className="navbar-mobile-menu-item"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(item.path);
+                }}
               >
-                {item}
+                {item.name}
               </p>
             </li>
           ))}

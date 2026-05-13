@@ -24,8 +24,6 @@ const ScrollToTop = () => {
 };
 
 const AppContent = () => {
-  const location = useLocation();
-
   return (
     <div className="App">
       <ScrollToTop />
@@ -34,9 +32,8 @@ const AppContent = () => {
         <Navbar />
 
         <AppRoutes />
-
-        {/* HIDE FOOTER DI LOGIN */}
-        {location.pathname !== "/login" && <Footer />}
+        
+        <Footer />
       </main>
 
       <ChatAssistant />
