@@ -7,34 +7,30 @@ export const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const { user, setUser } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setIsMenuOpen(false);
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
     };
 
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () =>
+      window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    document.body.style.overflow = isMenuOpen
+      ? "hidden"
+      : "";
 
     return () => {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
-
-  // LOGOUT
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-
-    setUser(null);
-
-    navigate("/login");
-  };
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -110,42 +106,37 @@ export const Navbar = () => {
           </ul>
         </div>
 
-        {/* RIGHT BUTTON */}
+        {/* CTA */}
         <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px] gap-3">
-          {!user ? (
-            <button
-              className="buttonDashboard"
-              onClick={() => navigate("/login")}
-            >
-              <p className="textButtonDashboard">Dashboard</p>
-            </button>
-          ) : (
-            <>
-              <button
-                className="buttonDashboard"
-                onClick={() => navigate("/interview")}
-              >
-                <p className="textButtonDashboard">Interview</p>
-              </button>
+          <button
+            className="buttonDashboard"
+            onClick={() =>
+              navigate(user ? "/interview" : "/login")
+            }
+          >
+            <p className="textButtonDashboard">
+              {user ? "Interview" : "Dashboard"}
+            </p>
+          </button>
 
-              <button
-                onClick={handleLogout}
-                className="
-                  px-5
-                  h-[45px]
-                  rounded-full
-                  border
-                  border-[#8039FF]
-                  text-[#8039FF]
-                  font-semibold
-                  hover:bg-[#8039FF]
-                  hover:text-white
-                  transition
-                "
-              >
-                Logout
-              </button>
-            </>
+          {user && (
+            <button
+              onClick={logout}
+              className="
+                px-5
+                h-[39px]
+                rounded-full
+                border
+                border-[#8039FF]
+                text-[#8039FF]
+                font-semibold
+                hover:bg-[#8039FF]
+                hover:text-white
+                transition
+              "
+            >
+              Logout
+            </button>
           )}
         </div>
 
@@ -154,7 +145,9 @@ export const Navbar = () => {
           className={`navbar-hamburger mr-2.5 md:hidden ${
             isMenuOpen ? "active" : ""
           }`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() =>
+            setIsMenuOpen(!isMenuOpen)
+          }
           aria-label="Toggle menu"
         >
           <span className="navbar-hamburger-line"></span>
@@ -172,7 +165,11 @@ export const Navbar = () => {
       />
 
       {/* MOBILE MENU */}
-      <div className={`navbar-mobile-menu ${isMenuOpen ? "active" : ""}`}>
+      <div
+        className={`navbar-mobile-menu ${
+          isMenuOpen ? "active" : ""
+        }`}
+      >
         <ul className="navbar-mobile-menu-list">
           {menuItems.map((item) => (
             <li key={item.name}>
@@ -189,51 +186,43 @@ export const Navbar = () => {
           ))}
         </ul>
 
-        {/* MOBILE BUTTON */}
         <div className="navbar-mobile-cta flex flex-col gap-3">
-          {!user ? (
+          <button
+            className="buttonDashboard"
+            onClick={() => {
+              setIsMenuOpen(false);
+
+              navigate(
+                user ? "/interview" : "/login"
+              );
+            }}
+          >
+            <p className="textButtonDashboard">
+              {user ? "Interview" : "Dashboard"}
+            </p>
+          </button>
+
+          {user && (
             <button
-              className="buttonDashboard"
               onClick={() => {
                 setIsMenuOpen(false);
-                navigate("/login");
+                logout();
               }}
+              className="
+                w-full
+                h-[45px]
+                rounded-full
+                border
+                border-[#8039FF]
+                text-[#8039FF]
+                font-semibold
+                hover:bg-[#8039FF]
+                hover:text-white
+                transition
+              "
             >
-              <p className="textButtonDashboard">Dashboard</p>
+              Logout
             </button>
-          ) : (
-            <>
-              <button
-                className="buttonDashboard"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  navigate("/interview");
-                }}
-              >
-                <p className="textButtonDashboard">Interview</p>
-              </button>
-
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleLogout();
-                }}
-                className="
-                  w-full
-                  h-[45px]
-                  rounded-full
-                  border
-                  border-[#8039FF]
-                  text-[#8039FF]
-                  font-semibold
-                  hover:bg-[#8039FF]
-                  hover:text-white
-                  transition
-                "
-              >
-                Logout
-              </button>
-            </>
           )}
         </div>
       </div>
