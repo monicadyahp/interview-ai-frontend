@@ -6,7 +6,8 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+
+  const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,6 +26,15 @@ export const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  // LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+
+    setUser(null);
+
+    navigate("/");
+  };
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -100,14 +110,36 @@ export const Navbar = () => {
           </ul>
         </div>
 
-        {/* DASHBOARD BUTTON */}
-        <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px]">
+        {/* DASHBOARD + LOGOUT */}
+        <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px] gap-3">
           <button
             className="buttonDashboard"
             onClick={() => navigate(user ? "/interview" : "/login")}
           >
-            <p className="textButtonDashboard">Dashboard</p>
+            <p className="textButtonDashboard">
+              {user ? "Interview" : "Dashboard"}
+            </p>
           </button>
+
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="
+                px-5
+                h-[45px]
+                rounded-full
+                border
+                border-[#8039FF]
+                text-[#8039FF]
+                font-semibold
+                hover:bg-[#8039FF]
+                hover:text-white
+                transition
+              "
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         {/* HAMBURGER */}
@@ -150,7 +182,7 @@ export const Navbar = () => {
           ))}
         </ul>
 
-        <div className="navbar-mobile-cta">
+        <div className="navbar-mobile-cta flex flex-col gap-3">
           <button
             className="buttonDashboard"
             onClick={() => {
@@ -158,8 +190,33 @@ export const Navbar = () => {
               navigate(user ? "/interview" : "/login");
             }}
           >
-            <p className="textButtonDashboard">Dashboard</p>
+            <p className="textButtonDashboard">
+              {user ? "Interview" : "Dashboard"}
+            </p>
           </button>
+
+          {user && (
+            <button
+              onClick={() => {
+                setIsMenuOpen(false);
+                handleLogout();
+              }}
+              className="
+                w-full
+                h-[45px]
+                rounded-full
+                border
+                border-[#8039FF]
+                text-[#8039FF]
+                font-semibold
+                hover:bg-[#8039FF]
+                hover:text-white
+                transition
+              "
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </>
