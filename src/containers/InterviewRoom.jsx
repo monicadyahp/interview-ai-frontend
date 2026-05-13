@@ -501,7 +501,7 @@ const InterviewRoom = () => {
           {/* LEFT */}
           <div className="bg-white rounded-[30px] border border-[#ECECEC] p-5">
             {/* VIDEO */}
-            <div className="relative rounded-[24px] overflow-hidden bg-black h-[350px]">
+            <div className="relative rounded-[28px] overflow-hidden bg-black h-[540px] xl:h-[680px]">
               {status === "RESULT" ? (
                 recordedVideoURL ? (
                   <video
