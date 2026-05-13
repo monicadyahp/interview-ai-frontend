@@ -33,7 +33,7 @@ export const Navbar = () => {
 
     setUser(null);
 
-    navigate("/");
+    navigate("/login");
   };
 
   const menuItems = [
@@ -110,35 +110,42 @@ export const Navbar = () => {
           </ul>
         </div>
 
-        {/* DASHBOARD + LOGOUT */}
+        {/* RIGHT BUTTON */}
         <div className="hidden navbar-cta md:flex md:items-center md:px-4 lg:px-5 xl:px-[30px] gap-3">
-          <button
-            className="buttonDashboard"
-            onClick={() => navigate(user ? "/interview" : "/login")}
-          >
-            <p className="textButtonDashboard">
-              {user ? "Interview" : "Dashboard"}
-            </p>
-          </button>
-
-          {user && (
+          {!user ? (
             <button
-              onClick={handleLogout}
-              className="
-                px-5
-                h-[45px]
-                rounded-full
-                border
-                border-[#8039FF]
-                text-[#8039FF]
-                font-semibold
-                hover:bg-[#8039FF]
-                hover:text-white
-                transition
-              "
+              className="buttonDashboard"
+              onClick={() => navigate("/login")}
             >
-              Logout
+              <p className="textButtonDashboard">Dashboard</p>
             </button>
+          ) : (
+            <>
+              <button
+                className="buttonDashboard"
+                onClick={() => navigate("/interview")}
+              >
+                <p className="textButtonDashboard">Interview</p>
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="
+                  px-5
+                  h-[45px]
+                  rounded-full
+                  border
+                  border-[#8039FF]
+                  text-[#8039FF]
+                  font-semibold
+                  hover:bg-[#8039FF]
+                  hover:text-white
+                  transition
+                "
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
 
@@ -182,40 +189,51 @@ export const Navbar = () => {
           ))}
         </ul>
 
+        {/* MOBILE BUTTON */}
         <div className="navbar-mobile-cta flex flex-col gap-3">
-          <button
-            className="buttonDashboard"
-            onClick={() => {
-              setIsMenuOpen(false);
-              navigate(user ? "/interview" : "/login");
-            }}
-          >
-            <p className="textButtonDashboard">
-              {user ? "Interview" : "Dashboard"}
-            </p>
-          </button>
-
-          {user && (
+          {!user ? (
             <button
+              className="buttonDashboard"
               onClick={() => {
                 setIsMenuOpen(false);
-                handleLogout();
+                navigate("/login");
               }}
-              className="
-                w-full
-                h-[45px]
-                rounded-full
-                border
-                border-[#8039FF]
-                text-[#8039FF]
-                font-semibold
-                hover:bg-[#8039FF]
-                hover:text-white
-                transition
-              "
             >
-              Logout
+              <p className="textButtonDashboard">Dashboard</p>
             </button>
+          ) : (
+            <>
+              <button
+                className="buttonDashboard"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate("/interview");
+                }}
+              >
+                <p className="textButtonDashboard">Interview</p>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogout();
+                }}
+                className="
+                  w-full
+                  h-[45px]
+                  rounded-full
+                  border
+                  border-[#8039FF]
+                  text-[#8039FF]
+                  font-semibold
+                  hover:bg-[#8039FF]
+                  hover:text-white
+                  transition
+                "
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
       </div>
