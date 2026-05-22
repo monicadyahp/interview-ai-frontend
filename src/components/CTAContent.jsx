@@ -1,59 +1,37 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CTAContent() {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex-1 w-full">
-      {/* Small Text */}
-      <p
-        className="
-          text-[18px]
-          md:text-[24px]
-          text-black
-          leading-relaxed
-        "
-      >
+    <div className="flex flex-col gap-6 max-w-[520px]">
+      <p className="text-[14px] md:text-[15px] text-[#333] font-medium">
         Ready to turn your anxiety into an offer letter?
       </p>
 
-      {/* Heading */}
-      <h1
-        className="
-          mt-6
-          lg:text-[32px]
-          md:text-[26px]
-          text-[24px]
-          font-extrabold
-          leading-tight
-          text-black
-          max-w-3xl
-        "
-      >
-        Join 5,000+ Indonesian grads who are leveling up their career game while
-        you're still guessing.
-      </h1>
+      <h2 className="text-[26px] md:text-[34px] font-extrabold text-[#1a1a2e] leading-[1.2]">
+        Join 5,000+ Indonesian grads who are leveling up their career game
+        while you're still guessing.
+      </h2>
 
-      {/* CTA Button */}
+      {/* FIX: navigate to /signup */}
       <button
+        onClick={() => navigate("/signup")}
         className="
-          mt-10
-          bg-gradient-to-r
-          from-[#7A3CFF]
-          to-[#5D49FF]
-          hover:scale-[1.02]
-          transition-all
-          duration-300
+          self-start
+          flex items-center gap-2
+          bg-[#8039FF]
+          hover:bg-[#6a2ee0]
           text-white
           font-bold
-          lg:text-[28px]
-          md:text-[26px]
-          text-[18px]
-          px-8
-          py-4
-          md:px-12
-          md:py-5
+          text-[15px] md:text-[17px]
+          px-7 py-4
           rounded-full
-          shadow-lg
-          w-full
+          transition-all duration-300
+          shadow-[0_8px_24px_rgba(128,57,255,0.3)]
+          hover:shadow-[0_12px_30px_rgba(128,57,255,0.4)]
+          hover:-translate-y-0.5
         "
       >
         Launch Intersight Now 🚀

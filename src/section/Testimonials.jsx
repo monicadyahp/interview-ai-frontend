@@ -10,15 +10,16 @@ import { Autoplay } from "swiper/modules";
 
 export default function Testimonials() {
   return (
-    <section className="w-full px-4 md:px-8 lg:px-12 pt-15 md:pt-18 lg:pt-20">
+    /* FIX: spacing seragam py-[54px] px-6 */
+    <section className="w-full px-6 py-[54px]">
       <div className="max-w-7xl mx-auto bg-[#F6ECF7] rounded-[32px] px-5 py-14 md:px-10 md:py-16">
         {/* Heading */}
         <div className="text-center mb-14">
-          <h1 className="text-[30px] md:text-[42px] font-extrabold text-black">
+          <h1 className="text-[24px] md:text-[32px] font-extrabold text-black">
             What candidates are saying
           </h1>
 
-          <p className="mt-4 text-[18px] md:text-[30px] text-[#222222]">
+          <p className="mt-3 text-[15px] md:text-[18px] text-[#222222]">
             Real feedback from real practice session
           </p>
         </div>
@@ -30,15 +31,9 @@ export default function Testimonials() {
           slidesPerView={1}
           autoHeight={false}
           breakpoints={{
-            640: {
-              slidesPerView: 1,
-            },
-            768: {
-              slidesPerView: 2,
-            },
-            1200: {
-              slidesPerView: 3,
-            },
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1200: { slidesPerView: 3 },
           }}
           autoplay={{
             delay: 3000,

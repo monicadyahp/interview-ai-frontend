@@ -4,7 +4,8 @@ import CTAContent from "../components/CTAContent";
 
 export default function CTASection() {
   return (
-    <section className="w-full px-4 md:px-8 lg:px-12 py-20">
+    /* FIX: spacing seragam py-[54px] px-6 */
+    <section className="w-full px-6 py-[54px]">
       <div
         className="
           max-w-7xl
@@ -19,7 +20,6 @@ export default function CTASection() {
           md:px-10
           lg:px-14
           py-10
-          pt-15 md:pt-18 lg:pt-20
         "
       >
         <div

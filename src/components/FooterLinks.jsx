@@ -13,22 +13,18 @@ const productLinks = ["Interview AI", "Smart Dashboard", "Chat Bot"];
 export default function FooterLinks() {
   return (
     <div
-      className="
-        grid
-        grid-cols-2
-        gap-12
-        md:gap-24
-      "
+      className="grid grid-cols-2 gap-12 md:gap-24"
+      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       {/* Project */}
       <div>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-3">
           {projectLinks.map((item, index) => (
             <li key={index}>
               <a
                 href="#"
                 className="
-                  text-[22px]
+                  text-[14px]
                   text-[#666666]
                   hover:text-black
                   transition-colors
@@ -44,25 +40,17 @@ export default function FooterLinks() {
 
       {/* Product */}
       <div>
-        <p
-          className="
-                  text-[22px]
-                  text-[#666666]
-                  hover:text-black
-                  transition-colors
-                  duration-300
-                  pb-[10px]
-                "
-        >
+        {/* FIX: "Product" label */}
+        <p className="text-[14px] font-semibold text-[#111111] pb-3">
           Product
         </p>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-3">
           {productLinks.map((item, index) => (
             <li key={index}>
               <a
                 href="#"
                 className="
-                  text-[22px]
+                  text-[14px]
                   text-[#666666]
                   hover:text-black
                   transition-colors

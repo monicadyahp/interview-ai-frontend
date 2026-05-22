@@ -1,7 +1,10 @@
 import React from "react";
 import { FaArrowCircleRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="relative mx-auto overflow-hidden w-[92%] h-[760px] md:w-[95%] md:w-[90%] lg:w-[90%] md:h-[980px] top-[23px] lg:h-[1020px] rounded-[30px] md:rounded-[40px] bg-[#F8F8FF] shadow-[0_10px_40px_rgba(140,94,173,0.08)]">
       {/* Background */}
@@ -19,20 +22,25 @@ export default function HeroSection() {
       ></div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center pt-30 md:pt-40 lg:pt-50 px-4 md:px-8 pb-0">
-        
+      <div className="relative z-10 flex flex-col items-center pt-30 md:pt-40 lg:pt-50 px-6 md:px-8 pb-0">
+
         <h1 className="font-extrabold text-center text-black text-[30px] sm:text-[40px] md:text-[46px] lg:text-[54px] leading-[1.15] max-w-[950px] mb-5 md:mb-6 tracking-tight">
           Master the Art of the First Impression: Where AI Meets Career Readiness
         </h1>
 
+        {/* FIX: "Inter-SIGHT" → "Intersight" */}
         <p className="font-medium text-center text-black text-[15px] sm:text-[16px] md:text-[18px] lg:text-[20px] leading-[1.6] max-w-[760px] mb-8 md:mb-10">
-          Stop letting interview anxiety overshadow your potential. Inter-SIGHT
+          Stop letting interview anxiety overshadow your potential. Intersight
           leverages advanced real-time emotion recognition and AI-driven
           insights to transform your nervous energy into a professional,
           high-impact performance.
         </p>
 
-        <button className="group relative overflow-hidden bg-[#8039FF] transition-all duration-300 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] h-[55px] md:h-[70px] rounded-full flex items-center justify-center gap-3 shadow-[0_15px_30px_rgba(140,94,173,0.3)] hover:shadow-[0_20px_40px_rgba(140,94,173,0.4)] hover:-translate-y-1 mb-8 md:mb-12">
+        {/* FIX: navigate to /signup */}
+        <button
+          onClick={() => navigate("/signup")}
+          className="group relative overflow-hidden bg-[#8039FF] transition-all duration-300 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] h-[55px] md:h-[70px] rounded-full flex items-center justify-center gap-3 shadow-[0_15px_30px_rgba(140,94,173,0.3)] hover:shadow-[0_20px_40px_rgba(140,94,173,0.4)] hover:-translate-y-1 mb-8 md:mb-12"
+        >
           <span className="text-white font-bold text-[16px] md:text-[22px]">
             Start Free Simulation
           </span>

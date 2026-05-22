@@ -4,69 +4,46 @@ import { faqData } from "../data/data";
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
-
   const sectionRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
-
       const section = sectionRef.current;
-
       const rect = section.getBoundingClientRect();
-
       const windowHeight = window.innerHeight;
-
-      // Total scrollable area inside section
       const sectionHeight = rect.height;
-
-      // How much section has entered viewport
-      const progress =
-        (windowHeight - rect.top) / (sectionHeight + windowHeight);
-
-      // Normalize 0 → 1
+      const progress = (windowHeight - rect.top) / (sectionHeight + windowHeight);
       const clampedProgress = Math.max(0, Math.min(progress, 1));
-
-      // Convert progress to FAQ index
       const newIndex = Math.min(
         faqData.length - 1,
-        Math.floor(clampedProgress * faqData.length),
+        Math.floor(clampedProgress * faqData.length)
       );
-
       setOpenIndex(newIndex);
     };
 
     handleScroll();
-
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
+    /* FIX: spacing seragam py-[54px] px-6 */
     <section
       ref={sectionRef}
-      className="
-        w-full
-        px-4
-        md:px-8
-        lg:px-12
-       pt-15 md:pt-18 lg:pt-20
-        overflow-hidden
-      "
+      className="w-full px-6 py-[54px] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
           {/* Left Content */}
           <div className="lg:sticky lg:top-24">
-            <h1 className="text-[24px] lg:text-[36px] md:text-[26px] font-extrabold leading-tight text-black">
+            {/* FIX: font size heading dari text-[24px] lg:text-[36px] → konsisten */}
+            <h1 className="text-[24px] md:text-[28px] font-extrabold leading-tight text-black">
               Frequently Asked Question
             </h1>
 
-            <p className="mt-6 text-[24px] lg:text-[36px] md:text-[26px] leading-relaxed text-[#222222]">
+            {/* FIX: subtitle dari text-[24px] lg:text-[36px] → text-[14px] md:text-[16px] */}
+            <p className="mt-4 text-[14px] md:text-[15px] leading-relaxed text-[#222222]">
               Find quick answers to common questions about our platform, food
               safety, and how you can start making an impact with Intersight.
             </p>

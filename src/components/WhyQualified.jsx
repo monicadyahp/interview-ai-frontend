@@ -18,49 +18,46 @@ export default function WhyQualified() {
   ];
 
   return (
-    <section className="pb-28 bg-white">
+    /* FIX: spacing atas bawah 54px (py-[54px]), kiri kanan 24px (px-6) */
+    <section className="py-[54px] bg-white">
       <div className="max-w-[1280px] mx-auto px-6">
 
-        {/* HEADING */}
-        <h2 className="text-center text-[56px] leading-[1.15] font-bold text-[#000000] mb-6">
+        {/* HEADING — FIX: dari text-[56px] → text-[32px] md:text-[40px] */}
+        <h2 className="text-center text-[28px] md:text-[36px] leading-[1.15] font-bold text-[#000000] mb-4">
           Why Qualified Candidates Fail ?
         </h2>
 
-        {/* SUBTITLE */}
-        <p className="text-center text-[32px] leading-[1.4] font-normal text-[#020617] max-w-[1100px] mx-auto mb-20">
+        {/* SUBTITLE — FIX: dari text-[32px] → text-[16px] md:text-[20px] */}
+        <p className="text-center text-[15px] md:text-[18px] leading-[1.6] font-normal text-[#020617] max-w-[600px] mx-auto mb-12">
           You're not alone. These are the struggles every candidate
           faces before their interview
         </p>
 
         {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
           {data.map((item, index) => (
             <div
               key={index}
-              className="border border-[#E7E7E7] rounded-[28px] p-10 shadow-sm bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
+              className="border border-[#E7E7E7] rounded-[28px] p-8 shadow-sm bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
             >
-
               {/* ICON */}
               <img
                 src={item.icon}
                 alt={item.title}
-                className="w-[42px] h-[42px] mb-8"
+                className="w-[36px] h-[36px] mb-6"
               />
 
-              {/* TITLE */}
-              <h3 className="text-[28px] leading-[1.3] font-bold text-[#020617] mb-5">
+              {/* TITLE — FIX: dari text-[28px] → text-[18px] md:text-[20px] */}
+              <h3 className="text-[16px] md:text-[18px] leading-[1.3] font-bold text-[#020617] mb-3">
                 {item.title}
               </h3>
 
-              {/* DESC */}
-              <p className="text-[18px] leading-[1.6] font-normal text-[#020617]">
+              {/* DESC — FIX: dari text-[18px] → text-[14px] md:text-[15px] */}
+              <p className="text-[13px] md:text-[14px] leading-[1.6] font-normal text-[#020617]">
                 {item.desc}
               </p>
-
             </div>
           ))}
-
         </div>
       </div>
     </section>

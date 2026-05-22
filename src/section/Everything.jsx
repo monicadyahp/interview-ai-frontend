@@ -4,15 +4,16 @@ import Card from "../components/Card";
 
 export const Everything = () => {
   return (
-    <section className="w-full px-4 md:px-8 lg:px-12 pt-15 md:pt-18 lg:pt-20">
+    /* FIX: spacing seragam py-[54px] px-6 */
+    <section className="w-full px-6 py-[54px]">
       <div className="bg-[#F3ECFF] rounded-[28px] max-w-7xl mx-auto px-5 py-12 md:px-10 md:py-16">
         {/* Heading */}
         <div className="flex flex-col items-center text-center gap-3 mb-10">
-          <h1 className="text-[28px] md:text-[40px] font-extrabold text-[#111111] leading-tight">
+          <h1 className="text-[24px] md:text-[32px] font-extrabold text-[#111111] leading-tight">
             Everything you need to walk in confident
           </h1>
 
-          <p className="text-[18px] md:text-[28px] font-medium text-[#2A2A2A]">
+          <p className="text-[15px] md:text-[18px] font-medium text-[#2A2A2A]">
             Built for real candidates, powered by real AI
           </p>
         </div>
