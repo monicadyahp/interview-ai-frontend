@@ -6,33 +6,46 @@ export default function CTAContent() {
 
   return (
     <div className="flex flex-col gap-6 max-w-[520px]">
-      <p className="text-[14px] md:text-[15px] text-[#333] font-medium">
+      {/* FIX: Label sesuai Figma */}
+      <p
+        className="text-[14px] md:text-[15px] font-semibold text-[#555555]"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
         Ready to turn your anxiety into an offer letter?
       </p>
 
-      <h2 className="text-[26px] md:text-[34px] font-extrabold text-[#1a1a2e] leading-[1.2]">
+      {/* FIX: Heading sesuai Figma */}
+      <h2
+        className="text-[28px] md:text-[36px] lg:text-[40px] font-extrabold text-black leading-[1.2]"
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+      >
         Join 5,000+ Indonesian grads who are leveling up their career game
         while you're still guessing.
       </h2>
 
-      {/* FIX: navigate to /signup */}
+      {/* FIX: Button "Launch Intersight Now 🚀" sesuai Figma → navigate ke /login */}
       <button
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate("/login")}
         className="
-          self-start
-          flex items-center gap-2
+          w-fit
+          px-8
+          h-[56px]
+          rounded-full
           bg-[#8039FF]
-          hover:bg-[#6a2ee0]
           text-white
           font-bold
-          text-[15px] md:text-[17px]
-          px-7 py-4
-          rounded-full
-          transition-all duration-300
-          shadow-[0_8px_24px_rgba(128,57,255,0.3)]
-          hover:shadow-[0_12px_30px_rgba(128,57,255,0.4)]
-          hover:-translate-y-0.5
+          text-[16px]
+          md:text-[18px]
+          hover:opacity-90
+          hover:-translate-y-1
+          transition-all
+          duration-300
+          shadow-[0_10px_30px_rgba(128,57,255,0.3)]
+          flex
+          items-center
+          gap-2
         "
+        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
       >
         Launch Intersight Now 🚀
       </button>

@@ -22,15 +22,17 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center pt-30 md:pt-40 lg:pt-50 px-6 md:px-8 pb-0">
 
-        {/* Heading — text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] */}
+        {/* FIX: Heading — line break setelah titik dua, sesuai Figma */}
         <h1
           className="font-extrabold text-center text-black text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.15] max-w-[900px] mb-5 tracking-tight"
           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
         >
-          Master the Art of the First Impression: Where AI Meets Career Readiness
+          Master the Art of the First Impression:{" "}
+          <br />
+          Where AI Meets Career Readiness
         </h1>
 
-        {/* Subtext — text-[15px] md:text-[17px] lg:text-[19px] */}
+        {/* Subtext */}
         <p
           className="font-medium text-center text-black text-[15px] md:text-[17px] lg:text-[19px] leading-[1.6] max-w-[720px] mb-8 md:mb-10"
           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
@@ -41,9 +43,9 @@ export default function HeroSection() {
           high-impact performance.
         </p>
 
-        {/* Button */}
+        {/* FIX: Button → navigate ke /login, LoginPage default ke Sign Up */}
         <button
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate("/login")}
           className="group relative overflow-hidden bg-[#8039FF] transition-all duration-300 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] h-[52px] md:h-[64px] rounded-full flex items-center justify-center gap-3 shadow-[0_15px_30px_rgba(140,94,173,0.3)] hover:shadow-[0_20px_40px_rgba(140,94,173,0.4)] hover:-translate-y-1 mb-8 md:mb-12"
         >
           <span

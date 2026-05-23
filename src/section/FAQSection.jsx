@@ -30,14 +30,19 @@ export default function FAQSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
           {/* Left */}
           <div className="lg:sticky lg:top-24">
-            {/* FIX: text-[24px] md:text-[32px] */}
-            <h1 className="text-[24px] md:text-[32px] font-extrabold leading-tight text-black">
+            <h1
+              className="text-[24px] md:text-[32px] font-extrabold leading-tight text-black"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
               Frequently Asked Question
             </h1>
-            {/* FIX: text-[15px] md:text-[16px] */}
-            <p className="mt-4 text-[15px] md:text-[16px] leading-relaxed text-[#222222]">
-              Find quick answers to common questions about our platform, food
-              safety, and how you can start making an impact with Intersight.
+            {/* FIX: subtitle sesuai Figma — hapus "food safety" */}
+            <p
+              className="mt-4 text-[15px] md:text-[16px] leading-relaxed text-[#222222]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Find quick answers to common questions about our platform,
+              and how you can start making an impact with Intersight.
             </p>
           </div>
 

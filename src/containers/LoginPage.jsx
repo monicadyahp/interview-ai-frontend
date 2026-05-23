@@ -7,9 +7,7 @@ import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // FIX: Default ke false supaya halaman pertama kali dibuka = Sign In
-  // Kalau kamu mau default Sign Up, ganti ke true
-  const [isRegister, setIsRegister] = useState(false);
+  const [isRegister, setIsRegister] = useState(false); // default: Sign In
   const [passError, setPassError] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -20,18 +18,13 @@ const LoginPage = () => {
   });
 
   const { setUser } = useContext(AuthContext);
-
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // SUBMIT LOGIN / REGISTER
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -45,16 +38,13 @@ const LoginPage = () => {
         showConfirmButton: false,
       });
     }
-
     setPassError(false);
 
     try {
       setIsLoading(true);
 
-      // REGISTER
       if (isRegister) {
         await axios.post(`${API_BASE_URL}/auth/register`, formData);
-
         Swal.fire({
           title: "Berhasil!",
           text: "Akun kamu sudah terdaftar. Silakan login ya!",
@@ -62,26 +52,15 @@ const LoginPage = () => {
           timer: 2500,
           showConfirmButton: false,
         });
-
         setIsRegister(false);
-        setFormData({
-          username: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
-      }
-
-      // LOGIN
-      else {
+        setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+      } else {
         const res = await axios.post(`${API_BASE_URL}/auth/login`, {
           email: formData.email,
           password: formData.password,
         });
-
         setUser(res.data.user);
         localStorage.setItem("token", res.data.token);
-
         Swal.fire({
           title: "Selamat Datang!",
           text: `Mari berlatih untuk interview kamu, ${res.data.user.username}!`,
@@ -89,7 +68,6 @@ const LoginPage = () => {
           timer: 2000,
           showConfirmButton: false,
         });
-
         const origin = location.state?.from || "/";
         navigate(origin);
       }
@@ -104,39 +82,59 @@ const LoginPage = () => {
     }
   };
 
-  // Handle switch mode + reset form
   const handleSwitchMode = () => {
     setIsRegister(!isRegister);
     setPassError(false);
-    setFormData({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    setFormData({ username: "", email: "", password: "", confirmPassword: "" });
   };
 
-  return (
-    <div className="min-h-screen bg-[#EDE8FF] flex flex-col">
-      {/* CONTENT */}
-      <div className="flex-1 flex flex-col items-center pt-[140px] pb-20 px-4">
-        {/* CARD */}
-        <div className="w-full max-w-[500px] bg-white border border-[#D9D9D9] rounded-[16px] px-8 py-10 shadow-sm">
+  const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
-          {/* ============================
-              TITLE — beda teks Sign In vs Sign Up
-          ============================ */}
+  const labelStyle = {
+    fontFamily,
+    fontWeight: 700,
+    fontSize: "14px",
+    color: "#000000",
+  };
+
+  const inputClass = `
+    w-full h-[44px] border border-[#D9D9D9] rounded-[8px] px-4
+    outline-none focus:border-[#8039FF] text-[14px] text-[#444444]
+    placeholder:text-[#BBBBBB]
+  `;
+
+  return (
+    <div className="min-h-screen flex flex-col" style={{ background: "#EDE8FF" }}>
+      <div className="flex-1 flex flex-col items-center justify-center py-20 px-4">
+        {/* CARD */}
+        <div
+          className="w-full bg-white border border-[#E5E5E5] rounded-[16px] px-8 py-10 shadow-sm"
+          style={{ maxWidth: "460px" }}
+        >
+          {/* TITLE */}
           <h1
-            className="text-[32px] font-bold text-[#000000] leading-tight"
-            style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700 }}
+            style={{
+              fontFamily,
+              fontWeight: 700,
+              fontSize: "24px",
+              color: "#000000",
+              lineHeight: 1.2,
+              marginBottom: "6px",
+            }}
           >
             {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
           </h1>
 
-          {/* FIX #1: Subtitle beda antara Sign In dan Sign Up */}
+          {/* SUBTITLE */}
           <p
-            className="text-[16px] text-[#000000] mt-3 leading-relaxed"
-            style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 500 }}
+            style={{
+              fontFamily,
+              fontWeight: 400,
+              fontSize: "13px",
+              color: "#444444",
+              marginBottom: "24px",
+              lineHeight: 1.5,
+            }}
           >
             {isRegister
               ? "Join us to unlock deeper, AI-powered insights from your interviews."
@@ -144,21 +142,12 @@ const LoginPage = () => {
           </p>
 
           {/* FORM */}
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-            {/* FULL NAME — hanya muncul di Sign Up */}
+            {/* FULL NAME — Sign Up only */}
             {isRegister && (
-              <div>
-                <label
-                  className="block mb-2 text-[#000000]"
-                  style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                  }}
-                >
-                  Full Name
-                </label>
+              <div className="flex flex-col gap-1.5">
+                <label style={labelStyle}>Full Name</label>
                 <input
                   type="text"
                   name="username"
@@ -166,24 +155,15 @@ const LoginPage = () => {
                   required
                   onChange={handleChange}
                   value={formData.username}
-                  className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
-                  style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
+                  className={inputClass}
+                  style={{ fontFamily }}
                 />
               </div>
             )}
 
             {/* EMAIL */}
-            <div>
-              <label
-                className="block mb-2 text-[#000000]"
-                style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontWeight: 700,
-                  fontSize: "16px",
-                }}
-              >
-                Email Address
-              </label>
+            <div className="flex flex-col gap-1.5">
+              <label style={labelStyle}>Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -191,52 +171,32 @@ const LoginPage = () => {
                 required
                 onChange={handleChange}
                 value={formData.email}
-                className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
-                style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
+                className={inputClass}
+                style={{ fontFamily }}
               />
             </div>
 
             {/* PASSWORD */}
-            <div>
-              <label
-                className="block mb-2 text-[#000000]"
-                style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontWeight: 700,
-                  fontSize: "16px",
-                }}
-              >
-                Password
-              </label>
+            <div className="flex flex-col gap-1.5">
+              <label style={labelStyle}>Password</label>
               <input
                 type="password"
                 name="password"
                 placeholder={
-                  isRegister
-                    ? "min. 8 characters with a number"
-                    : "enter your password"
+                  isRegister ? "min. 8 characters with a number" : "enter your password"
                 }
                 required
                 onChange={handleChange}
                 value={formData.password}
-                className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
-                style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
+                className={inputClass}
+                style={{ fontFamily }}
               />
             </div>
 
-            {/* CONFIRM PASSWORD — hanya muncul di Sign Up */}
+            {/* CONFIRM PASSWORD — Sign Up only */}
             {isRegister && (
-              <div>
-                <label
-                  className="block mb-2 text-[#000000]"
-                  style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontWeight: 700,
-                    fontSize: "16px",
-                  }}
-                >
-                  Confirm Password
-                </label>
+              <div className="flex flex-col gap-1.5">
+                <label style={labelStyle}>Confirm Password</label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -247,25 +207,22 @@ const LoginPage = () => {
                     if (passError) setPassError(false);
                   }}
                   value={formData.confirmPassword}
-                  className={`w-full h-[52px] border rounded-[10px] px-4 outline-none ${
-                    passError
-                      ? "border-red-500"
-                      : "border-[#D9D9D9] focus:border-[#8039FF]"
-                  }`}
-                  style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
+                  className={`${inputClass} ${passError ? "!border-red-500" : ""}`}
+                  style={{ fontFamily }}
                 />
               </div>
             )}
 
-            {/* FIX #2: FORGOT PASSWORD — abu-abu, hanya di Sign In, posisi setelah password */}
+            {/* FORGOT PASSWORD — Sign In only, abu-abu */}
             {!isRegister && (
-              <div className="flex justify-start -mt-2">
+              <div style={{ marginTop: "-4px" }}>
                 <span
-                  className="text-[#9CA3AF] cursor-pointer hover:text-[#8039FF] transition-colors"
+                  className="cursor-pointer hover:text-[#8039FF] transition-colors"
                   style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontWeight: 500,
-                    fontSize: "14px",
+                    fontFamily,
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    color: "#9CA3AF",
                   }}
                 >
                   Forgot your password?
@@ -273,16 +230,17 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* TERMS CHECKBOX — hanya di Sign Up, sebelum tombol */}
+            {/* TERMS — Sign Up only */}
             {isRegister && (
               <div className="flex items-start gap-2">
-                <input type="checkbox" className="mt-1 accent-[#8039FF]" required />
+                <input type="checkbox" className="mt-0.5 accent-[#8039FF]" required />
                 <p
-                  className="leading-relaxed text-[#666666]"
                   style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontSize: "12px",
-                    fontWeight: 500,
+                    fontFamily,
+                    fontSize: "11px",
+                    fontWeight: 400,
+                    color: "#666666",
+                    lineHeight: 1.5,
                   }}
                 >
                   By signing up, you agree to our{" "}
@@ -298,100 +256,90 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* BUTTON */}
+            {/* SUBMIT BUTTON */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-[56px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{
-                fontFamily: "Plus Jakarta Sans",
-                fontWeight: 700,
-                fontSize: "20px",
-              }}
+              className="
+                w-full h-[48px] rounded-full text-white
+                bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8]
+                hover:opacity-90 transition mt-2
+                disabled:opacity-60 disabled:cursor-not-allowed
+              "
+              style={{ fontFamily, fontWeight: 700, fontSize: "18px" }}
             >
               {isLoading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
             </button>
           </form>
 
           {/* DIVIDER */}
-          <div className="flex items-center gap-3 my-8">
-            <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
             <span
-              className="text-[#999999]"
-              style={{
-                fontFamily: "Plus Jakarta Sans",
-                fontSize: "14px",
-                fontWeight: 500,
-              }}
+              style={{ fontFamily, fontSize: "12px", fontWeight: 500, color: "#999999" }}
             >
-              {/* FIX #3: Teks divider beda sesuai mode */}
               {isRegister ? "Or sign up with" : "Or continue with"}
             </span>
-            <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
+            <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
           </div>
 
           {/* SOCIAL BUTTONS */}
-          <div className="flex items-center justify-center gap-5">
-
-            {/* FIX #3: FACEBOOK — background biru bulat seperti logo resmi FB */}
+          <div className="flex items-center justify-center gap-4">
+            {/* Facebook — bulat biru */}
             <button
               type="button"
-              className="w-[52px] h-[52px] rounded-full flex items-center justify-center hover:scale-105 transition overflow-hidden bg-[#1877F2]"
-              aria-label="Sign in with Facebook"
+              aria-label="Continue with Facebook"
+              className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition overflow-hidden bg-[#1877F2]"
             >
               <img
                 src="/icons/facebook.png"
-                alt="facebook"
-                className="w-[28px] h-[28px] object-contain"
-                style={{ filter: "brightness(0) invert(1)" }} // bikin putih kalau PNG-nya berwarna
+                alt="Facebook"
+                className="w-[26px] h-[26px] object-contain"
+                style={{ filter: "brightness(0) invert(1)" }}
               />
             </button>
 
-            {/* GOOGLE — sudah benar, tetap dibungkus border */}
+            {/* Google */}
             <button
               type="button"
-              className="w-[52px] h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
-              aria-label="Sign in with Google"
+              aria-label="Continue with Google"
+              className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
             >
               <img
                 src="/icons/google.png"
-                alt="google"
-                className="w-[24px] h-[24px] object-contain"
+                alt="Google"
+                className="w-[22px] h-[22px] object-contain"
               />
             </button>
 
-            {/* FIX #3: ICLOUD — diperbesar jadi 30px */}
+            {/* iCloud */}
             <button
               type="button"
-              className="w-[52px] h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
-              aria-label="Sign in with iCloud"
+              aria-label="Continue with iCloud"
+              className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
             >
               <img
                 src="/icons/icloud.png"
-                alt="icloud"
-                className="w-[30px] h-[30px] object-contain"
+                alt="iCloud"
+                className="w-[28px] h-[28px] object-contain"
               />
             </button>
           </div>
 
           {/* SWITCH MODE */}
-          <div
-            className="text-center mt-8 text-[#666666]"
-            style={{
-              fontFamily: "Plus Jakarta Sans",
-              fontWeight: 500,
-              fontSize: "16px",
-            }}
+          <p
+            className="text-center mt-6"
+            style={{ fontFamily, fontSize: "13px", fontWeight: 400, color: "#666666" }}
           >
             {isRegister ? "Already have an account?" : "New to Intersight?"}
             <span
               onClick={handleSwitchMode}
-              className="ml-2 text-[#8039FF] cursor-pointer hover:underline"
+              className="ml-1.5 text-[#8039FF] cursor-pointer hover:underline"
               style={{ fontWeight: 700 }}
             >
               {isRegister ? "Sign In" : "Create an account"}
             </span>
-          </div>
+          </p>
         </div>
       </div>
     </div>
