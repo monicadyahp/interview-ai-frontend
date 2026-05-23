@@ -18,18 +18,17 @@ export default function WhyQualified() {
   ];
 
   return (
-    <section className="py-[54px] bg-white">
+    <section className="py-[54px] bg-white" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="max-w-[1280px] mx-auto px-6">
 
-        {/* HEADING — FIX: naik dikit jadi text-[32px] md:text-[40px] */}
-        <h2 className="text-center text-[32px] md:text-[40px] leading-[1.15] font-bold text-[#000000] mb-4">
+        {/* HEADING */}
+        <h2 className="text-center text-[28px] md:text-[36px] leading-[1.15] font-bold text-[#000000] mb-4">
           Why Qualified Candidates Fail ?
         </h2>
 
-        {/* SUBTITLE — FIX: text-[16px] md:text-[18px] */}
-        <p className="text-center text-[16px] md:text-[18px] leading-[1.6] font-normal text-[#020617] max-w-[600px] mx-auto mb-12">
-          You're not alone. These are the struggles every candidate
-          faces before their interview
+        {/* SUBTITLE */}
+        <p className="text-center text-[16px] md:text-[18px] leading-[1.6] text-[#020617] max-w-[600px] mx-auto mb-12">
+          You're not alone. These are the struggles every candidate faces before their interview
         </p>
 
         {/* CARDS */}
@@ -39,17 +38,11 @@ export default function WhyQualified() {
               key={index}
               className="border border-[#E7E7E7] rounded-[28px] p-8 shadow-sm bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
             >
-              <img
-                src={item.icon}
-                alt={item.title}
-                className="w-[40px] h-[40px] mb-6"
-              />
-              {/* TITLE — text-[18px] md:text-[20px] */}
+              <img src={item.icon} alt={item.title} className="w-[40px] h-[40px] mb-6" />
               <h3 className="text-[18px] md:text-[20px] leading-[1.3] font-bold text-[#020617] mb-3">
                 {item.title}
               </h3>
-              {/* DESC — text-[14px] md:text-[16px] */}
-              <p className="text-[14px] md:text-[16px] leading-[1.6] font-normal text-[#020617]">
+              <p className="text-[15px] md:text-[16px] leading-[1.6] text-[#020617]">
                 {item.desc}
               </p>
             </div>
