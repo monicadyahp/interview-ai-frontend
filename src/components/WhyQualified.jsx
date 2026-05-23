@@ -18,17 +18,16 @@ export default function WhyQualified() {
   ];
 
   return (
-    /* FIX: spacing atas bawah 54px (py-[54px]), kiri kanan 24px (px-6) */
     <section className="py-[54px] bg-white">
       <div className="max-w-[1280px] mx-auto px-6">
 
-        {/* HEADING — FIX: dari text-[56px] → text-[32px] md:text-[40px] */}
-        <h2 className="text-center text-[28px] md:text-[36px] leading-[1.15] font-bold text-[#000000] mb-4">
+        {/* HEADING — FIX: naik dikit jadi text-[32px] md:text-[40px] */}
+        <h2 className="text-center text-[32px] md:text-[40px] leading-[1.15] font-bold text-[#000000] mb-4">
           Why Qualified Candidates Fail ?
         </h2>
 
-        {/* SUBTITLE — FIX: dari text-[32px] → text-[16px] md:text-[20px] */}
-        <p className="text-center text-[15px] md:text-[18px] leading-[1.6] font-normal text-[#020617] max-w-[600px] mx-auto mb-12">
+        {/* SUBTITLE — FIX: text-[16px] md:text-[18px] */}
+        <p className="text-center text-[16px] md:text-[18px] leading-[1.6] font-normal text-[#020617] max-w-[600px] mx-auto mb-12">
           You're not alone. These are the struggles every candidate
           faces before their interview
         </p>
@@ -40,20 +39,17 @@ export default function WhyQualified() {
               key={index}
               className="border border-[#E7E7E7] rounded-[28px] p-8 shadow-sm bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
             >
-              {/* ICON */}
               <img
                 src={item.icon}
                 alt={item.title}
-                className="w-[36px] h-[36px] mb-6"
+                className="w-[40px] h-[40px] mb-6"
               />
-
-              {/* TITLE — FIX: dari text-[28px] → text-[18px] md:text-[20px] */}
-              <h3 className="text-[16px] md:text-[18px] leading-[1.3] font-bold text-[#020617] mb-3">
+              {/* TITLE — text-[18px] md:text-[20px] */}
+              <h3 className="text-[18px] md:text-[20px] leading-[1.3] font-bold text-[#020617] mb-3">
                 {item.title}
               </h3>
-
-              {/* DESC — FIX: dari text-[18px] → text-[14px] md:text-[15px] */}
-              <p className="text-[13px] md:text-[14px] leading-[1.6] font-normal text-[#020617]">
+              {/* DESC — text-[14px] md:text-[16px] */}
+              <p className="text-[14px] md:text-[16px] leading-[1.6] font-normal text-[#020617]">
                 {item.desc}
               </p>
             </div>

@@ -19,11 +19,12 @@ export default function TrustedBy() {
   ];
 
   return (
-    <section className="pt-8 pb-24 bg-white overflow-hidden">
+    /* FIX: spacing seragam py-[54px], hapus pb-24 yang kegedean */
+    <section className="py-[54px] bg-white overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6">
 
-        {/* TEXT */}
-        <p className="text-center text-[#8A8A8A] text-[34px] font-bold mb-10 leading-normal">
+        {/* FIX: font size dari text-[34px] → text-[16px] md:text-[18px] */}
+        <p className="text-center text-[#8A8A8A] text-[16px] md:text-[18px] font-semibold mb-8 leading-normal">
           Trusted by 15.000+ University Student in Indonesia
         </p>
 
@@ -40,27 +41,19 @@ export default function TrustedBy() {
           }}
           allowTouchMove={false}
           breakpoints={{
-            320: {
-              slidesPerView: 2,
-            },
-            640: {
-              slidesPerView: 3,
-            },
-            768: {
-              slidesPerView: 4,
-            },
-            1024: {
-              slidesPerView: 6,
-            },
+            320: { slidesPerView: 2 },
+            640: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 6 },
           }}
         >
           {logos.map((logo, index) => (
             <SwiperSlide key={index}>
-              <div className="flex items-center justify-center h-[110px]">
+              <div className="flex items-center justify-center h-[80px]">
                 <img
                   src={logo}
                   alt="University Logo"
-                  className="h-[82px] object-contain transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]"
+                  className="h-[60px] object-contain transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)]"
                 />
               </div>
             </SwiperSlide>

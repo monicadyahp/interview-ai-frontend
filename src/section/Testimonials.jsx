@@ -1,30 +1,25 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
-
 import TestimonialCard from "../components/TestimonialCard";
 import { testimonialData } from "../data/data";
-
 import { Autoplay } from "swiper/modules";
 
 export default function Testimonials() {
   return (
-    /* FIX: spacing seragam py-[54px] px-6 */
     <section className="w-full px-6 py-[54px]">
       <div className="max-w-7xl mx-auto bg-[#F6ECF7] rounded-[32px] px-5 py-14 md:px-10 md:py-16">
-        {/* Heading */}
         <div className="text-center mb-14">
-          <h1 className="text-[24px] md:text-[32px] font-extrabold text-black">
+          {/* FIX: text-[28px] md:text-[36px] */}
+          <h1 className="text-[28px] md:text-[36px] font-extrabold text-black">
             What candidates are saying
           </h1>
-
-          <p className="mt-3 text-[15px] md:text-[18px] text-[#222222]">
+          {/* FIX: text-[16px] md:text-[18px] */}
+          <p className="mt-3 text-[16px] md:text-[18px] text-[#222222]">
             Real feedback from real practice session
           </p>
         </div>
 
-        {/* Swiper */}
         <Swiper
           modules={[Autoplay]}
           spaceBetween={24}
@@ -35,10 +30,7 @@ export default function Testimonials() {
             768: { slidesPerView: 2 },
             1200: { slidesPerView: 3 },
           }}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
         >
           {testimonialData.map((item) => (
             <SwiperSlide key={item.id} className="!h-auto flex">
