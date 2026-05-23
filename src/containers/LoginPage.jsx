@@ -7,7 +7,9 @@ import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRegister, setIsRegister] = useState(true);
+  // FIX: Default ke false supaya halaman pertama kali dibuka = Sign In
+  // Kalau kamu mau default Sign Up, ganti ke true
+  const [isRegister, setIsRegister] = useState(false);
   const [passError, setPassError] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -35,7 +37,6 @@ const LoginPage = () => {
 
     if (isRegister && formData.password !== formData.confirmPassword) {
       setPassError(true);
-
       return Swal.fire({
         title: "Gagal",
         text: "Konfirmasi password tidak cocok!",
@@ -63,7 +64,6 @@ const LoginPage = () => {
         });
 
         setIsRegister(false);
-
         setFormData({
           username: "",
           email: "",
@@ -80,7 +80,6 @@ const LoginPage = () => {
         });
 
         setUser(res.data.user);
-
         localStorage.setItem("token", res.data.token);
 
         Swal.fire({
@@ -92,7 +91,6 @@ const LoginPage = () => {
         });
 
         const origin = location.state?.from || "/";
-
         navigate(origin);
       }
     } catch (err) {
@@ -106,50 +104,49 @@ const LoginPage = () => {
     }
   };
 
+  // Handle switch mode + reset form
+  const handleSwitchMode = () => {
+    setIsRegister(!isRegister);
+    setPassError(false);
+    setFormData({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-[#F7F7F7] flex flex-col">
+    <div className="min-h-screen bg-[#EDE8FF] flex flex-col">
       {/* CONTENT */}
       <div className="flex-1 flex flex-col items-center pt-[140px] pb-20 px-4">
         {/* CARD */}
         <div className="w-full max-w-[500px] bg-white border border-[#D9D9D9] rounded-[16px] px-8 py-10 shadow-sm">
-          {/* TITLE */}
+
+          {/* ============================
+              TITLE — beda teks Sign In vs Sign Up
+          ============================ */}
           <h1
-            className="
-              text-[32px]
-              font-bold
-              text-[#000000]
-              leading-tight
-            "
-            style={{
-              fontFamily: "Plus Jakarta Sans",
-              fontWeight: 700,
-            }}
+            className="text-[32px] font-bold text-[#000000] leading-tight"
+            style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 700 }}
           >
-            Welcome Back!
+            {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
           </h1>
 
+          {/* FIX #1: Subtitle beda antara Sign In dan Sign Up */}
           <p
-            className="
-              text-[16px]
-              text-[#000000]
-              mt-3
-              leading-relaxed
-            "
-            style={{
-              fontFamily: "Plus Jakarta Sans",
-              fontWeight: 500,
-            }}
+            className="text-[16px] text-[#000000] mt-3 leading-relaxed"
+            style={{ fontFamily: "Plus Jakarta Sans", fontWeight: 500 }}
           >
-            Sign in to continue reducing food waste and making a positive
-            impact today.
+            {isRegister
+              ? "Join us to unlock deeper, AI-powered insights from your interviews."
+              : "Sign in to access your interview insights and analytics."}
           </p>
 
           {/* FORM */}
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 flex flex-col gap-5"
-          >
-            {/* FULL NAME */}
+          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5">
+
+            {/* FULL NAME — hanya muncul di Sign Up */}
             {isRegister && (
               <div>
                 <label
@@ -157,33 +154,20 @@ const LoginPage = () => {
                   style={{
                     fontFamily: "Plus Jakarta Sans",
                     fontWeight: 700,
-                    fontSize: "20px",
+                    fontSize: "16px",
                   }}
                 >
                   Full Name
                 </label>
-
                 <input
                   type="text"
                   name="username"
-                  placeholder="Enter your full name"
+                  placeholder="e.g. Justin Bieber"
                   required
                   onChange={handleChange}
                   value={formData.username}
-                  className="
-                    w-full
-                    h-[52px]
-                    border
-                    border-[#D9D9D9]
-                    rounded-[10px]
-                    px-4
-                    outline-none
-                    focus:border-[#8039FF]
-                  "
-                  style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontSize: "14px",
-                  }}
+                  className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
+                  style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
                 />
               </div>
             )}
@@ -195,33 +179,20 @@ const LoginPage = () => {
                 style={{
                   fontFamily: "Plus Jakarta Sans",
                   fontWeight: 700,
-                  fontSize: "20px",
+                  fontSize: "16px",
                 }}
               >
                 Email Address
               </label>
-
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="name@company.com"
                 required
                 onChange={handleChange}
                 value={formData.email}
-                className="
-                  w-full
-                  h-[52px]
-                  border
-                  border-[#D9D9D9]
-                  rounded-[10px]
-                  px-4
-                  outline-none
-                  focus:border-[#8039FF]
-                "
-                style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontSize: "14px",
-                }}
+                className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
+                style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
               />
             </div>
 
@@ -232,41 +203,28 @@ const LoginPage = () => {
                 style={{
                   fontFamily: "Plus Jakarta Sans",
                   fontWeight: 700,
-                  fontSize: "20px",
+                  fontSize: "16px",
                 }}
               >
                 Password
               </label>
-
               <input
                 type="password"
                 name="password"
                 placeholder={
                   isRegister
-                    ? "Create a strong password"
-                    : "Enter your password"
+                    ? "min. 8 characters with a number"
+                    : "enter your password"
                 }
                 required
                 onChange={handleChange}
                 value={formData.password}
-                className="
-                  w-full
-                  h-[52px]
-                  border
-                  border-[#D9D9D9]
-                  rounded-[10px]
-                  px-4
-                  outline-none
-                  focus:border-[#8039FF]
-                "
-                style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontSize: "14px",
-                }}
+                className="w-full h-[52px] border border-[#D9D9D9] rounded-[10px] px-4 outline-none focus:border-[#8039FF]"
+                style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
               />
             </div>
 
-            {/* CONFIRM PASSWORD */}
+            {/* CONFIRM PASSWORD — hanya muncul di Sign Up */}
             {isRegister && (
               <div>
                 <label
@@ -274,12 +232,11 @@ const LoginPage = () => {
                   style={{
                     fontFamily: "Plus Jakarta Sans",
                     fontWeight: 700,
-                    fontSize: "20px",
+                    fontSize: "16px",
                   }}
                 >
                   Confirm Password
                 </label>
-
                 <input
                   type="password"
                   name="confirmPassword"
@@ -287,80 +244,78 @@ const LoginPage = () => {
                   required
                   onChange={(e) => {
                     handleChange(e);
-
-                    if (passError) {
-                      setPassError(false);
-                    }
+                    if (passError) setPassError(false);
                   }}
                   value={formData.confirmPassword}
-                  className={`
-                    w-full
-                    h-[52px]
-                    border
-                    rounded-[10px]
-                    px-4
-                    outline-none
-                    ${
-                      passError
-                        ? "border-red-500"
-                        : "border-[#D9D9D9] focus:border-[#8039FF]"
-                    }
-                  `}
-                  style={{
-                    fontFamily: "Plus Jakarta Sans",
-                    fontSize: "14px",
-                  }}
+                  className={`w-full h-[52px] border rounded-[10px] px-4 outline-none ${
+                    passError
+                      ? "border-red-500"
+                      : "border-[#D9D9D9] focus:border-[#8039FF]"
+                  }`}
+                  style={{ fontFamily: "Plus Jakarta Sans", fontSize: "14px" }}
                 />
               </div>
             )}
 
-            {/* FORGOT PASSWORD */}
-            <div
-              className="text-[#000000]"
-              style={{
-                fontFamily: "Plus Jakarta Sans",
-                fontWeight: 500,
-                fontSize: "16px",
-              }}
-            >
-              Forgot your password?
-            </div>
+            {/* FIX #2: FORGOT PASSWORD — abu-abu, hanya di Sign In, posisi setelah password */}
+            {!isRegister && (
+              <div className="flex justify-start -mt-2">
+                <span
+                  className="text-[#9CA3AF] cursor-pointer hover:text-[#8039FF] transition-colors"
+                  style={{
+                    fontFamily: "Plus Jakarta Sans",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                  }}
+                >
+                  Forgot your password?
+                </span>
+              </div>
+            )}
+
+            {/* TERMS CHECKBOX — hanya di Sign Up, sebelum tombol */}
+            {isRegister && (
+              <div className="flex items-start gap-2">
+                <input type="checkbox" className="mt-1 accent-[#8039FF]" required />
+                <p
+                  className="leading-relaxed text-[#666666]"
+                  style={{
+                    fontFamily: "Plus Jakarta Sans",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                  }}
+                >
+                  By signing up, you agree to our{" "}
+                  <span className="text-[#8039FF] cursor-pointer hover:underline">
+                    Terms of Service
+                  </span>{" "}
+                  and{" "}
+                  <span className="text-[#8039FF] cursor-pointer hover:underline">
+                    Privacy Policy
+                  </span>
+                  .
+                </p>
+              </div>
+            )}
 
             {/* BUTTON */}
             <button
               type="submit"
               disabled={isLoading}
-              className="
-                w-full
-                h-[56px]
-                rounded-full
-                text-white
-                bg-gradient-to-r
-                from-[#071097]
-                via-[#8039FF]
-                to-[#FE63C8]
-                hover:opacity-90
-                transition
-                mt-2
-              "
+              className="w-full h-[56px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{
                 fontFamily: "Plus Jakarta Sans",
                 fontWeight: 700,
-                fontSize: "24px",
+                fontSize: "20px",
               }}
             >
-              {isLoading
-                ? "Loading..."
-                : isRegister
-                ? "Sign Up"
-                : "Sign In"}
+              {isLoading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
             </button>
           </form>
 
           {/* DIVIDER */}
           <div className="flex items-center gap-3 my-8">
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
-
             <span
               className="text-[#999999]"
               style={{
@@ -369,54 +324,34 @@ const LoginPage = () => {
                 fontWeight: 500,
               }}
             >
-              Or sign up with
+              {/* FIX #3: Teks divider beda sesuai mode */}
+              {isRegister ? "Or sign up with" : "Or continue with"}
             </span>
-
             <div className="flex-1 h-[1px] bg-[#D9D9D9]" />
           </div>
 
-          {/* SOCIAL */}
+          {/* SOCIAL BUTTONS */}
           <div className="flex items-center justify-center gap-5">
-            {/* FACEBOOK */}
+
+            {/* FIX #3: FACEBOOK — background biru bulat seperti logo resmi FB */}
             <button
               type="button"
-              className="
-                w-[52px]
-                h-[52px]
-                rounded-full
-                border
-                border-[#E5E5E5]
-                flex
-                items-center
-                justify-center
-                hover:scale-105
-                transition
-                bg-white
-              "
+              className="w-[52px] h-[52px] rounded-full flex items-center justify-center hover:scale-105 transition overflow-hidden bg-[#1877F2]"
+              aria-label="Sign in with Facebook"
             >
               <img
                 src="/icons/facebook.png"
                 alt="facebook"
-                className="w-[24px] h-[24px] object-contain"
+                className="w-[28px] h-[28px] object-contain"
+                style={{ filter: "brightness(0) invert(1)" }} // bikin putih kalau PNG-nya berwarna
               />
             </button>
 
-            {/* GOOGLE */}
+            {/* GOOGLE — sudah benar, tetap dibungkus border */}
             <button
               type="button"
-              className="
-                w-[52px]
-                h-[52px]
-                rounded-full
-                border
-                border-[#E5E5E5]
-                flex
-                items-center
-                justify-center
-                hover:scale-105
-                transition
-                bg-white
-              "
+              className="w-[52px] h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
+              aria-label="Sign in with Google"
             >
               <img
                 src="/icons/google.png"
@@ -425,32 +360,21 @@ const LoginPage = () => {
               />
             </button>
 
-            {/* ICLOUD */}
+            {/* FIX #3: ICLOUD — diperbesar jadi 30px */}
             <button
               type="button"
-              className="
-                w-[52px]
-                h-[52px]
-                rounded-full
-                border
-                border-[#E5E5E5]
-                flex
-                items-center
-                justify-center
-                hover:scale-105
-                transition
-                bg-white
-              "
+              className="w-[52px] h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white"
+              aria-label="Sign in with iCloud"
             >
               <img
                 src="/icons/icloud.png"
                 alt="icloud"
-                className="w-[24px] h-[24px] object-contain"
+                className="w-[30px] h-[30px] object-contain"
               />
             </button>
           </div>
 
-          {/* SWITCH */}
+          {/* SWITCH MODE */}
           <div
             className="text-center mt-8 text-[#666666]"
             style={{
@@ -459,43 +383,15 @@ const LoginPage = () => {
               fontSize: "16px",
             }}
           >
-            {isRegister
-              ? "Already have an account?"
-              : "Don't have an account?"}
-
+            {isRegister ? "Already have an account?" : "New to Intersight?"}
             <span
-              onClick={() => setIsRegister(!isRegister)}
-              className="
-                ml-2
-                text-[#8039FF]
-                cursor-pointer
-              "
-              style={{
-                fontWeight: 700,
-              }}
+              onClick={handleSwitchMode}
+              className="ml-2 text-[#8039FF] cursor-pointer hover:underline"
+              style={{ fontWeight: 700 }}
             >
-              {isRegister ? "Sign In" : "Sign Up"}
+              {isRegister ? "Sign In" : "Create an account"}
             </span>
           </div>
-
-          {/* TERMS */}
-          {isRegister && (
-            <div className="flex items-start gap-2 mt-6">
-              <input type="checkbox" className="mt-1" />
-
-              <p
-                className="leading-relaxed text-[#666666]"
-                style={{
-                  fontFamily: "Plus Jakarta Sans",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                }}
-              >
-                By signing up, you agree to our Terms of Service and Privacy
-                Policy.
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
