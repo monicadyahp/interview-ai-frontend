@@ -2,12 +2,11 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 
-// Import semua halaman dari folder containers
 import LandingPage from '../containers/LandingPage';
 import LoginPage from '../containers/LoginPage';
 import InterviewRoom from '../containers/InterviewRoom';
 import HistoryPage from '../containers/HistoryPage';
-import Profile from '../containers/Profile'; // sesuaikan nama file aslinya
+import Profile from '../containers/ProfilePage'; 
 
 const AppRoutes = () => {
   return (
