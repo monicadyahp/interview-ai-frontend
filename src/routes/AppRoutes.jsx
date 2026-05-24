@@ -4,25 +4,32 @@ import ProtectedRoute from './ProtectedRoute';
 
 import LandingPage from '../containers/LandingPage';
 import LoginPage from '../containers/LoginPage';
+import Dashboard from '../containers/Dashboard';
 import InterviewRoom from '../containers/InterviewRoom';
 import HistoryPage from '../containers/HistoryPage';
-import Profile from '../containers/ProfilePage'; 
+import ProfilePage from '../containers/ProfilePage';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Halaman Utama / Landing Page */}
+      {/* Landing Page */}
       <Route path="/" element={<LandingPage />} />
 
-      {/* Halaman Sign In — default mode isRegister=false */}
+      {/* Auth */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<Navigate to="/login?mode=signup" replace />} />
 
-      {/* Halaman Sign Up — alias ke LoginPage, isRegister akan true otomatis
-          Catatan: karena LoginPage pakai internal state, kita redirect ke /login
-          tapi kamu bisa extend LoginPage untuk terima prop/query param jika diperlukan */}
-      <Route path="/signup" element={<Navigate to="/login" replace />} />
+      {/* Dashboard (Protected) */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Halaman Interview (Protected) */}
+      {/* Interview (Protected) */}
       <Route
         path="/interview"
         element={
@@ -32,7 +39,7 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Halaman Riwayat (Protected) */}
+      {/* History (Protected) */}
       <Route
         path="/history"
         element={
@@ -42,17 +49,17 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Halaman Profile (Protected) */}
+      {/* Profile / Setting (Protected) */}
       <Route
         path="/profile"
         element={
           <ProtectedRoute>
-            <Profile />
+            <ProfilePage />
           </ProtectedRoute>
         }
       />
 
-      {/* Halaman 404 */}
+      {/* 404 */}
       <Route
         path="*"
         element={
@@ -60,13 +67,13 @@ const AppRoutes = () => {
             <div className="text-center">
               <h2
                 className="text-[48px] font-bold text-[#8039FF]"
-                style={{ fontFamily: 'Plus Jakarta Sans' }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
                 404
               </h2>
               <p
                 className="text-[18px] text-[#666666] mt-2"
-                style={{ fontFamily: 'Plus Jakarta Sans' }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               >
                 Halaman tidak ditemukan
               </p>

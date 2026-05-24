@@ -71,7 +71,7 @@ const LoginPage = () => {
           showConfirmButton: false,
         });
         // FIX: setelah login langsung ke dashboard
-        navigate("/interview", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     } catch (err) {
       Swal.fire({
