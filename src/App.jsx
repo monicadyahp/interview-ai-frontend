@@ -4,7 +4,6 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import Header from "./components/Header";
 import AppRoutes from "./routes/AppRoutes";
 import ChatAssistant from "./components/ChatAssistant";
 import { Navbar } from "./layout/Navbar";
@@ -14,26 +13,39 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
   return null;
 };
 
+// Halaman yang TIDAK perlu Navbar & Footer landing page
+const AUTH_AND_APP_ROUTES = [
+  "/dashboard",
+  "/interview",
+  "/history",
+  "/profile",
+  "/login",
+];
+
 const AppContent = () => {
+  const { pathname } = useLocation();
+
+  // Sembunyikan Navbar & Footer di halaman app/auth
+  const hideLayout = AUTH_AND_APP_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
+
   return (
     <div className="App">
       <ScrollToTop />
 
       <main className="main">
-        <Navbar />
+        {!hideLayout && <Navbar />}
 
         <AppRoutes />
-        
-        <Footer />
+
+        {!hideLayout && <Footer />}
       </main>
 
       <ChatAssistant />
