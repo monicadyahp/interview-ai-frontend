@@ -407,12 +407,12 @@ const InterviewRoom = () => {
                     <p className="text-[14px] font-bold text-[#1E1E1E] mb-4">Interview Blueprint</p>
                     <div className="flex flex-col gap-3">
                       {[
-                        { icon: "📋", title: "15 Questions", sub: "Curated for your level" },
-                        { icon: "⭐", title: "STAR Method", sub: "AI Evaluation Strategy" },
-                        { icon: "🎭", title: "Emotional Analysis Enabled", sub: "Vibe & Confidence check" },
+                        { icon: "/icons/questions.png", title: "15 Questions", sub: "Curated for your level" },
+                        { icon: "/icons/star.png", title: "STAR Method", sub: "AI Evaluation Strategy" },
+                        { icon: "/icons/analysis.png", title: "Emotional Analysis Enabled", sub: "Vibe & Confidence check" },
                       ].map((item) => (
                         <div key={item.title} className="flex items-start gap-3">
-                          <span className="text-[18px]">{item.icon}</span>
+                          <img src={item.icon} alt={item.title} className="w-5 h-5 object-contain mt-0.5" />
                           <div>
                             <p className="text-[13px] font-bold text-[#1E1E1E]">{item.title}</p>
                             <p className="text-[12px] text-[#999]">{item.sub}</p>
@@ -427,13 +427,13 @@ const InterviewRoom = () => {
                     <p className="text-[14px] font-bold text-[#1E1E1E] mb-4">Tech Readiness</p>
                     <div className="flex flex-col gap-3">
                       {[
-                        { icon: <Mic size={15} />, label: "Microphone Access" },
-                        { icon: <Camera size={15} />, label: "Camera Access" },
-                        { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>, label: "Connection Access" },
+                        { icon: "/icons/techmicrophone.png", label: "Microphone Access" },
+                        { icon: "/icons/techcamera.png", label: "Camera Access" },
+                        { icon: "/icons/techconnection.png", label: "Connection Access" },
                       ].map((item) => (
                         <div key={item.label} className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-[#555]">
-                            {item.icon}
+                            <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" />
                             <span className="text-[13px]">{item.label}</span>
                           </div>
                           <span className="text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">READY</span>
@@ -586,7 +586,10 @@ const InterviewRoom = () => {
 
                   {/* Star Framework */}
                   <div className="bg-white rounded-[20px] border border-[#ECECEC] p-5">
-                    <p className="text-[14px] font-bold text-[#1E1E1E] mb-4">Star Framework</p>
+                    <div className="flex items-center gap-2 mb-4">
+                      <img src="/icons/star.png" alt="star" className="w-5 h-5 object-contain" />
+                      <p className="text-[14px] font-bold text-[#1E1E1E]">Star Framework</p>
+                    </div>
                     <div className="flex flex-col gap-2.5">
                       {[
                         { key: "S", desc: "Contextualize your current role" },
@@ -605,7 +608,10 @@ const InterviewRoom = () => {
                   {/* Questions & Recap */}
                   <div className="bg-white rounded-[20px] border border-[#ECECEC] p-5">
                     <div className="flex items-center justify-between mb-4">
-                      <p className="text-[14px] font-bold text-[#1E1E1E]">Questions & Response</p>
+                      <div className="flex items-center gap-2">
+                        <img src="/icons/questions.png" alt="questions" className="w-5 h-5 object-contain" />
+                        <p className="text-[14px] font-bold text-[#1E1E1E]">Questions & Response</p>
+                      </div>
                       <button onClick={() => setIsAddingQuestion(true)}
                         className="w-8 h-8 rounded-full bg-[#7B4DFF] text-white flex items-center justify-center">
                         <Plus size={14} />
