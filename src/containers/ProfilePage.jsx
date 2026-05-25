@@ -1,356 +1,344 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
-import { API_BASE_URL } from '../utils/constants';
-import Swal from 'sweetalert2';
-import { getHistory } from '../services/api';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import { API_BASE_URL } from "../utils/constants";
+import Swal from "sweetalert2";
 
-const ProfilePage = () => {
-    const { user, setUser } = useContext(AuthContext);
-    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
-    // Logika deteksi User Google: ID Google biasanya string angka yang sangat panjang
-    // Logika baru: Cek apakah ID hanya berisi angka (Google) dan panjangnya pas
-    const isGoogleUser = user?.isGoogle === true;
-    // Tambahkan state untuk loading halaman
-    const [pageLoading, setPageLoading] = React.useState(true);
-    const [totalSessions, setTotalSessions] = React.useState(0);
-    // Matikan loading setelah komponen selesai memuat data user
-    React.useEffect(() => {
-        const loadInitialData = async () => {
-            if (user) {
-                try {
-                    // Ambil riwayat untuk menghitung total sesi
-                    const historyData = await getHistory(user.id || user._id);
-                    setTotalSessions(historyData.length);
-                } catch (err) {
-                    console.error("Gagal mengambil statistik");
-                }
-                // Matikan loading setelah data siap
-                setTimeout(() => setPageLoading(false), 800);
-            }
+const SidebarItem = ({ imgSrc, label, active, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-3 px-4 h-[44px] rounded-[14px] text-[14px] font-semibold transition-all duration-200 ${
+      active
+        ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]"
+        : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"
+    }`}
+    style={{ fontFamily }}
+  >
+    <img src={imgSrc} alt={label} className="w-[18px] h-[18px] object-contain"
+      style={{ filter: active ? "brightness(0) invert(1)" : "none" }} />
+    {label}
+  </button>
+);
+
+const InputField = ({ label, placeholder, value, onChange, fullWidth = true }) => (
+  <div className={fullWidth ? "col-span-2" : ""}>
+    <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">{label}</label>
+    <input
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]"
+      style={{ fontFamily }}
+    />
+  </div>
+);
+
+const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+export default function ProfilePage() {
+  const { user, setUser, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // form state — pre-fill dari user
+  const [firstName, setFirstName] = useState(user?.username?.split(" ")[0] || "");
+  const [lastName, setLastName] = useState(user?.username?.split(" ").slice(1).join(" ") || "");
+  const [bio, setBio] = useState(user?.bio || "");
+  const [education, setEducation] = useState(user?.education || "");
+  const [currentPosition, setCurrentPosition] = useState(user?.targetJob || "");
+  const [industry, setIndustry] = useState(user?.industry || "");
+  const [country, setCountry] = useState(user?.country || "");
+  const [employmentLevel, setEmploymentLevel] = useState(user?.employmentLevel || "");
+  const [preferenceCompany, setPreferenceCompany] = useState(user?.preferenceCompany || "");
+  const [isSaving, setIsSaving] = useState(false);
+
+  if (!user) { navigate("/login"); return null; }
+
+  // ── photo handler ──────────────────────────────────
+  const resizeImage = (base64Str) =>
+    new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX = 400;
+        let { width, height } = img;
+        if (width > height) { if (width > MAX) { height *= MAX / width; width = MAX; } }
+        else { if (height > MAX) { width *= MAX / height; height = MAX; } }
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/png"));
+      };
+    });
+
+  const handleEditPhoto = async () => {
+    const { value: file } = await Swal.fire({
+      title: "Pilih Foto Profil",
+      input: "file",
+      inputAttributes: { accept: "image/*", "aria-label": "Pilih foto" },
+      imageUrl: user.profileImage || defaultImg,
+      imageWidth: 120, imageHeight: 120, imageAlt: "Preview",
+      confirmButtonText: "Upload", confirmButtonColor: "#7B4DFF",
+      showCancelButton: true,
+      didOpen: () => {
+        const img = Swal.getImage();
+        img.style.borderRadius = "50%";
+        img.style.objectFit = "cover";
+        const input = Swal.getInput();
+        input.onchange = () => {
+          const reader = new FileReader();
+          reader.onload = (e) => { img.src = e.target.result; };
+          if (input.files[0]) reader.readAsDataURL(input.files[0]);
         };
-        loadInitialData();
-    }, [user]);
-    // 1. Fungsi Update Data (Surgical Fix)
-    // Tambahkan parameter 'type' dengan default 'data'
-    const updateProfileData = async (formData, type = 'data') => {
-        const currentUser = user || JSON.parse(localStorage.getItem('user'));
-        const emailToConfirm = currentUser?.email;
-
-        if (!emailToConfirm) {
-            Swal.fire('Error', 'Email tidak ditemukan. Silakan login ulang.', 'error');
-            return;
-        }
-
-        // TAMPILKAN LOADING SEBELUM AXIOS JALAN
-        Swal.fire({
-            title: 'Loading',
-            text: type === 'photo' ? 'Sedang memperbarui foto profil...' : 'Sedang memperbarui profil...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading(); // Animasi loading bawaan SweetAlert2
-            }
-        });
-
-        try {
-            const dataToSend = { 
-                profileImage: user.profileImage, 
-                ...formData, 
-                email: user.email, 
-                username: formData.username || user.username || user.name
-            };
-            
-            const res = await axios.put(`${API_BASE_URL}/auth/profile/${user.id || user._id}`, dataToSend);
-            
-            setUser(res.data);
-            
-            // TAMPILKAN BERHASIL SESUAI JENIS UPDATE
-            Swal.fire({ 
-                icon: 'success', 
-                title: 'Berhasil!', 
-                text: type === 'photo' ? 'Foto profil telah diperbarui' : 'Profil sudah diperbarui',
-                timer: 2000, 
-                showConfirmButton: false 
-            });
-        } catch (err) {
-            console.error("Detail Error:", err.response?.data);
-            Swal.fire('Gagal', 'Terjadi kesalahan saat menyimpan.', 'error');
-        }
-    };
-
-    // --- FUNGSI OTOMATIS KOMPRES GAMBAR ---
-    // --- FUNGSI OTOMATIS KOMPRES GAMBAR (VERSI TRANSPARAN) ---
-    const resizeImage = (base64Str) => {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.src = base64Str;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 400; 
-                const MAX_HEIGHT = 400; 
-                let width = img.width;
-                let height = img.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                
-                // Bersihkan canvas agar benar-benar kosong/transparan sebelum digambar
-                ctx.clearRect(0, 0, width, height); 
-                ctx.drawImage(img, 0, 0, width, height);
-
-                // UBAH DARI 'image/jpeg' MENJADI 'image/png'
-                // PNG mendukung latar belakang transparan
-                resolve(canvas.toDataURL('image/png'));
-            };
-        });
-    };
-
-    // 2. Fungsi Pilih Foto dari Galeri + Auto Resize
-    const handleEditPhoto = async () => {
-        const { value: file } = await Swal.fire({
-            title: 'Pilih Foto Profil',
-            input: 'file',
-            inputAttributes: { 'accept': 'image/*', 'aria-label': 'Pilih foto' },
-            // Preview awal menggunakan foto profil saat ini
-            imageUrl: user.profileImage || defaultImg,
-            imageWidth: 120,
-            imageHeight: 120,
-            imageAlt: 'Preview Foto',
-            confirmButtonText: 'Upload',
-            confirmButtonColor: '#8C5EAD',
-            showCancelButton: true,
-            // --- LOGIKA PREVIEW OTOMATIS ---
-            didOpen: () => {
-                const img = Swal.getImage();
-                // Buat preview berbentuk lingkaran
-                img.style.borderRadius = '50%';
-                img.style.objectFit = 'cover';
-                img.style.border = '4px solid #F3EAFB';
-                // Tambahkan ini agar jika PNG transparan, dia tidak menumpuk dengan warna background Swal
-                img.style.background = 'transparent';
-
-                const input = Swal.getInput();
-                input.onchange = () => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        img.src = e.target.result; // Ganti gambar preview saat file dipilih
-                    };
-                    if (input.files[0]) reader.readAsDataURL(input.files[0]);
-                };
-            }
-        });
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                // Kompres gambar otomatis agar ringan
-                const compressedBase64 = await resizeImage(e.target.result);
-                // Ubah baris pemanggilan di akhir handleEditPhoto menjadi:
-                updateProfileData({ profileImage: compressedBase64 }, 'photo');
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleResetPhoto = () => {
-        Swal.fire({
-            title: 'Hapus foto?',
-            text: "Foto akan kembali ke default",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Ya, Hapus'
-        }).then((result) => {
-            // Ubah baris pemanggilan di handleResetPhoto menjadi:
-            if (result.isConfirmed) updateProfileData({ profileImage: defaultImg }, 'photo');
-        });
-    };
-
-    const handleEditProfile = async () => {
-        const { value: formValues } = await Swal.fire({
-            title: 'Edit Profil',
-            html: `
-                <div style="text-align: left; display: flex; flex-direction: column; gap: 10px;">
-                    <label style="font-size: 0.8rem; font-weight: bold;">Nama Lengkap ${isGoogleUser ? '(Akun Google)' : ''}</label>
-                    <input id="swal-username" class="swal2-input" 
-                        style="margin:0; width: 100%; background: ${isGoogleUser ? '#f5f5f5' : '#fff'}; color: ${isGoogleUser ? '#888' : '#333'};" 
-                        value="${user.username || user.name || ''}" 
-                        ${isGoogleUser ? 'readonly' : ''}>
-                    ${isGoogleUser ? '<small style="color: #888; display: block; margin-top: 5px;">Nama akun Google tidak dapat diubah di sini.</small>' : ''}
-                    
-                    <label style="font-size: 0.8rem; font-weight: bold;">Link LinkedIn</label>
-                    <input id="swal-linkedin" class="swal2-input" style="margin:0; width: 100%;" 
-                        placeholder="https://linkedin.com/in/username" value="${user.linkedinUrl || ''}">
-
-                    <label style="font-size: 0.8rem; font-weight: bold;">Target Pekerjaan</label>
-                    <input id="swal-job" class="swal2-input" style="margin:0; width: 100%;" placeholder="Contoh: Web Developer" value="${user.targetJob || ''}">
-                    
-                    <div style="display: flex; gap: 10px;">
-                        <div style="flex: 1;">
-                            <label style="font-size: 0.8rem; font-weight: bold;">Umur</label>
-                            <input id="swal-age" type="number" class="swal2-input" style="margin:0; width: 100%;" value="${user.age || ''}">
-                        </div>
-                        <div style="flex: 2;">
-                            <label style="font-size: 0.8rem; font-weight: bold;">Pendidikan</label>
-                            <input id="swal-edu" class="swal2-input" style="margin:0; width: 100%;" value="${user.education || ''}">
-                        </div>
-                    </div>
-
-                    <label style="font-size: 0.8rem; font-weight: bold;">Bio Singkat</label>
-                    <textarea id="swal-bio" class="swal2-textarea" style="margin:0; width: 100%; height: 80px;" placeholder="Ceritakan sedikit tentang dirimu...">${user.bio || ''}</textarea>
-                </div>
-            `,
-            focusConfirm: false,
-            confirmButtonText: 'Simpan Profil',
-            confirmButtonColor: '#8C5EAD',
-            showCancelButton: true,
-            preConfirm: () => ({
-                username: document.getElementById('swal-username').value,
-                linkedinUrl: document.getElementById('swal-linkedin').value,
-                targetJob: document.getElementById('swal-job').value,
-                age: document.getElementById('swal-age').value,
-                education: document.getElementById('swal-edu').value,
-                bio: document.getElementById('swal-bio').value
-            })
-        });
-
-        if (formValues) updateProfileData(formValues, 'data');
-    };
-
-    // Ganti bagian if (!user) return null; menjadi ini:
-    if (pageLoading) {
-        return (
-            <div style={{ 
-                height: '90vh', display: 'flex', flexDirection: 'column', 
-                alignItems: 'center', justifyContent: 'center', gap: '1rem' 
-            }}>
-                <div className="spinner"></div> {/* Pakai class spinner yang sudah ada di CSS-mu */}
-                <p style={{ color: '#8C5EAD', fontWeight: '600' }}>Memuat Profil...</p>
-            </div>
-        );
+      },
+    });
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const compressed = await resizeImage(e.target.result);
+        saveToAPI({ profileImage: compressed }, "photo");
+      };
+      reader.readAsDataURL(file);
     }
+  };
 
-    if (!user) return null;
+  const saveToAPI = async (data, type = "data") => {
+    setIsSaving(true);
+    try {
+      const payload = {
+        profileImage: user.profileImage,
+        ...data,
+        email: user.email,
+        username: data.username || user.username || user.name,
+      };
+      const res = await axios.put(`${API_BASE_URL}/auth/profile/${user.id || user._id}`, payload);
+      setUser(res.data);
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: type === "photo" ? "Foto profil diperbarui" : "Profil disimpan",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    return (
-        // KUNCI PERBAIKAN: Tambahkan flexDirection: 'column' agar elemen menumpuk ke bawah
-        // Ganti baris <section ... > menjadi:
-        <section className="section container" style={{ 
-            height: 'calc(100vh - 4.5rem)', // Pas sisa layar setelah header
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            padding: '1rem' // Biarkan flexbox yang mengatur posisi tengah
-        }}>
-            
-            {/* 1. KARTU PROFIL UTAMA */}
-            <div className="profile-card" style={{ 
-                background: '#FFF', width: '100%', maxWidth: '400px', padding: '1.5rem', 
-                borderRadius: '30px', boxShadow: '0 20px 60px rgba(140, 94, 173, 0.12)', 
-                textAlign: 'center', border: '1px solid #F3EAFB' 
-            }}>
-                {/* Avatar Section */}
-                {/* Cari bagian Avatar Section di dalam return */}
-                {/* Cari bagian Avatar Section di dalam return */}
-                <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1rem' }}>
-                    <img 
-                        src={user.profileImage || defaultImg} 
-                        alt="Profile" 
-                        style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #F3EAFB' }} 
-                    />
-                    
-                    {/* KUNCI: Hanya muncul jika BUKAN User Google */}
-                    {!isGoogleUser && (
-                        <>
-                            <button onClick={handleEditPhoto} title="Ganti Foto" style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#8C5EAD', color: '#FFF', border: '2px solid #FFF', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <i className='bx bxs-pencil' style={{ fontSize: '0.9rem' }}></i>
-                            </button>
-                            <button onClick={handleResetPhoto} title="Hapus Foto" style={{ position: 'absolute', bottom: '-5px', left: '-5px', background: '#FFEDED', color: '#FF4D4D', border: '2px solid #FFF', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <i className='bx bxs-trash' style={{ fontSize: '0.9rem' }}></i>
-                            </button>
-                        </>
-                    )}
+  const handleSaveChanges = () => {
+    saveToAPI({
+      username: `${firstName} ${lastName}`.trim(),
+      bio,
+      education,
+      targetJob: currentPosition,
+      industry,
+      country,
+      employmentLevel,
+      preferenceCompany,
+    });
+  };
+
+  return (
+    <div className="min-h-screen flex bg-[#F7F7FB]" style={{ fontFamily }}>
+
+      {/* SIDEBAR */}
+      <aside className="hidden lg:flex w-[220px] bg-white border-r border-[#ECECEC] px-5 py-7 flex-col justify-between shrink-0">
+        <div>
+          <div onClick={() => navigate("/")} className="flex items-center gap-2.5 cursor-pointer mb-8">
+            <img src="/logo/Icon_Insight.png" alt="logo" className="w-9 h-9" />
+            <h1 className="text-[22px] font-bold fontIntersight">Intersight</h1>
+          </div>
+          <p className="text-[10px] font-bold text-[#BBBBBB] tracking-widest mb-3 px-1">OVERVIEW</p>
+          <div className="flex flex-col gap-1.5">
+            <SidebarItem imgSrc="/icons/overviewdashboard.png" label="Dashboard" onClick={() => navigate("/dashboard")} />
+            <SidebarItem imgSrc="/icons/overviewinterview.png" label="Interview" onClick={() => navigate("/interview")} />
+            <SidebarItem imgSrc="/icons/overviewai.png" label="AI Assistant" onClick={() => navigate("/chatbot")} />
+          </div>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-[#BBBBBB] tracking-widest mb-3 px-1">SETTINGS</p>
+          <div className="flex flex-col gap-1.5">
+            <SidebarItem imgSrc="/icons/setting.png" label="Setting" active onClick={() => navigate("/profile")} />
+            <SidebarItem imgSrc="/icons/logout.png" label="Log Out" onClick={logout} />
+          </div>
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <main className="flex-1 flex flex-col min-w-0">
+
+        {/* Top Bar */}
+        <div className="bg-white border-b border-[#ECECEC] px-6 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2 w-[320px]">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" placeholder="Find past interviews, resources, or tips..."
+              className="bg-transparent outline-none text-[13px] text-[#999] w-full" />
+          </div>
+          <div className="flex items-center gap-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[12px] font-bold">
+                {user?.username?.[0]?.toUpperCase() || "A"}
+              </div>
+              <span className="text-[14px] font-semibold text-[#1E1E1E]">{user?.username?.split(" ")[0] || "Angel"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 px-6 py-6 overflow-auto">
+
+          {/* Page title */}
+          <h1 className="text-[22px] font-bold text-[#1E1E1E] mb-1">Account Settings</h1>
+          <p className="text-[13px] text-[#999] mb-6">Manage your profile information and account preferences.</p>
+
+          {/* Card */}
+          <div className="bg-white rounded-[20px] border border-[#E5E5E5] p-6 max-w-[700px]">
+
+            {/* Section header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-[16px] font-bold text-[#1E1E1E]">Personal Profile</h2>
+              <button
+                onClick={handleEditPhoto}
+                className="px-4 py-2 rounded-[10px] border border-[#7B4DFF] text-[#7B4DFF] text-[13px] font-semibold hover:bg-[#7B4DFF] hover:text-white transition"
+              >
+                Edit Profile
+              </button>
+            </div>
+
+            {/* Photo */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="relative">
+                <img
+                  src={user.profileImage || defaultImg}
+                  alt="Profile"
+                  className="w-[80px] h-[80px] rounded-full object-cover border-2 border-[#E5E5E5]"
+                />
+              </div>
+              <div>
+                <p className="text-[14px] font-semibold text-[#1E1E1E]">Photo Profile</p>
+                <p className="text-[12px] text-[#999]">*upload your png or jpg up to 25 mb</p>
+              </div>
+            </div>
+
+            {/* Form fields */}
+            <div className="grid grid-cols-2 gap-4">
+
+              {/* First Name + Last Name */}
+              <div>
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">First Name</label>
+                <input type="text" placeholder="Enter Your Name" value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+              <div>
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Last Name</label>
+                <input type="text" placeholder="Enter Your Name" value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Bio */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Bio</label>
+                <input type="text" placeholder="Enter Your Name" value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Education */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Education</label>
+                <input type="text" placeholder="Enter Your Name" value={education}
+                  onChange={(e) => setEducation(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Current Position */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Current Position</label>
+                <input type="text" placeholder="Enter Your Name" value={currentPosition}
+                  onChange={(e) => setCurrentPosition(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Industry */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Industry</label>
+                <input type="text" placeholder="Enter Your Name" value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Country / Region */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-1.5">Country / Region</label>
+                <input type="text" placeholder="Enter Your Name" value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] text-[#444] outline-none focus:border-[#7B4DFF] bg-[#FAFAFA]" />
+              </div>
+
+              {/* Employment Level */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-2">Employment Level</label>
+                <div className="flex gap-2 flex-wrap">
+                  {["Internship", "Full-Time", "Part-Time", "Freelance"].map((lvl) => (
+                    <button key={lvl} onClick={() => setEmploymentLevel(lvl)}
+                      className={`px-4 py-2 rounded-full text-[12px] font-semibold border transition ${
+                        employmentLevel === lvl
+                          ? "bg-[#7B4DFF] text-white border-[#7B4DFF]"
+                          : "bg-white text-[#666] border-[#E5E5E5] hover:border-[#7B4DFF]"
+                      }`}>
+                      {lvl}
+                    </button>
+                  ))}
                 </div>
-                
-                <h2 style={{ fontSize: '1.5rem', color: '#1F1F1F', margin: 0 }}>
-                    {user.username || user.name || "User Baru"}
-                </h2>
-                <p style={{ color: '#8C5EAD', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '0.5rem', textTransform: 'uppercase' }}>{user.targetJob || "Professional Candidate"}</p>
-                {/* --- TAMBAHKAN LOGIKA IKON LINKEDIN DI SINI --- */}
-                {user.linkedinUrl && (
-                    <a href={user.linkedinUrl} target="_blank" rel="noopener noreferrer" 
-                    style={{ color: '#0077B5', fontSize: '1.5rem', display: 'inline-block', marginBottom: '0.5rem', transition: '0.3s' }}>
-                        <i className='bx bxl-linkedin-square'></i>
-                    </a>
-                )}
-                <p style={{ color: '#888', fontSize: '0.8rem', marginBottom: '1.5rem', fontStyle: 'italic' }}>"{user.bio || "Belum Mengisi Biodata"}"</p>
+              </div>
 
-                {/* Info Grid - Bagian yang diperbaiki agar Pendidikan di pojok kanan */}
-                <div style={{ textAlign: 'left', background: '#FDFBFF', padding: '1.2rem', borderRadius: '20px', border: '1px solid #F3EAFB' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                        <span style={{ color: '#AAA', fontSize: '0.75rem', fontWeight: '700' }}>UMUR</span>
-                        <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>{user.age ? `${user.age} Thn` : '-'}</span>
-                    </div>
-                    
-                    {/* Perbaikan: Ganti flexDirection: 'column' menjadi justifyContent: 'space-between' */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '15px' }}>
-                        <span style={{ color: '#AAA', fontSize: '0.75rem', fontWeight: '700', whiteSpace: 'nowrap' }}>PENDIDIKAN</span>
-                        <span style={{ fontWeight: '600', fontSize: '0.85rem', textAlign: 'right' }}>{user.education || "Belum diisi"}</span>
-                    </div>
+              {/* Preferences Company */}
+              <div className="col-span-2">
+                <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-2">Preferences Company</label>
+                <div className="flex gap-2 flex-wrap">
+                  {["Startup", "Corporate", "Agency", "Tech Company"].map((type) => (
+                    <button key={type} onClick={() => setPreferenceCompany(type)}
+                      className={`px-4 py-2 rounded-full text-[12px] font-semibold border transition ${
+                        preferenceCompany === type
+                          ? "bg-[#7B4DFF] text-white border-[#7B4DFF]"
+                          : "bg-white text-[#666] border-[#E5E5E5] hover:border-[#7B4DFF]"
+                      }`}>
+                      {type}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <button onClick={handleEditProfile} className="button" style={{ marginTop: '1.5rem', width: '100%', borderRadius: '15px', padding: '12px' }}>
-                    Edit Profil <i className='bx bx-right-arrow-alt'></i>
+              {/* Save Button */}
+              <div className="col-span-2 mt-2">
+                <button
+                  onClick={handleSaveChanges}
+                  disabled={isSaving}
+                  className="w-full h-[48px] rounded-full text-white font-bold text-[15px] transition hover:opacity-90 disabled:opacity-60"
+                  style={{ background: "linear-gradient(90deg, #C084FC, #E879F9, #FB923C)" }}
+                >
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </button>
+              </div>
             </div>
-
-            {/* 2. BAGIAN STATISTIK RINGKAS (TIDAK LAGI KE SAMPING) */}
-            <div style={{ 
-                marginTop: '1rem', display: 'flex', gap: '1rem', 
-                justifyContent: 'center', width: '100%', maxWidth: '400px' 
-            }}>
-                <div style={{ 
-                    background: '#FFF', flex: 1, padding: '1.2rem', borderRadius: '25px', 
-                    textAlign: 'center', border: '1px solid #F3EAFB',
-                    boxShadow: '0 10px 30px rgba(140, 94, 173, 0.08)'
-                }}>
-                    <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: '800', color: '#8C5EAD' }}>
-                        {totalSessions}
-                    </span>
-                    <span style={{ fontSize: '0.65rem', color: '#AAA', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        Total Sesi
-                    </span>
-                </div>
-
-                <div style={{ 
-                    background: '#FFF', flex: 1, padding: '1.2rem', borderRadius: '25px', 
-                    textAlign: 'center', border: '1px solid #F3EAFB',
-                    boxShadow: '0 10px 30px rgba(140, 94, 173, 0.08)'
-                }}>
-                    <span style={{ display: 'block', fontSize: '1.8rem', fontWeight: '800', color: '#8C5EAD' }}>
-                        {totalSessions > 5 ? 'Pro' : totalSessions > 0 ? 'Ready' : 'Newbie'}
-                    </span>
-                    <span style={{ fontSize: '0.65rem', color: '#AAA', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        Level
-                    </span>
-                </div>
-            </div>
-        </section>
-    );
-};
-
-export default ProfilePage;
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
