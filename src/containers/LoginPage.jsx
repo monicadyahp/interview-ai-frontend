@@ -60,37 +60,41 @@ const LoginPage = () => {
   const inputClass = `w-full h-[44px] border border-[#D9D9D9] rounded-[8px] px-4 outline-none focus:border-[#8039FF] text-[14px] text-[#444444] placeholder:text-[#BBBBBB]`;
 
   return (
-    <div className="min-h-screen flex" style={{ background: "#EDE8FF", fontFamily }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-10" style={{ background: "#EDE8FF", fontFamily }}>
 
-      {/* LEFT — image panel */}
-      <div className="hidden md:block md:w-[45%] lg:w-[50%] relative overflow-hidden rounded-r-[32px]">
-        <img
-          src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
-          alt={isRegister ? "Sign Up" : "Sign In"}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/10" />
-      </div>
+      {/* CARD — gambar kiri + form kanan dalam 1 kotak putih */}
+      <div
+        className="w-full bg-white rounded-[20px] shadow-sm border border-[#E5E5E5] flex overflow-hidden"
+        style={{ maxWidth: "860px", minHeight: "560px" }}
+      >
+        {/* LEFT — image */}
+        <div className="hidden md:block w-[42%] relative flex-shrink-0">
+          <img
+            src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
+            alt={isRegister ? "Sign Up" : "Sign In"}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
 
-      {/* RIGHT — form panel */}
-      <div className="flex-1 flex flex-col items-center justify-center py-10 px-6">
-        <div className="w-full bg-white border border-[#E5E5E5] rounded-[16px] px-8 py-10 shadow-sm" style={{ maxWidth: "460px" }}>
+        {/* RIGHT — form */}
+        <div className="flex-1 px-8 py-10 overflow-y-auto">
 
           {/* TITLE */}
-          <h1 style={{ fontFamily, fontWeight: 700, fontSize: "24px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
+          <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
             {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
           </h1>
 
           {/* SUBTITLE */}
-          <p style={{ fontFamily, fontWeight: 400, fontSize: "13px", color: "#444444", marginBottom: "24px", lineHeight: 1.5 }}>
+          <p style={{ fontFamily, fontWeight: 400, fontSize: "13px", color: "#444444", marginBottom: "20px", lineHeight: 1.5 }}>
             {isRegister
               ? "Join us to unlock deeper, AI-powered insights from your interviews."
               : "Sign in to access your interview insights and analytics."}
           </p>
 
           {/* FORM */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
 
+            {/* Full Name — Sign Up only */}
             {isRegister && (
               <div className="flex flex-col gap-1.5">
                 <label style={labelStyle}>Full Name</label>
@@ -99,12 +103,14 @@ const LoginPage = () => {
               </div>
             )}
 
+            {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label style={labelStyle}>Email Address</label>
               <input type="email" name="email" placeholder="name@company.com" required
                 onChange={handleChange} value={formData.email} className={inputClass} style={{ fontFamily }} />
             </div>
 
+            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label style={labelStyle}>Password</label>
               <input type="password" name="password"
@@ -112,6 +118,7 @@ const LoginPage = () => {
                 required onChange={handleChange} value={formData.password} className={inputClass} style={{ fontFamily }} />
             </div>
 
+            {/* Confirm Password — Sign Up only */}
             {isRegister && (
               <div className="flex flex-col gap-1.5">
                 <label style={labelStyle}>Confirm Password</label>
@@ -122,6 +129,7 @@ const LoginPage = () => {
               </div>
             )}
 
+            {/* Forgot Password — Sign In only */}
             {!isRegister && (
               <div style={{ marginTop: "-4px" }}>
                 <span className="cursor-pointer hover:text-[#8039FF] transition-colors"
@@ -131,6 +139,7 @@ const LoginPage = () => {
               </div>
             )}
 
+            {/* Terms — Sign Up only */}
             {isRegister && (
               <div className="flex items-start gap-2">
                 <input type="checkbox" className="mt-0.5 accent-[#8039FF]" required />
@@ -143,15 +152,16 @@ const LoginPage = () => {
               </div>
             )}
 
+            {/* Submit Button */}
             <button type="submit" disabled={isLoading}
-              className="w-full h-[48px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full h-[48px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ fontFamily, fontWeight: 700, fontSize: "18px" }}>
               {isLoading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
             </button>
           </form>
 
           {/* DIVIDER */}
-          <div className="flex items-center gap-3 my-6">
+          <div className="flex items-center gap-3 my-5">
             <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
             <span style={{ fontFamily, fontSize: "12px", fontWeight: 500, color: "#999999" }}>
               {isRegister ? "Or sign up with" : "Or continue with"}
@@ -163,7 +173,7 @@ const LoginPage = () => {
           {isRegister && (
             <p className="text-center mb-4" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
               Already have an account?{" "}
-              <span onClick={handleSwitchMode} className="ml-1 text-[#8039FF] cursor-pointer hover:underline font-bold">
+              <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
                 Sign In
               </span>
             </p>
@@ -188,9 +198,9 @@ const LoginPage = () => {
 
           {/* New to Intersight — Sign In */}
           {!isRegister && (
-            <p className="text-center mt-6" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
+            <p className="text-center mt-5" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
               New to Intersight?{" "}
-              <span onClick={handleSwitchMode} className="ml-1 text-[#8039FF] cursor-pointer hover:underline font-bold">
+              <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
                 Create an account
               </span>
             </p>
