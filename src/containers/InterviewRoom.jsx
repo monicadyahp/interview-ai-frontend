@@ -12,14 +12,14 @@ const fontFamily = "'Plus Jakarta Sans', sans-serif";
 const SidebarItem = ({ imgSrc, label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-4 h-[44px] rounded-[14px] text-[14px] font-semibold transition-all duration-200 ${
+    className={`w-full flex items-center gap-3 px-4 h-[46px] rounded-[14px] text-[15px] font-semibold transition-all duration-200 ${
       active
         ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]"
         : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"
     }`}
     style={{ fontFamily }}
   >
-    <img src={imgSrc} alt={label} className="w-[18px] h-[18px] object-contain"
+    <img src={imgSrc} alt={label} className="w-[20px] h-[20px] object-contain"
       style={{ filter: active ? "brightness(0) invert(1)" : "none" }} />
     {label}
   </button>
@@ -165,7 +165,8 @@ const InterviewRoom = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    if (status === "RESULT" && user) saveFinalResultToDB(); // eslint-disable-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (status === "RESULT" && user) saveFinalResultToDB();
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -232,7 +233,7 @@ const InterviewRoom = () => {
       <main className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
         <div className="bg-white border-b border-[#ECECEC] px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2 w-[320px]">
+          <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2 w-[480px]">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
@@ -279,7 +280,7 @@ const InterviewRoom = () => {
                   </div>
 
                   {/* Webcam */}
-                  <div className="relative rounded-[20px] overflow-hidden bg-black h-[280px] md:h-[340px]">
+                  <div className="relative rounded-[20px] overflow-hidden bg-black h-[360px] md:h-[440px]">
                     <WebcamOverlay webcamRef={webcamRef} />
                   </div>
 
@@ -287,13 +288,13 @@ const InterviewRoom = () => {
                   <div className="bg-white rounded-[20px] border border-[#ECECEC] p-6">
                     <p className="text-[11px] font-bold text-[#999] tracking-widest mb-4">SET YOUR MISSION</p>
                     <div className="mb-4">
-                      <label className="text-[14px] font-bold text-[#1E1E1E] mb-2 block">Position Applied</label>
+                      <label className="text-[15px] font-bold text-[#1E1E1E] mb-2 block">Position Applied</label>
                       <input type="text" placeholder="Type your position applied" value={positionApplied}
                         onChange={(e) => setPositionApplied(e.target.value)}
                         className="w-full h-[44px] border border-[#E5E5E5] rounded-[12px] px-4 text-[13px] outline-none focus:border-[#7B4DFF]" />
                     </div>
                     <div className="mb-4">
-                      <label className="text-[14px] font-bold text-[#1E1E1E] mb-2 block">Employment Level</label>
+                      <label className="text-[15px] font-bold text-[#1E1E1E] mb-2 block">Employment Level</label>
                       <div className="flex gap-2 flex-wrap">
                         {["Internship","Full-Time","Part-Time","Freelance"].map((lvl) => (
                           <button key={lvl} onClick={() => setEmploymentLevel(lvl)}
@@ -304,7 +305,7 @@ const InterviewRoom = () => {
                       </div>
                     </div>
                     <div className="mb-4">
-                      <label className="text-[14px] font-bold text-[#1E1E1E] mb-2 block">Company Type Context</label>
+                      <label className="text-[15px] font-bold text-[#1E1E1E] mb-2 block">Company Type Context</label>
                       <div className="flex gap-2 flex-wrap">
                         {["Startup","Corporate","Agency","Tech Company"].map((type) => (
                           <button key={type} onClick={() => setCompanyType(type)}
@@ -315,7 +316,7 @@ const InterviewRoom = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[14px] font-bold text-[#1E1E1E] mb-2 block">Simulation Level</label>
+                      <label className="text-[15px] font-bold text-[#1E1E1E] mb-2 block">Simulation Level</label>
                       <div className="flex gap-2">
                         {["Easy","Normal","Hard"].map((lvl) => (
                           <button key={lvl} onClick={() => setSimulationLevel(lvl)}
@@ -331,7 +332,7 @@ const InterviewRoom = () => {
                 {/* Right panel */}
                 <div className="flex flex-col gap-4">
                   <div className="bg-white rounded-[20px] border border-[#ECECEC] p-5">
-                    <p className="text-[14px] font-bold text-[#1E1E1E] mb-4">Interview Blueprint</p>
+                    <p className="text-[15px] font-bold text-[#1E1E1E] mb-4">Interview Blueprint</p>
                     <div className="flex flex-col gap-3">
                       {[
                         { icon: "/icons/questions.png", title: "15 Questions", sub: "Curated for your level" },
@@ -341,8 +342,8 @@ const InterviewRoom = () => {
                         <div key={item.title} className="flex items-start gap-3">
                           <img src={item.icon} alt={item.title} className="w-5 h-5 object-contain mt-0.5" />
                           <div>
-                            <p className="text-[13px] font-bold text-[#1E1E1E]">{item.title}</p>
-                            <p className="text-[12px] text-[#999]">{item.sub}</p>
+                            <p className="text-[14px] font-bold text-[#1E1E1E]">{item.title}</p>
+                            <p className="text-[13px] text-[#999]">{item.sub}</p>
                           </div>
                         </div>
                       ))}
@@ -350,7 +351,7 @@ const InterviewRoom = () => {
                   </div>
 
                   <div className="bg-white rounded-[20px] border border-[#ECECEC] p-5">
-                    <p className="text-[14px] font-bold text-[#1E1E1E] mb-4">Tech Readiness</p>
+                    <p className="text-[15px] font-bold text-[#1E1E1E] mb-4">Tech Readiness</p>
                     <div className="flex flex-col gap-3">
                       {[
                         { icon: "/icons/techmicrophone.png", label: "Microphone Access" },
@@ -360,7 +361,7 @@ const InterviewRoom = () => {
                         <div key={item.label} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" />
-                            <span className="text-[13px] text-[#555]">{item.label}</span>
+                            <span className="text-[14px] text-[#555]">{item.label}</span>
                           </div>
                           <span className="text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">READY</span>
                         </div>
@@ -410,7 +411,7 @@ const InterviewRoom = () => {
               <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-5">
                 <div className="flex flex-col gap-4">
                   {/* Video */}
-                  <div className="relative rounded-[20px] overflow-hidden bg-black h-[300px] md:h-[380px]">
+                  <div className="relative rounded-[20px] overflow-hidden bg-black h-[400px] md:h-[500px]">
                     {status === "RESULT" ? (
                       recordedVideoURL
                         ? <video controls playsInline className="w-full h-full object-cover scale-x-[-1]"><source src={recordedVideoURL} type="video/webm" /></video>
