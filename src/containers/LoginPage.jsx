@@ -60,19 +60,21 @@ const LoginPage = () => {
   const inputClass = `w-full h-[44px] border border-[#D9D9D9] rounded-[8px] px-4 outline-none focus:border-[#8039FF] text-[14px] text-[#444444] placeholder:text-[#BBBBBB]`;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10" style={{ background: "#EDE8FF", fontFamily }}>
+    /* FIX: padding top disesuaikan dengan navbar */
+    <div className="min-h-screen flex items-center justify-center px-4 py-10" style={{ background: "#F2EBFF", fontFamily }}>
 
       {/* CARD — gambar kiri + form kanan dalam 1 kotak putih */}
       <div
         className="w-full bg-white rounded-[20px] shadow-sm border border-[#E5E5E5] flex overflow-hidden"
-        style={{ maxWidth: "860px", minHeight: "560px" }}
+        style={{ maxWidth: "860px" }}
       >
-        {/* LEFT — image */}
-        <div className="hidden md:block w-[42%] relative flex-shrink-0">
+        {/* LEFT — image, FIX: no rounded, object-cover full fit */}
+        <div className="hidden md:block w-[42%] relative flex-shrink-0" style={{ minHeight: "560px" }}>
           <img
             src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
             alt={isRegister ? "Sign Up" : "Sign In"}
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ borderRadius: 0 }}
           />
         </div>
 
@@ -94,7 +96,6 @@ const LoginPage = () => {
           {/* FORM */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
 
-            {/* Full Name — Sign Up only */}
             {isRegister && (
               <div className="flex flex-col gap-1.5">
                 <label style={labelStyle}>Full Name</label>
@@ -103,14 +104,12 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label style={labelStyle}>Email Address</label>
               <input type="email" name="email" placeholder="name@company.com" required
                 onChange={handleChange} value={formData.email} className={inputClass} style={{ fontFamily }} />
             </div>
 
-            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label style={labelStyle}>Password</label>
               <input type="password" name="password"
@@ -118,7 +117,6 @@ const LoginPage = () => {
                 required onChange={handleChange} value={formData.password} className={inputClass} style={{ fontFamily }} />
             </div>
 
-            {/* Confirm Password — Sign Up only */}
             {isRegister && (
               <div className="flex flex-col gap-1.5">
                 <label style={labelStyle}>Confirm Password</label>
@@ -129,7 +127,6 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Forgot Password — Sign In only */}
             {!isRegister && (
               <div style={{ marginTop: "-4px" }}>
                 <span className="cursor-pointer hover:text-[#8039FF] transition-colors"
@@ -139,7 +136,6 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Terms — Sign Up only */}
             {isRegister && (
               <div className="flex items-start gap-2">
                 <input type="checkbox" className="mt-0.5 accent-[#8039FF]" required />
@@ -152,7 +148,6 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Submit Button */}
             <button type="submit" disabled={isLoading}
               className="w-full h-[48px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ fontFamily, fontWeight: 700, fontSize: "18px" }}>
@@ -181,15 +176,17 @@ const LoginPage = () => {
 
           {/* SOCIAL BUTTONS */}
           <div className="flex items-center justify-center gap-4">
+            {/* FIX: Facebook — hapus filter invert, icon sudah putih sendiri */}
             <button type="button" aria-label="Continue with Facebook"
-              className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition overflow-hidden bg-[#1877F2]">
-              <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain"
-                style={{ filter: "brightness(0) invert(1)" }} />
+              className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition bg-[#1877F2]">
+              <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain" />
             </button>
+
             <button type="button" aria-label="Continue with Google"
               className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
               <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
             </button>
+
             <button type="button" aria-label="Continue with iCloud"
               className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
               <img src="/icons/icloud.png" alt="iCloud" className="w-[36px] h-[36px] object-contain" />
