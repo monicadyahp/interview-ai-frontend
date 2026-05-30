@@ -24,13 +24,13 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center pt-30 md:pt-40 lg:pt-50 px-6 md:px-8 pb-0">
 
-        {/* FIX: heading 2 baris, abis titik dua langsung ke bawah */}
+        {/* FIX: heading 2 baris */}
         <h1
-          className="font-extrabold text-center text-black text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] leading-[1.15] max-w-[900px] mb-5 tracking-tight"
+          className="font-extrabold text-center text-black text-[26px] sm:text-[32px] md:text-[40px] lg:text-[46px] leading-[1.15] max-w-[900px] mb-5 tracking-tight"
           style={ff}
         >
-          Master the Art of the First Impression:<br />
-          Where AI Meets Career Readiness
+          <span className="block">Master the Art of the First Impression:</span>
+          <span className="block">Where AI Meets Career Readiness</span>
         </h1>
 
         <p
