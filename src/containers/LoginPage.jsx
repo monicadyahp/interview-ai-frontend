@@ -84,13 +84,12 @@ const LoginPage = () => {
             minHeight: "520px",
           }}
         >
-          {/* KIRI — foto */}
           <div
             className="hidden md:flex"
             style={{
               width: "42%",
               flexShrink: 0,
-              padding: "16px",          
+              padding: "16px",           
               alignItems: "stretch",
             }}
           >
@@ -108,7 +107,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* KANAN — form */}
           <div style={{ flex: 1, padding: "40px 32px", overflowY: "auto" }}>
 
             <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
