@@ -51,6 +51,9 @@ const InterviewRoom = () => {
   const [employmentLevel, setEmploymentLevel] = useState("");
   const [companyType, setCompanyType] = useState("");
   const [simulationLevel, setSimulationLevel] = useState("Normal");
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackScore, setFeedbackScore] = useState(null);
+  const [feedbackNote, setFeedbackNote] = useState("");
 
   const calculateStats = useCallback(() => {
     if (!emotionLogs.length) return [];
@@ -203,7 +206,7 @@ const InterviewRoom = () => {
         </div>
       )}
 
-      {/* SIDEBAR — fixed */}
+      {/* SIDEBAR */}
       <aside className="hidden lg:flex w-[240px] bg-white border-r border-[#ECECEC] px-5 py-7 flex-col justify-between shrink-0 fixed top-0 left-0 h-full z-10">
         <div>
           <div onClick={() => navigate("/")} className="flex items-center gap-2.5 cursor-pointer mb-8">
@@ -487,7 +490,7 @@ const InterviewRoom = () => {
                           <span className="text-[11px] text-[#999]" style={{ fontFamily }}>Mute</span>
                         </div>
                         <div className="flex flex-col items-center gap-1">
-                          <button onClick={() => { setStatus("RESULT"); stopRecording(); }}
+                          <button onClick={() => { stopRecording(); setShowFeedback(true); }}
                             className="w-11 h-11 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-500 hover:text-white transition group">
                             <div className="w-4 h-4 bg-red-400 group-hover:bg-white rounded-sm" />
                           </button>
@@ -632,8 +635,76 @@ const InterviewRoom = () => {
             </>
           )}
         </div>
+
+        {/* Footer */}
         <DashboardFooter />
       </main>
+      {/* ══ FEEDBACK MODAL ══ */}
+      {showFeedback && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-[24px] w-full max-w-[440px] p-8 shadow-2xl" style={{ fontFamily }}>
+            <h2 className="text-[20px] font-bold text-[#1E1E1E] text-center mb-1">
+              How do you feel after this simulation?
+            </h2>
+            <p className="text-[13px] text-[#999] text-center mb-6">
+              Your honest feedback help us calibrate your AI coach.
+            </p>
+
+            {/* Emoji rating */}
+            <div className="flex items-end justify-between mb-2 px-2">
+              {[1, 2, 3, 4, 5].map((score) => (
+                <button
+                  key={score}
+                  onClick={() => setFeedbackScore(score)}
+                  className="flex flex-col items-center gap-1 transition-transform hover:scale-110"
+                >
+                  <img
+                    src={`/icons/feedbackb${score}.png`}
+                    alt={`feedback ${score}`}
+                    className="w-[40px] h-[40px] object-contain transition-all duration-200"
+                    style={{ opacity: feedbackScore && feedbackScore !== score ? 0.4 : 1 }}
+                  />
+                </button>
+              ))}
+            </div>
+            {/* Label bawah emoji */}
+            <div className="flex justify-between px-2 mb-6">
+              <span className="text-[11px] text-[#999]">Not Excited</span>
+              <span className="text-[11px] text-[#999]">Very Excited</span>
+            </div>
+
+            {/* Notes */}
+            <label className="text-[13px] font-bold text-[#1E1E1E] block mb-2">
+              Improvement Notes <span className="font-normal text-[#999]">(Optional)</span>
+            </label>
+            <textarea
+              placeholder="What kindly reminder for yourself for improvement next interview ?"
+              value={feedbackNote}
+              onChange={(e) => setFeedbackNote(e.target.value)}
+              className="w-full h-[100px] rounded-[14px] border border-[#E5E5E5] p-4 text-[13px] text-[#444] outline-none resize-none focus:border-[#7B4DFF] mb-6"
+              style={{ fontFamily }}
+            />
+
+            {/* Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => { setShowFeedback(false); setStatus("RESULT"); }}
+                className="flex-1 h-[46px] rounded-full border border-[#E5E5E5] text-[#666] font-semibold text-[14px] hover:bg-[#F7F7FB] transition"
+                style={{ fontFamily }}
+              >
+                Skip for Now
+              </button>
+              <button
+                onClick={() => { setShowFeedback(false); setStatus("RESULT"); }}
+                className="flex-1 h-[46px] rounded-full text-white font-bold text-[14px] hover:opacity-90 transition"
+                style={{ background: "linear-gradient(90deg, #7B4DFF, #C026D3)", fontFamily }}
+              >
+                Save Reflection
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
