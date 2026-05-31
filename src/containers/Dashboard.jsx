@@ -193,14 +193,14 @@ export default function Dashboard() {
         <div className="flex-1 px-6 py-6 overflow-auto">
 
           {/* Greeting Card */}
-          <div className="relative w-full rounded-[24px] overflow-hidden mb-6" style={{ minHeight: "200px" }}>
+          <div className="relative w-full rounded-[24px] overflow-hidden mb-6">
             <img src="/hero/framedashboard.jpg" alt="dashboard hero"
-              className="absolute inset-0 w-full h-full object-cover object-center" />
+              className="w-full h-auto block" style={{ maxHeight: "320px", objectFit: "cover", objectPosition: "center top" }} />
             <div className="absolute inset-0 bg-black/45" />
-            <div className="relative z-10 px-8 py-10 max-w-[540px]">
-              <h2 className="text-white text-[26px] md:text-[30px] font-bold leading-[1.2] mb-3" style={{ fontFamily }}>
-                {getGreeting()} {user?.username?.split(" ")[0] || "Angel"}, Ready to Shine{" "}
-                in Your Next interview ?
+            <div className="absolute inset-0 flex flex-col justify-center px-8 py-10 max-w-[580px]">
+              <h2 className="text-white font-bold leading-[1.2] mb-3" style={{ fontFamily, fontSize: "clamp(22px, 3vw, 32px)" }}>
+                {getGreeting()} {user?.username?.split(" ")[0] || "Angel"}!<br />
+                Ready to Shine in Your Next interview?
               </h2>
               <p className="text-white/80 text-[14px] leading-relaxed" style={{ fontFamily }}>
                 {totalSessions > 0
@@ -294,7 +294,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
         <DashboardFooter />
       </main>
     </div>
