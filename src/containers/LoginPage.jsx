@@ -61,9 +61,15 @@ const LoginPage = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: "#F2EBFF", fontFamily, paddingTop: "120px", paddingBottom: "60px" }}
+      className="min-h-screen flex flex-col items-center justify-center px-4"
+      style={{
+        background: "#F2EBFF",
+        fontFamily,
+        paddingTop: "120px",
+        paddingBottom: "60px",
+      }}
     >
+      {/* ===== WHITE CARD ===== */}
       <div
         className="w-full bg-white flex overflow-hidden"
         style={{
@@ -71,23 +77,38 @@ const LoginPage = () => {
           borderRadius: "20px",
           boxShadow: "0 8px 40px rgba(128, 57, 255, 0.12)",
           border: "1px solid #E5E5E5",
+          minHeight: "520px",
         }}
       >
-        {/* LEFT — image */}
+        {/* LEFT — gambar */}
         <div
-          className="hidden md:block w-[42%] relative flex-shrink-0"
-          style={{ minHeight: "560px", borderRadius: "20px 0 0 20px", overflow: "hidden" }}
+          className="hidden md:block flex-shrink-0"
+          style={{
+            width: "42%",
+            borderRadius: "20px 0 0 20px",
+            overflow: "hidden",
+            position: "relative",
+          }}
         >
           <img
             src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
             alt={isRegister ? "Sign Up" : "Sign In"}
-            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+            }}
           />
         </div>
 
         {/* RIGHT — form */}
-        <div className="flex-1 px-8 py-10 overflow-y-auto">
-
+        <div
+          className="flex-1 overflow-y-auto"
+          style={{ padding: "40px 32px" }}
+        >
           <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
             {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
           </h1>
