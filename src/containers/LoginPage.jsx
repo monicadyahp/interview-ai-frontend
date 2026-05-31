@@ -61,24 +61,22 @@ const LoginPage = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
-      style={{ background: "#F2EBFF", fontFamily }}
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ background: "#F2EBFF", fontFamily, paddingTop: "120px", paddingBottom: "60px" }}
     >
-      <div style={{ height: "100px" }} />
-
       <div
-        className="w-full bg-white flex overflow-hidden flex-1"
+        className="w-full bg-white flex overflow-hidden"
         style={{
-          borderRadius: "0",
-          boxShadow: "none",
-          border: "none",
-          minHeight: "calc(100vh - 100px)",
+          maxWidth: "860px",
+          borderRadius: "20px",
+          boxShadow: "0 8px 40px rgba(128, 57, 255, 0.12)",
+          border: "1px solid #E5E5E5",
         }}
       >
         {/* LEFT — image */}
         <div
           className="hidden md:block w-[42%] relative flex-shrink-0"
-          style={{ minHeight: "560px", borderRadius: "0", overflow: "hidden" }}
+          style={{ minHeight: "560px", borderRadius: "20px 0 0 20px", overflow: "hidden" }}
         >
           <img
             src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
