@@ -19,6 +19,8 @@ const AUTH_AND_APP_ROUTES = [
   "/interview",
   "/history",
   "/profile",
+  "/chatbot",
+  "/learning",
 ];
 
 const AppContent = () => {
@@ -35,7 +37,7 @@ const AppContent = () => {
         <AppRoutes />
         {!hideLayout && <Footer />}
       </main>
-      <ChatAssistant />
+      {!hideLayout && <ChatAssistant />}
     </div>
   );
 };
