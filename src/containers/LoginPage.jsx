@@ -60,166 +60,169 @@ const LoginPage = () => {
   const inputClass = `w-full h-[44px] border border-[#D9D9D9] rounded-[8px] px-4 outline-none focus:border-[#8039FF] text-[14px] text-[#444444] placeholder:text-[#BBBBBB]`;
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center px-4"
-      style={{
-        background: "#F2EBFF",
-        fontFamily,
-        paddingTop: "120px",
-        paddingBottom: "60px",
-      }}
-    >
-      {/* ===== WHITE CARD ===== */}
+    <div style={{ background: "#FFFFFF", fontFamily }}>
+
       <div
-        className="w-full bg-white flex overflow-hidden"
         style={{
-          maxWidth: "860px",
-          borderRadius: "20px",
-          boxShadow: "0 8px 40px rgba(128, 57, 255, 0.12)",
-          border: "1px solid #E5E5E5",
-          minHeight: "520px",
+          background: "#F2EBFF",
+          paddingTop: "120px",   
+          paddingBottom: "60px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
         }}
       >
-        {/* LEFT — gambar */}
         <div
-          className="hidden md:block flex-shrink-0"
           style={{
-            width: "42%",
-            borderRadius: "20px 0 0 20px",
+            maxWidth: "860px",
+            margin: "0 auto",
+            background: "#FFFFFF",
+            borderRadius: "20px",
+            boxShadow: "0 8px 40px rgba(128, 57, 255, 0.12)",
+            border: "1px solid #E5E5E5",
+            display: "flex",
             overflow: "hidden",
-            position: "relative",
+            minHeight: "520px",
           }}
         >
-          <img
-            src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
-            alt={isRegister ? "Sign Up" : "Sign In"}
+          {/* KIRI — foto */}
+          <div
+            className="hidden md:flex"
             style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
+              width: "42%",
+              flexShrink: 0,
+              padding: "16px",          
+              alignItems: "stretch",
             }}
-          />
-        </div>
+          >
+            <img
+              src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
+              alt={isRegister ? "Sign Up" : "Sign In"}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center",
+                borderRadius: "12px",    
+                display: "block",
+              }}
+            />
+          </div>
 
-        {/* RIGHT — form */}
-        <div
-          className="flex-1 overflow-y-auto"
-          style={{ padding: "40px 32px" }}
-        >
-          <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
-            {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
-          </h1>
+          {/* KANAN — form */}
+          <div style={{ flex: 1, padding: "40px 32px", overflowY: "auto" }}>
 
-          <p style={{ fontFamily, fontWeight: 400, fontSize: "13px", color: "#444444", marginBottom: "20px", lineHeight: 1.5 }}>
-            {isRegister
-              ? "Join us to unlock deeper, AI-powered insights from your interviews."
-              : "Sign in to access your interview insights and analytics."}
-          </p>
+            <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
+              {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
+            </h1>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+            <p style={{ fontFamily, fontWeight: 400, fontSize: "13px", color: "#444444", marginBottom: "20px", lineHeight: 1.5 }}>
+              {isRegister
+                ? "Join us to unlock deeper, AI-powered insights from your interviews."
+                : "Sign in to access your interview insights and analytics."}
+            </p>
 
-            {isRegister && (
-              <div className="flex flex-col gap-1.5">
-                <label style={labelStyle}>Full Name</label>
-                <input type="text" name="username" placeholder="e.g. Justin Bieber" required
-                  onChange={handleChange} value={formData.username} className={inputClass} style={{ fontFamily }} />
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+
+              {isRegister && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <label style={labelStyle}>Full Name</label>
+                  <input type="text" name="username" placeholder="e.g. Justin Bieber" required
+                    onChange={handleChange} value={formData.username} className={inputClass} style={{ fontFamily }} />
+                </div>
+              )}
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <label style={labelStyle}>Email Address</label>
+                <input type="email" name="email" placeholder="name@company.com" required
+                  onChange={handleChange} value={formData.email} className={inputClass} style={{ fontFamily }} />
               </div>
-            )}
 
-            <div className="flex flex-col gap-1.5">
-              <label style={labelStyle}>Email Address</label>
-              <input type="email" name="email" placeholder="name@company.com" required
-                onChange={handleChange} value={formData.email} className={inputClass} style={{ fontFamily }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <label style={labelStyle}>Password</label>
+                <input type="password" name="password"
+                  placeholder={isRegister ? "min. 8 characters with a number" : "enter your password"}
+                  required onChange={handleChange} value={formData.password} className={inputClass} style={{ fontFamily }} />
+              </div>
+
+              {isRegister && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <label style={labelStyle}>Confirm Password</label>
+                  <input type="password" name="confirmPassword" placeholder="Re-enter your password" required
+                    onChange={(e) => { handleChange(e); if (passError) setPassError(false); }}
+                    value={formData.confirmPassword}
+                    className={`${inputClass} ${passError ? "!border-red-500" : ""}`} style={{ fontFamily }} />
+                </div>
+              )}
+
+              {!isRegister && (
+                <div style={{ marginTop: "-4px" }}>
+                  <span className="cursor-pointer hover:text-[#8039FF] transition-colors"
+                    style={{ fontFamily, fontSize: "13px", fontWeight: 400, color: "#9CA3AF" }}>
+                    Forgot your password?
+                  </span>
+                </div>
+              )}
+
+              {isRegister && (
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                  <input type="checkbox" className="mt-0.5 accent-[#8039FF]" required />
+                  <p style={{ fontFamily, fontSize: "11px", fontWeight: 400, color: "#666666", lineHeight: 1.5 }}>
+                    By signing up, you agree to our{" "}
+                    <span className="text-[#8039FF] cursor-pointer hover:underline">Terms of Service</span>{" "}
+                    and{" "}
+                    <span className="text-[#8039FF] cursor-pointer hover:underline">Privacy Policy</span>.
+                  </p>
+                </div>
+              )}
+
+              <button type="submit" disabled={isLoading}
+                className="w-full h-[48px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ fontFamily, fontWeight: 700, fontSize: "18px", marginTop: "4px" }}>
+                {isLoading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
+              </button>
+            </form>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "20px 0" }}>
+              <div style={{ flex: 1, height: "1px", background: "#E5E5E5" }} />
+              <span style={{ fontFamily, fontSize: "12px", fontWeight: 500, color: "#999999" }}>
+                {isRegister ? "Or sign up with" : "Or continue with"}
+              </span>
+              <div style={{ flex: 1, height: "1px", background: "#E5E5E5" }} />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label style={labelStyle}>Password</label>
-              <input type="password" name="password"
-                placeholder={isRegister ? "min. 8 characters with a number" : "enter your password"}
-                required onChange={handleChange} value={formData.password} className={inputClass} style={{ fontFamily }} />
-            </div>
-
             {isRegister && (
-              <div className="flex flex-col gap-1.5">
-                <label style={labelStyle}>Confirm Password</label>
-                <input type="password" name="confirmPassword" placeholder="Re-enter your password" required
-                  onChange={(e) => { handleChange(e); if (passError) setPassError(false); }}
-                  value={formData.confirmPassword}
-                  className={`${inputClass} ${passError ? "!border-red-500" : ""}`} style={{ fontFamily }} />
-              </div>
+              <p style={{ fontFamily, fontSize: "13px", color: "#666666", textAlign: "center", marginBottom: "16px" }}>
+                Already have an account?{" "}
+                <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
+                  Sign In
+                </span>
+              </p>
             )}
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px" }}>
+              <button type="button"
+                className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition bg-[#1877F2]">
+                <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain" />
+              </button>
+              <button type="button"
+                className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
+                <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
+              </button>
+              <button type="button"
+                className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
+                <img src="/icons/icloud.png" alt="iCloud" className="w-[36px] h-[36px] object-contain" />
+              </button>
+            </div>
 
             {!isRegister && (
-              <div style={{ marginTop: "-4px" }}>
-                <span className="cursor-pointer hover:text-[#8039FF] transition-colors"
-                  style={{ fontFamily, fontSize: "13px", fontWeight: 400, color: "#9CA3AF" }}>
-                  Forgot your password?
+              <p style={{ fontFamily, fontSize: "13px", color: "#666666", textAlign: "center", marginTop: "20px" }}>
+                New to Intersight?{" "}
+                <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
+                  Create an account
                 </span>
-              </div>
+              </p>
             )}
-
-            {isRegister && (
-              <div className="flex items-start gap-2">
-                <input type="checkbox" className="mt-0.5 accent-[#8039FF]" required />
-                <p style={{ fontFamily, fontSize: "11px", fontWeight: 400, color: "#666666", lineHeight: 1.5 }}>
-                  By signing up, you agree to our{" "}
-                  <span className="text-[#8039FF] cursor-pointer hover:underline">Terms of Service</span>{" "}
-                  and{" "}
-                  <span className="text-[#8039FF] cursor-pointer hover:underline">Privacy Policy</span>.
-                </p>
-              </div>
-            )}
-
-            <button type="submit" disabled={isLoading}
-              className="w-full h-[48px] rounded-full text-white bg-gradient-to-r from-[#071097] via-[#8039FF] to-[#FE63C8] hover:opacity-90 transition mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ fontFamily, fontWeight: 700, fontSize: "18px" }}>
-              {isLoading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
-            </button>
-          </form>
-
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
-            <span style={{ fontFamily, fontSize: "12px", fontWeight: 500, color: "#999999" }}>
-              {isRegister ? "Or sign up with" : "Or continue with"}
-            </span>
-            <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
           </div>
-
-          {isRegister && (
-            <p className="text-center mb-4" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
-              Already have an account?{" "}
-              <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
-                Sign In
-              </span>
-            </p>
-          )}
-
-          <div className="flex items-center justify-center gap-4">
-            <button type="button"
-              className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition bg-[#1877F2]">
-              <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain" />
-            </button>
-            <button type="button"
-              className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
-              <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
-            </button>
-            <button type="button"
-              className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
-              <img src="/icons/icloud.png" alt="iCloud" className="w-[36px] h-[36px] object-contain" />
-            </button>
-          </div>
-
-          {!isRegister && (
-            <p className="text-center mt-5" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
-              New to Intersight?{" "}
-              <span onClick={handleSwitchMode} className="text-[#8039FF] cursor-pointer hover:underline font-bold">
-                Create an account
-              </span>
-            </p>
-          )}
         </div>
       </div>
     </div>
