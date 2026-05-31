@@ -198,7 +198,7 @@ export default function Dashboard() {
               className="w-full h-auto block" style={{ maxHeight: "320px", objectFit: "cover", objectPosition: "center top" }} />
             <div className="absolute inset-0 bg-black/45" />
             <div className="absolute inset-0 flex flex-col justify-center px-8 py-10 max-w-[580px]">
-              <h2 className="text-white font-bold leading-[1.2] mb-3" style={{ fontFamily, fontSize: "clamp(22px, 3vw, 32px)" }}>
+              <h2 className="text-white font-bold leading-[1.2] mb-3" style={{ fontFamily, fontSize: "clamp(18px, 2.2vw, 26px)" }}>
                 {getGreeting()} {user?.username?.split(" ")[0] || "Angel"}!<br />
                 Ready to Shine in Your Next interview?
               </h2>
