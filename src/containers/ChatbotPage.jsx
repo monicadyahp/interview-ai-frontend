@@ -129,8 +129,8 @@ export default function ChatbotPage() {
             <div className="flex items-center justify-between px-5 py-4 rounded-t-[20px]"
               style={{ background: "linear-gradient(90deg, #1E1060, #3B2299)" }}>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30">
-                  <img src="/logo/Icon_Insight.png" alt="AI" className="w-full h-full object-contain bg-white/10 p-1" />
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 bg-white/10 flex items-center justify-center">
+                  <img src="/logo/Icon_Insight.png" alt="AI" className="w-8 h-8 object-contain" />
                 </div>
                 <div>
                   <p className="text-white font-bold text-[15px]" style={{ fontFamily }}>Intersight AI Copilot</p>
