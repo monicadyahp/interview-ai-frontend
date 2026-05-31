@@ -8,6 +8,7 @@ import Dashboard from '../containers/Dashboard';
 import InterviewRoom from '../containers/InterviewRoom';
 import HistoryPage from '../containers/HistoryPage';
 import ProfilePage from '../containers/ProfilePage';
+import ChatbotPage from "../containers/ChatbotPage";
 
 const AppRoutes = () => {
   return (
@@ -47,6 +48,16 @@ const AppRoutes = () => {
             <HistoryPage />
           </ProtectedRoute>
         }
+      />
+
+      {/* Chatbot (Protected) */}
+      <Route 
+        path="/chatbot" 
+        element={
+        <ProtectedRoute>
+            <ChatbotPage />
+          </ProtectedRoute>
+        } 
       />
 
       {/* Profile / Setting (Protected) */}
