@@ -60,40 +60,45 @@ const LoginPage = () => {
   const inputClass = `w-full h-[44px] border border-[#D9D9D9] rounded-[8px] px-4 outline-none focus:border-[#8039FF] text-[14px] text-[#444444] placeholder:text-[#BBBBBB]`;
 
   return (
-    /* FIX: padding top disesuaikan dengan navbar */
-    <div className="min-h-screen flex items-center justify-center px-4 py-10" style={{ background: "#F2EBFF", fontFamily }}>
-
-      {/* CARD — gambar kiri + form kanan dalam 1 kotak putih */}
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ background: "#F2EBFF", fontFamily, paddingTop: "120px", paddingBottom: "60px" }}
+    >
+      
       <div
-        className="w-full bg-white rounded-[20px] shadow-sm border border-[#E5E5E5] flex overflow-hidden"
-        style={{ maxWidth: "860px" }}
+        className="w-full bg-white flex overflow-hidden"
+        style={{
+          maxWidth: "860px",
+          borderRadius: "20px",
+          boxShadow: "0 8px 40px rgba(128, 57, 255, 0.12)",
+          border: "1px solid #E5E5E5",
+        }}
       >
-        {/* LEFT — image, FIX: no rounded, object-cover full fit */}
-        <div className="hidden md:block w-[42%] relative flex-shrink-0" style={{ minHeight: "560px" }}>
+        {/* LEFT — image */}
+        <div
+          className="hidden md:block w-[42%] relative flex-shrink-0"
+          style={{ minHeight: "560px", borderRadius: "20px 0 0 20px", overflow: "hidden" }}
+        >
           <img
             src={isRegister ? "/hero/signup.png" : "/hero/signin.png"}
             alt={isRegister ? "Sign Up" : "Sign In"}
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ borderRadius: 0 }}
           />
         </div>
 
         {/* RIGHT — form */}
         <div className="flex-1 px-8 py-10 overflow-y-auto">
 
-          {/* TITLE */}
           <h1 style={{ fontFamily, fontWeight: 700, fontSize: "22px", color: "#000000", lineHeight: 1.2, marginBottom: "6px" }}>
             {isRegister ? "Get Started with Intersight" : "Welcome Back!"}
           </h1>
 
-          {/* SUBTITLE */}
           <p style={{ fontFamily, fontWeight: 400, fontSize: "13px", color: "#444444", marginBottom: "20px", lineHeight: 1.5 }}>
             {isRegister
               ? "Join us to unlock deeper, AI-powered insights from your interviews."
               : "Sign in to access your interview insights and analytics."}
           </p>
 
-          {/* FORM */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
 
             {isRegister && (
@@ -155,7 +160,6 @@ const LoginPage = () => {
             </button>
           </form>
 
-          {/* DIVIDER */}
           <div className="flex items-center gap-3 my-5">
             <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
             <span style={{ fontFamily, fontSize: "12px", fontWeight: 500, color: "#999999" }}>
@@ -164,7 +168,6 @@ const LoginPage = () => {
             <div className="flex-1 h-[1px] bg-[#E5E5E5]" />
           </div>
 
-          {/* Already have account — Sign Up */}
           {isRegister && (
             <p className="text-center mb-4" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
               Already have an account?{" "}
@@ -174,26 +177,21 @@ const LoginPage = () => {
             </p>
           )}
 
-          {/* SOCIAL BUTTONS */}
           <div className="flex items-center justify-center gap-4">
-            {/* FIX: Facebook — hapus filter invert, icon sudah putih sendiri */}
-            <button type="button" aria-label="Continue with Facebook"
+            <button type="button"
               className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition bg-[#1877F2]">
               <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain" />
             </button>
-
-            <button type="button" aria-label="Continue with Google"
+            <button type="button"
               className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
               <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
             </button>
-
-            <button type="button" aria-label="Continue with iCloud"
+            <button type="button"
               className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
               <img src="/icons/icloud.png" alt="iCloud" className="w-[36px] h-[36px] object-contain" />
             </button>
           </div>
 
-          {/* New to Intersight — Sign In */}
           {!isRegister && (
             <p className="text-center mt-5" style={{ fontFamily, fontSize: "13px", color: "#666666" }}>
               New to Intersight?{" "}
