@@ -1,20 +1,21 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
 const overviewLinks = [
-  { label: "Dashboard", path: "/dashboard", icon: "/icons/overviewdashboardungu.png" },
-  { label: "Interview", path: "/interview", icon: "/icons/overviewinterviewungu.png" },
-  { label: "AI Assistant", path: "/chatbot", icon: "/icons/overviewaiungu.png" },
-  { label: "History", path: "/history", icon: "/icons/overviewhistoryungu.png" },
-  { label: "Learning", path: "/learning", icon: "/icons/overviewlearningungu.png" },
+  { label: "Dashboard", path: "/dashboard", icon: "/icons/overviewdashboard.png", iconActive: "/icons/overviewdashboardungu.png" },
+  { label: "Interview", path: "/interview", icon: "/icons/overviewinterview.png", iconActive: "/icons/overviewinterviewungu.png" },
+  { label: "AI Assistant", path: "/chatbot", icon: "/icons/overviewai.png", iconActive: "/icons/overviewaiungu.png" },
+  { label: "History", path: "/history", icon: "/icons/overviewhistory.png", iconActive: "/icons/overviewhistoryungu.png" },
+  { label: "Learning", path: "/learning", icon: "/icons/overviewlearning.png", iconActive: "/icons/overviewlearningungu.png" },
 ];
 
 export default function DashboardTopBar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -87,13 +88,16 @@ export default function DashboardTopBar() {
               {/* Overview links */}
               <div className="px-2 py-2 border-b border-[#F0F0F0]">
                 <p className="text-[10px] font-bold text-[#BBBBBB] tracking-widest px-2 py-1">OVERVIEW</p>
-                {overviewLinks.map(({ label, path, icon }) => (
-                  <button key={path} onClick={() => { navigate(path); setShowDropdown(false); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[12px] hover:bg-[#F5F2FF] transition text-left">
-                    <img src={icon} alt={label} className="w-4 h-4 object-contain" />
-                    <span className="text-[13px] font-medium text-[#444]">{label}</span>
-                  </button>
-                ))}
+                {overviewLinks.map(({ label, path, icon, iconActive }) => {
+                  const isActive = pathname === path;
+                  return (
+                    <button key={path} onClick={() => { navigate(path); setShowDropdown(false); }}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition text-left ${isActive ? "bg-[#EDE9FF]" : "hover:bg-[#F5F2FF]"}`}>
+                      <img src={isActive ? iconActive : icon} alt={label} className="w-4 h-4 object-contain" />
+                      <span className={`text-[13px] font-medium ${isActive ? "text-[#7B4DFF] font-semibold" : "text-[#444]"}`}>{label}</span>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Settings links */}
