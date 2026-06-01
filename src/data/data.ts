@@ -50,8 +50,7 @@ export const dataHowItWorks = [
     title: "Create Your Profile",
     description:
       "Sign up and tell us your target role and industry. We'll personalize your question bank right away",
-    image:
-      "https://cdn.create.vista.com/api/media/small/130582534/stock-photo-young-businessman-sitting-at-job-interview",
+    image: "/hero/howcreate.png",
   },
   {
     id: 2,
@@ -59,8 +58,7 @@ export const dataHowItWorks = [
     title: "Run a Simulation",
     description:
       "Start a timed mock interview. Our AI watches your expressions and gives real-time emotion feedback on screen",
-    image:
-      "https://cdn.create.vista.com/api/media/small/130582534/stock-photo-young-businessman-sitting-at-job-interview",
+    image: "/hero/howrun.png",
   },
   {
     id: 3,
@@ -68,8 +66,7 @@ export const dataHowItWorks = [
     title: "Review & Improve",
     description:
       "After each session, get a full performance report, AI feedback, and your emotion trend chart",
-    image:
-      "https://cdn.create.vista.com/api/media/small/130582534/stock-photo-young-businessman-sitting-at-job-interview",
+    image: "/hero/howreview.png",
   },
 ];
 
@@ -79,7 +76,7 @@ export const testimonialData = [
     rating: 5,
     review:
       "I used to freeze during every interview. After 5 sessions on Intersight, I landed my first job offer. The emotion feedback was a game changer.",
-    name: "Feedora A.",
+    name: "Monica Dyah P.",
     role: "Fresh Graduate",
   },
   {
@@ -87,23 +84,39 @@ export const testimonialData = [
     rating: 4,
     review:
       "The AI feedback helped me improve my confidence and speaking clarity. The simulations felt realistic and helpful.",
-    name: "Michael R.",
+    name: "Zahwa Anissa H.",
     role: "Software Engineer",
   },
   {
     id: 3,
-    rating: 5,
+    rating: 4,
     review:
-      "I practiced every night before my interview. The emotion tracking feature really improved my body language.",
-    name: "Sarah J.",
-    role: "UI/UX Designer",
+      "The emotion tracking caught that I looked nervous when discussing CSS — something I never noticed. Now I ace the \'tell me about your project\' questions with ease.",
+    name: "Syasmi Permata Oktavia",
+    role: "Front-End Developer",
   },
   {
     id: 4,
     rating: 5,
     review:
-      "One of the best AI interview practice platforms I've ever used. Highly recommended for fresh graduates.",
-    name: "Jonathan K.",
+      "I practiced every night before my interview. The emotion tracking feature really improved my body language.",
+    name: "Via Angelya",
+    role: "UI/UX Designer",
+  },
+  {
+    id: 5,
+    rating: 5,
+    review:
+      "I used to blank out when asked about system design. After 7 sessions on Intersight, I confidently explained my architecture choices and got an offer as a Full-Stack Dev!",
+    name: "Prasetyo Dio",
+    role: "Full-Stack Developer",
+  },
+  {
+    id: 6,
+    rating: 5,
+    review:
+      "One of the best AI interview practice platforms I\'ve ever used. Highly recommended for fresh graduates.",
+    name: "Aqilla Z. Fakhira",
     role: "Data Analyst",
   },
 ];
