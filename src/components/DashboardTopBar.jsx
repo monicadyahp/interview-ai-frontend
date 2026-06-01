@@ -27,7 +27,7 @@ export default function DashboardTopBar() {
   return (
     <div className="bg-white border-b border-[#ECECEC] px-6 py-3.5 flex items-center justify-between sticky top-0 z-20">
       {/* Search bar */}
-      <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2.5 flex-1 max-w-[600px]">
+      <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2.5 flex-1">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>

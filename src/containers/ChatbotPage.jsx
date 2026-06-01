@@ -118,8 +118,8 @@ export default function ChatbotPage() {
             <div className="flex items-center justify-between px-5 py-4 rounded-t-[20px]"
               style={{ background: "linear-gradient(90deg, #1E1060, #3B2299)" }}>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 bg-white/10 flex items-center justify-center">
-                  <img src="/logo/Icon_Insight.png" alt="AI" className="w-8 h-8 object-contain" />
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 flex-shrink-0">
+                  <img src="/logo/profileai.png" alt="AI" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <p className="text-white font-bold text-[15px]" style={{ fontFamily }}>Intersight AI Copilot</p>
@@ -141,28 +141,39 @@ export default function ChatbotPage() {
                 /* Welcome state */
                 <div className="flex flex-col items-center justify-center h-full gap-5 py-8">
                   <div>
-                    <p className="text-[26px] font-bold text-[#1E1E1E] text-center mb-1" style={{ fontFamily }}>
+                    <p className="text-[32px] font-bold text-[#1E1E1E] text-center mb-1" style={{ fontFamily }}>
                       Hi {user?.username?.split(" ")[0] || "Angel"} !
                     </p>
-                    <p className="text-[22px] font-bold text-[#1E1E1E] text-center" style={{ fontFamily }}>
+                    <p className="text-[26px] font-bold text-[#1E1E1E] text-center" style={{ fontFamily }}>
                       Where should we start ?
                     </p>
                   </div>
 
                   {/* Initial bot message */}
-                  <div className="bg-[#F3ECFF] rounded-[16px] rounded-tl-none px-5 py-3.5 max-w-[360px]">
+                  <div className="bg-[#F3ECFF] rounded-[16px] rounded-tl-none px-5 py-3.5 max-w-[400px]">
                     <p className="text-[14px] text-[#444]" style={{ fontFamily }}>{messages[0].text}</p>
                   </div>
 
                   {/* Quick topic chips */}
-                  <div className="flex flex-wrap gap-2 justify-center max-w-[500px]">
-                    {quickTopics.map((q) => (
-                      <button key={q.label} onClick={() => sendMessage(q.value)}
-                        className="px-4 py-2 rounded-full text-[13px] font-medium border border-[#7B4DFF] text-[#7B4DFF] hover:bg-[#7B4DFF] hover:text-white transition"
-                        style={{ fontFamily }}>
-                        {q.label}
-                      </button>
-                    ))}
+                  <div className="flex flex-wrap gap-2 justify-center max-w-[540px]">
+                    {quickTopics.map((q, i) => {
+                      const colors = [
+                        { border: "#C084FC", text: "#9333EA", bg: "#FAF5FF" },
+                        { border: "#86EFAC", text: "#16A34A", bg: "#F0FDF4" },
+                        { border: "#FCA5A5", text: "#DC2626", bg: "#FEF2F2" },
+                        { border: "#93C5FD", text: "#2563EB", bg: "#EFF6FF" },
+                        { border: "#FCD34D", text: "#D97706", bg: "#FFFBEB" },
+                        { border: "#F9A8D4", text: "#DB2777", bg: "#FDF2F8" },
+                      ];
+                      const c = colors[i % colors.length];
+                      return (
+                        <button key={q.label} onClick={() => sendMessage(q.value)}
+                          className="px-4 py-2 rounded-full text-[13px] font-semibold border transition hover:opacity-80"
+                          style={{ borderColor: c.border, color: c.text, background: c.bg, fontFamily }}>
+                          {q.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
