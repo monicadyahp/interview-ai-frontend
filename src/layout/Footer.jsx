@@ -4,7 +4,7 @@ import FooterLinks from "../components/FooterLinks";
 import FooterBottom from "../components/FooterBottom";
 export default function Footer() {
   return (
-    <footer className="w-full px-4 md:px-8 lg:px-12">
+    <footer className="w-full bg-white border-t border-[#ECECEC] px-4 md:px-8 lg:px-12 pt-10 pb-6 mt-6">
       <div className="max-w-7xl mx-auto">
         {/* Top */}
         <div

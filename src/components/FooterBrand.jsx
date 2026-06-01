@@ -14,8 +14,7 @@ export default function FooterBrand() {
             src="/logo/Icon_Insight.png"
             alt="Logo Insight"
             className="w-10 h-10 object-contain"
-          />
-          {/* FIX: font size logo dari text-[44px] → text-[28px] */}
+          /> 
           <h1
             className="
               font-bold fontIntersight
@@ -31,11 +30,13 @@ export default function FooterBrand() {
         </div>
       </div>
 
-      {/* Social Media — FIX: ikon dari w-14 h-14 → w-10 h-10, rounded-xl → rounded-full */}
+      {/* Social Media */}
       <div className="flex items-center gap-4">
         {/* Instagram */}
         <a
-          href="#"
+          href="https://www.instagram.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             w-10 h-10 rounded-full
             bg-[radial-gradient(circle_at_30%_107%,#FDF497_0%,#FDF497_5%,#FD5949_45%,#D6249F_60%,#285AEB_90%)]
@@ -48,7 +49,9 @@ export default function FooterBrand() {
 
         {/* Facebook */}
         <a
-          href="#"
+          href="https://www.facebook.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             w-10 h-10 rounded-full
             bg-[#1877F2]
@@ -61,7 +64,9 @@ export default function FooterBrand() {
 
         {/* LinkedIn */}
         <a
-          href="#"
+          href="https://www.linkedin.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             w-10 h-10 rounded-full
             bg-[#0A66C2]
@@ -74,7 +79,9 @@ export default function FooterBrand() {
 
         {/* YouTube */}
         <a
-          href="#"
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             w-10 h-10 rounded-full
             bg-[#FF0000]
@@ -87,7 +94,9 @@ export default function FooterBrand() {
 
         {/* Discord */}
         <a
-          href="#"
+          href="https://discord.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             w-10 h-10 rounded-full
             bg-[#5865F2]
