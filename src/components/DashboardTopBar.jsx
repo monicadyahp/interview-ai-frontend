@@ -5,11 +5,11 @@ import { AuthContext } from "../context/AuthContext";
 const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
 const overviewLinks = [
-  { label: "Dashboard", path: "/dashboard", icon: "/icons/overviewdashboard.png" },
-  { label: "Interview", path: "/interview", icon: "/icons/overviewinterview.png" },
-  { label: "AI Assistant", path: "/chatbot", icon: "/icons/overviewai.png" },
-  { label: "History", path: "/history", icon: "/icons/overviewhistory.png" },
-  { label: "Learning", path: "/learning", icon: "/icons/overviewlearning.png" },
+  { label: "Dashboard", path: "/dashboard", icon: "/icons/overviewdashboardungu.png" },
+  { label: "Interview", path: "/interview", icon: "/icons/overviewinterviewungu.png" },
+  { label: "AI Assistant", path: "/chatbot", icon: "/icons/overviewaiungu.png" },
+  { label: "History", path: "/history", icon: "/icons/overviewhistoryungu.png" },
+  { label: "Learning", path: "/learning", icon: "/icons/overviewlearningungu.png" },
 ];
 
 export default function DashboardTopBar() {

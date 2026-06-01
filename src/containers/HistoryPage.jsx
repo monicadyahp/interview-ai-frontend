@@ -18,7 +18,7 @@ const SidebarItem = ({ imgSrc, activeImgSrc, label, active, onClick }) => (
     onClick={onClick}
     className={`w-full flex items-center gap-3 px-4 h-[48px] rounded-[14px] text-[15px] font-semibold transition-all duration-200 ${
       active
-        ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]"
+        ? "bg-[#EDE9FF] text-[#7B4DFF]"
         : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"
     }`}
     style={{ fontFamily }}
@@ -34,7 +34,7 @@ const emotionIcon = (emotion) => {
 };
 
 const emotionColor = (emotion) => {
-  const map = { Happy: "#F472B6", Neutral: "#8B5CF6", Confident: "#F97316", Anxious: "#9CA3AF", Sad: "#60A5FA", Angry: "#EF4444", Fear: "#F97316" };
+  const map = { Happy: "#F59E0B", Neutral: "#8B5CF6", Sad: "#3B82F6", Angry: "#EF4444", Fear: "#F97316", Confident: "#10B981", Anxious: "#6366F1" };
   return map[emotion] || "#8B5CF6";
 };
 
@@ -218,17 +218,22 @@ export default function HistoryPage() {
                             </div>
                           </td>
                           <td className="px-5 py-4">
-                            <button onClick={(e) => { e.stopPropagation(); setSelectedHistory(item); }}
-                              className="px-4 py-1.5 rounded-full text-[12px] font-semibold text-[#7B4DFF] border border-[#7B4DFF] bg-white hover:bg-[#F3ECFF] transition"
-                              style={{ fontFamily }}>
-                              View Detail
-                            </button>
+                            <span className="text-[12px] text-[#999]" style={{ fontFamily }}>
+                              {item.feedbackNote ? item.feedbackNote.substring(0, 22) + "..." : "—"}
+                            </span>
                           </td>
                           <td className="px-5 py-4">
-                            <button onClick={(e) => deleteItem(e, item._id)}
-                              className="w-8 h-8 rounded-full bg-[#FFF0F0] flex items-center justify-center hover:bg-red-500 transition group">
-                              <img src="/icons/historytrash.png" alt="delete" className="w-4 h-4 object-contain group-hover:brightness-0 group-hover:invert" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button onClick={(e) => { e.stopPropagation(); setSelectedHistory(item); }}
+                                className="px-4 py-1.5 rounded-full text-[12px] font-semibold text-[#7B4DFF] border border-[#7B4DFF] bg-white hover:bg-[#F3ECFF] transition"
+                                style={{ fontFamily }}>
+                                View Detail
+                              </button>
+                              <button onClick={(e) => deleteItem(e, item._id)}
+                                className="w-8 h-8 rounded-full bg-[#FFF0F0] flex items-center justify-center hover:bg-red-500 transition group">
+                                <img src="/icons/historytrash.png" alt="delete" className="w-4 h-4 object-contain group-hover:brightness-0 group-hover:invert" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );

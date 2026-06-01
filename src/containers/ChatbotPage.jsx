@@ -14,7 +14,7 @@ const SidebarItem = ({ imgSrc, activeImgSrc, label, active, onClick }) => (
     onClick={onClick}
     className={`w-full flex items-center gap-3 px-4 h-[48px] rounded-[14px] text-[15px] font-semibold transition-all duration-200 ${
       active
-        ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]"
+        ? "bg-[#EDE9FF] text-[#7B4DFF]"
         : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"
     }`}
     style={{ fontFamily }}
@@ -154,7 +154,7 @@ export default function ChatbotPage() {
                     <p className="text-[14px] text-[#444]" style={{ fontFamily }}>{messages[0].text}</p>
                   </div>
 
-                  {/* Quick topic chips */}
+                  {/* Quick topic chips — warna-warni */}
                   <div className="flex flex-wrap gap-2 justify-center max-w-[540px]">
                     {quickTopics.map((q, i) => {
                       const colors = [
