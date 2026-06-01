@@ -92,7 +92,7 @@ export const testimonialData = [
     rating: 4,
     review:
       "The emotion tracking caught that I looked nervous when discussing CSS — something I never noticed. Now I ace the \'tell me about your project\' questions with ease.",
-    name: "Syasmi Permata Oktavia",
+    name: "Syasmi Permata",
     role: "Front-End Developer",
   },
   {

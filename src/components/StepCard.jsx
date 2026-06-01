@@ -14,8 +14,8 @@ export default function StepCard({ step, title, description, image, large = fals
             <img
               src={image}
               alt={title}
-              className="w-full h-auto object-contain rounded-xl"
-              style={{ maxHeight: large ? "360px" : "300px" }}
+              className="w-full object-contain rounded-xl"
+              style={{ height: large ? "340px" : "280px", objectFit: "contain" }}
             />
           )}
         </div>
