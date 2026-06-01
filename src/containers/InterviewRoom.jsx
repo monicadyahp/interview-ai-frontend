@@ -116,13 +116,16 @@ const InterviewRoom = () => {
         duration: selectedDuration,
         answer: userAnswer,
         userPhoto: capturedUserPhoto,
+        positionApplied,
+        feedbackNote,
+        feedbackScore,
       });
     } catch {
       Swal.fire("Error", "Gagal menyimpan ke database", "error");
     } finally {
       setIsLoading(false);
     }
-  }, [user, allQuestions, currentQuestionIndex, selectedDuration, userAnswer, capturedUserPhoto, getDominantEmotion, calculateStats]);
+  }, [user, allQuestions, currentQuestionIndex, selectedDuration, userAnswer, capturedUserPhoto, positionApplied, feedbackNote, feedbackScore, getDominantEmotion, calculateStats]);
 
   const captureFrame = useCallback(async () => {
     if (!webcamRef.current || !user || status !== "RECORDING") return;

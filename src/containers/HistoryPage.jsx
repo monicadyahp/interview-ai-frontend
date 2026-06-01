@@ -86,10 +86,12 @@ export default function HistoryPage() {
     } catch { Swal.fire("Gagal", "Gagal export gambar.", "error"); }
   };
 
+  // Stats untuk stat cards bawah
   const avgScore = histories.length ? Math.round(histories.reduce((acc, h) => { const pos = h.allStats?.find((s) => ["Happy","Confident","Neutral"].includes(s.label)); return acc + (pos?.value || 0); }, 0) / histories.length) : 0;
   const dominantEmotion = (() => { if (!histories.length) return "—"; const c = {}; histories.forEach((h) => { c[h.emotion] = (c[h.emotion] || 0) + 1; }); return Object.keys(c).reduce((a, b) => c[a] > c[b] ? a : b); })();
   const streak = (() => { if (!histories.length) return 0; const dates = [...new Set(histories.map((h) => new Date(h.createdAt).toLocaleDateString("en-CA")))].sort().reverse(); let s = 1; for (let i = 0; i < dates.length - 1; i++) { if ((new Date(dates[i]) - new Date(dates[i + 1])) / 86400000 === 1) s++; else break; } return s; })();
 
+  // Filter & paginate
   const filtered = histories.filter((h) => {
     const q = search.toLowerCase();
     return !q || (h.question?.toLowerCase().includes(q)) || (h.emotion?.toLowerCase().includes(q));
@@ -193,7 +195,7 @@ export default function HistoryPage() {
                           </td>
                           <td className="px-5 py-4">
                             <p className="text-[13px] font-semibold text-[#1E1E1E]" style={{ fontFamily }}>
-                              {item.question?.length > 20 ? item.question.substring(0, 20) + "..." : item.question || "—"}
+                              {item.positionApplied || item.question?.substring(0, 20) + "..." || "—"}
                             </p>
                           </td>
                           <td className="px-5 py-4">
@@ -212,7 +214,7 @@ export default function HistoryPage() {
                           </td>
                           <td className="px-5 py-4">
                             <span className="text-[12px] text-[#999]" style={{ fontFamily }}>
-                              {item.answer ? item.answer.substring(0, 18) + "..." : "—"}
+                              {item.feedbackNote ? item.feedbackNote.substring(0, 22) + "..." : "—"}
                             </span>
                           </td>
                           <td className="px-5 py-4">
@@ -334,6 +336,7 @@ export default function HistoryPage() {
                   <p className="text-[12px] opacity-90" style={{ fontFamily }}>"{selectedHistory.motivation}"</p>
                 </div>
               </div>
+              {/* Hidden export area */}
               <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
                 <div ref={exportAreaRef} style={{ width: "500px", height: "888px", background: "linear-gradient(180deg,#F9F7FC,#FFF)", padding: "40px", display: "flex", flexDirection: "column", fontFamily, boxSizing: "border-box" }}>
                   <div style={{ background: "linear-gradient(135deg,#7B4DFF,#C026D3)", color: "#FFF", padding: "20px 30px", borderRadius: "25px", textAlign: "center", marginBottom: "15px" }}>
