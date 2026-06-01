@@ -36,7 +36,6 @@ export const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Interview AI", path: "/interview" },
     { name: "Chatbot AI", path: "/chatbot" },
-    { name: "Insight", path: "/insight" },
     { name: "About Us", path: "/about" },
   ];
 
@@ -111,11 +110,11 @@ export const Navbar = () => {
           <button
             className="buttonDashboard"
             onClick={() =>
-              navigate(user ? "/interview" : "/login")
+              navigate(user ? "/dashboard" : "/login")
             }
           >
             <p className="textButtonDashboard">
-              {user ? "Interview" : "Dashboard"}
+              {"Dashboard"}
             </p>
           </button>
 
@@ -198,7 +197,7 @@ export const Navbar = () => {
             }}
           >
             <p className="textButtonDashboard">
-              {user ? "Interview" : "Dashboard"}
+              {"Dashboard"}
             </p>
           </button>
 
