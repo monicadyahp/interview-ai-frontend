@@ -8,6 +8,7 @@ import Dashboard from '../containers/Dashboard';
 import InterviewRoom from '../containers/InterviewRoom';
 import HistoryPage from '../containers/HistoryPage';
 import LearningPage from '../containers/LearningPage';
+import ChatbotPage from '../containers/ChatbotPage';
 import ProfilePage from '../containers/ProfilePage';
 
 const AppRoutes = () => {
@@ -46,6 +47,16 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <HistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* AI Assistant / Chatbot (Protected) */}
+      <Route
+        path="/chatbot"
+        element={
+          <ProtectedRoute>
+            <ChatbotPage />
           </ProtectedRoute>
         }
       />
