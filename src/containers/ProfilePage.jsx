@@ -5,6 +5,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../utils/constants";
 import Swal from "sweetalert2";
 import DashboardFooter from "../layout/DashboardFooter";
+import DashboardTopBar from "../components/DashboardTopBar";
 
 const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
@@ -118,26 +119,9 @@ export default function ProfilePage() {
         </div>
       </aside>
 
-      {/* MAIN */}
+      {/* MAIN — offset sidebar */}
       <main className="flex-1 flex flex-col min-w-0 lg:ml-[240px]">
-
-        {/* Top Bar */}
-        <div className="bg-white border-b border-[#ECECEC] px-6 py-3.5 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2.5 flex-1 max-w-[600px]">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" placeholder="Find past interviews, resources, or tips..."
-              className="bg-transparent outline-none text-[14px] text-[#999] w-full" style={{ fontFamily }} />
-          </div>
-          <div className="flex items-center gap-4 ml-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#E5E5E5]">
-                <img src={user.profileImage || defaultImg} alt="avatar" className="w-full h-full object-cover" />
-              </div>
-              <span className="text-[15px] font-semibold text-[#1E1E1E]">{user?.username?.split(" ")[0] || "Angel"}</span>
-            </div>
-          </div>
-        </div>
+        <DashboardTopBar />
 
         {/* Content */}
         <div className="flex-1 px-6 py-8 overflow-auto flex flex-col items-center">
