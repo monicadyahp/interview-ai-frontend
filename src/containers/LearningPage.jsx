@@ -7,12 +7,17 @@ import DashboardTopBar from "../components/DashboardTopBar";
 
 const fontFamily = "'Plus Jakarta Sans', sans-serif";
 
-const SidebarItem = ({ imgSrc, label, active, onClick }) => (
-  <button onClick={onClick}
-    className={`w-full flex items-center gap-3 px-4 h-[48px] rounded-[14px] text-[15px] font-semibold transition-all duration-200 ${active ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]" : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"}`}
-    style={{ fontFamily }}>
-    <img src={imgSrc} alt={label} className="w-[22px] h-[22px] object-contain"
-      style={{ filter: active ? "brightness(0) invert(1)" : "none" }} />
+const SidebarItem = ({ imgSrc, activeImgSrc, label, active, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-3 px-4 h-[48px] rounded-[14px] text-[15px] font-semibold transition-all duration-200 ${
+      active
+        ? "bg-[#7B4DFF] text-white shadow-[0_4px_12px_rgba(123,77,255,0.3)]"
+        : "text-[#666] hover:bg-[#F5F2FF] hover:text-[#7B4DFF]"
+    }`}
+    style={{ fontFamily }}
+  >
+    <img src={active && activeImgSrc ? activeImgSrc : imgSrc} alt={label} className="w-[22px] h-[22px] object-contain" />
     {label}
   </button>
 );
@@ -119,17 +124,17 @@ export default function LearningPage() {
           </div>
           <p className="text-[11px] font-bold text-[#BBBBBB] tracking-widest mb-3 px-1">OVERVIEW</p>
           <div className="flex flex-col gap-1.5">
-            <SidebarItem imgSrc="/icons/overviewdashboard.png" label="Dashboard" onClick={() => navigate("/dashboard")} />
-            <SidebarItem imgSrc="/icons/overviewinterview.png" label="Interview" onClick={() => navigate("/interview")} />
-            <SidebarItem imgSrc="/icons/overviewai.png" label="AI Assistant" onClick={() => navigate("/chatbot")} />
-            <SidebarItem imgSrc="/icons/overviewhistory.png" label="History" onClick={() => navigate("/history")} />
-            <SidebarItem imgSrc="/icons/overviewlearning.png" label="Learning" active onClick={() => navigate("/learning")} />
+            <SidebarItem imgSrc="/icons/overviewdashboard.png" activeImgSrc="/icons/overviewdashboardungu.png" label="Dashboard" onClick={() => navigate("/dashboard")} />
+            <SidebarItem imgSrc="/icons/overviewinterview.png" activeImgSrc="/icons/overviewinterviewungu.png" label="Interview" onClick={() => navigate("/interview")} />
+            <SidebarItem imgSrc="/icons/overviewai.png" activeImgSrc="/icons/overviewaiungu.png" label="AI Assistant" onClick={() => navigate("/chatbot")} />
+            <SidebarItem imgSrc="/icons/overviewhistory.png" activeImgSrc="/icons/overviewhistoryungu.png" label="History" onClick={() => navigate("/history")} />
+            <SidebarItem imgSrc="/icons/overviewlearning.png" activeImgSrc="/icons/overviewlearningungu.png" label="Learning" active onClick={() => navigate("/learning")} />
           </div>
         </div>
         <div>
           <p className="text-[11px] font-bold text-[#BBBBBB] tracking-widest mb-3 px-1">SETTINGS</p>
           <div className="flex flex-col gap-1.5">
-            <SidebarItem imgSrc="/icons/setting.png" label="Setting" onClick={() => navigate("/profile")} />
+            <SidebarItem imgSrc="/icons/setting.png" activeImgSrc="/icons/overviewsettingungu.png" label="Setting" onClick={() => navigate("/profile")} />
             <SidebarItem imgSrc="/icons/logout.png" label="Log Out" onClick={logout} />
           </div>
         </div>
