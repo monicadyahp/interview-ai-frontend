@@ -7,10 +7,10 @@ const LEARNING_PATHS = [
     id: "ds",
     label: "Data Science",
     emoji: "📊",
-    color: "#8039FF",
-    bg: "linear-gradient(135deg, #f3eeff 0%, #ede4ff 100%)",
-    border: "#c9b0f5",
-    badgeBg: "linear-gradient(90deg, #8039FF, #a855f7)",
+    color: "#16a34a",
+    bg: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+    border: "#86efac",
+    badgeBg: "linear-gradient(90deg, #16a34a, #22c55e)",
     members: [
       {
         name: "Monica Dyah Pudyowati",
@@ -32,10 +32,10 @@ const LEARNING_PATHS = [
     id: "fwd",
     label: "Full-Stack Web Developer",
     emoji: "💻",
-    color: "#0A66C2",
-    bg: "linear-gradient(135deg, #e8f1fb 0%, #dbeafe 100%)",
-    border: "#93c5fd",
-    badgeBg: "linear-gradient(90deg, #0A66C2, #3b82f6)",
+    color: "#8039FF",
+    bg: "linear-gradient(135deg, #f3eeff 0%, #ede4ff 100%)",
+    border: "#c9b0f5",
+    badgeBg: "linear-gradient(90deg, #8039FF, #fe63c8)",
     members: [
       {
         name: "Syasmi Permata Oktavia",
@@ -229,7 +229,7 @@ export default function AboutPage() {
               </div>
 
               {/* Member cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
                 {path.members.map((member) => (
                   <MemberCard
                     key={member.credential}

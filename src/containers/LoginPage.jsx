@@ -39,7 +39,7 @@ const LoginPage = () => {
         setUser(res.data.user);
         localStorage.setItem("token", res.data.token);
         Swal.fire({ title: "Selamat Datang!", text: `Mari berlatih untuk interview kamu, ${res.data.user.username}!`, icon: "success", timer: 2000, showConfirmButton: false });
-        navigate("/dashboard", { replace: true });
+        navigate("/interview", { replace: true });
       }
     } catch (err) {
       Swal.fire({ title: "Oops...", text: err.response?.data?.msg || "Gagal!", icon: "error" });
