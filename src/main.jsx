@@ -6,10 +6,15 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 // Import CSS Global (Aesthetics Skin Design)
 import "./App.css";
 
+// Client ID diambil dari env (VITE_GOOGLE_CLIENT_ID), dengan fallback ke nilai
+// produksi agar build tidak pernah memakai Client ID yang salah.
+const GOOGLE_CLIENT_ID =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  "596272309967-7ol6vcpag8lot6tu28vq6i0nd7f2krc1.apps.googleusercontent.com";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* Ganti dengan Client ID asli kamu */}
-    <GoogleOAuthProvider clientId="158352528695-fupam1ncdn5fonnlhndc6a7vkgioke9b.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthProvider>
         <App />
       </AuthProvider>

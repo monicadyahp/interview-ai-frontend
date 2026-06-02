@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { API_BASE_URL } from "../utils/constants";
+import { GoogleLogin } from "@react-oauth/google";
 import Swal from "sweetalert2";
 
 const fontFamily = "'Plus Jakarta Sans', sans-serif";
@@ -46,6 +47,27 @@ const LoginPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(`${API_BASE_URL}/auth/google`, {
+        credential: credentialResponse.credential,
+      });
+      setUser(res.data.user);
+      localStorage.setItem("token", res.data.token);
+      Swal.fire({ title: "Selamat Datang!", text: `Mari berlatih untuk interview kamu, ${res.data.user.username}!`, icon: "success", timer: 2000, showConfirmButton: false });
+      navigate("/interview", { replace: true });
+    } catch (err) {
+      Swal.fire({ title: "Oops...", text: err.response?.data?.msg || "Login Google gagal!", icon: "error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    Swal.fire({ title: "Oops...", text: "Login Google dibatalkan atau gagal.", icon: "error" });
   };
 
   const handleSwitchMode = () => {
@@ -198,10 +220,13 @@ const LoginPage = () => {
             )}
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <button type="button"
-                className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
-                <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
-              </button>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                text={isRegister ? "signup_with" : "signin_with"}
+                shape="pill"
+                width="320"
+              />
             </div>
 
             {!isRegister && (
