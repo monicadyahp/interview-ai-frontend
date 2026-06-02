@@ -11,6 +11,7 @@ import LearningPage from '../containers/LearningPage';
 import ChatbotPage from '../containers/ChatbotPage';
 import ProfilePage from '../containers/ProfilePage';
 import ContactPage from '../containers/ContactPage';
+import TermsRulesPage from '../containers/TermsRulesPage';
 
 const AppRoutes = () => {
   return (
@@ -20,6 +21,9 @@ const AppRoutes = () => {
 
       {/* Contact */}
       <Route path="/contact" element={<ContactPage />} />
+
+      {/* Terms & Rules */}
+      <Route path="/terms" element={<TermsRulesPage />} />
 
       {/* Auth */}
       <Route path="/login" element={<LoginPage />} />

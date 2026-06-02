@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ff = { fontFamily: "'Plus Jakarta Sans', sans-serif" };
 
 export default function FooterBottom() {
+  const navigate = useNavigate();
+
   return (
     <div
       className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pt-5"
@@ -15,13 +18,19 @@ export default function FooterBottom() {
       </p>
 
       <div className="flex items-center gap-3">
-        <a href="#" className="text-[13px] text-[#999] hover:text-black transition-colors">
+        <button
+          onClick={() => navigate("/terms")}
+          className="text-[13px] text-[#999] hover:text-[#8039FF] transition-colors"
+        >
           Terms
-        </a>
+        </button>
         <span className="text-[#ccc]">|</span>
-        <a href="#" className="text-[13px] text-[#999] hover:text-black transition-colors">
+        <button
+          onClick={() => navigate("/terms?tab=rules")}
+          className="text-[13px] text-[#999] hover:text-[#8039FF] transition-colors"
+        >
           Rules
-        </a>
+        </button>
       </div>
     </div>
   );

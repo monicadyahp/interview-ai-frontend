@@ -114,9 +114,9 @@ export default function DashboardFooter() {
             Coding Camp 2026 powered by DBS Foundation.
           </p>
           <div className="flex items-center gap-3">
-            <a href="#" className="text-[13px] text-[#999] hover:text-black transition-colors">Terms</a>
+            <button onClick={() => navigate("/terms")} className="text-[13px] text-[#999] hover:text-[#8039FF] transition-colors">Terms</button>
             <span className="text-[#ccc]">|</span>
-            <a href="#" className="text-[13px] text-[#999] hover:text-black transition-colors">Rules</a>
+            <button onClick={() => navigate("/terms?tab=rules")} className="text-[13px] text-[#999] hover:text-[#8039FF] transition-colors">Rules</button>
           </div>
         </div>
       </div>
