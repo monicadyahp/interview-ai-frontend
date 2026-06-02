@@ -1,111 +1,72 @@
 import React from "react";
 import { Instagram } from "lucide-react";
 
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/",
+    label: "Instagram",
+    bg: "radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%)",
+    icon: <Instagram className="text-white w-5 h-5" />,
+  },
+  {
+    href: "https://www.facebook.com/",
+    label: "Facebook",
+    bg: "#1877F2",
+    icon: <img src="/icons/facebook.png" className="w-4" alt="Facebook" />,
+  },
+  {
+    href: "https://www.linkedin.com/",
+    label: "LinkedIn",
+    bg: "#0A66C2",
+    icon: <img src="/icons/linkedin.png" className="w-5" alt="LinkedIn" />,
+  },
+  {
+    href: "https://www.youtube.com/",
+    label: "YouTube",
+    bg: "#FF0000",
+    icon: <img src="/icons/youtube.png" className="w-5" alt="YouTube" />,
+  },
+  {
+    href: "https://discord.com/",
+    label: "Discord",
+    bg: "#5865F2",
+    icon: <img src="/icons/discord.png" className="w-5" alt="Discord" />,
+  },
+];
+
 export default function FooterBrand() {
   return (
     <div
-      className="flex flex-col gap-7 w-full max-w-[520px]"
+      className="flex flex-col gap-5 w-full max-w-[320px]"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      {/* Logo + Border */}
-      <div className="w-full border-b border-[#E5E5E5] pb-5">
-        <div className="flex items-center gap-3">
-          <img
-            src="/logo/Icon_Insight.png"
-            alt="Logo Insight"
-            className="w-10 h-10 object-contain"
-          /> 
-          <h1
-            className="
-              font-bold fontIntersight
-              text-[28px]
-              leading-[1.15]
-              tracking-[0.02em]
-              pb-1
-              overflow-visible
-            "
-          >
-            Intersight
-          </h1>
-        </div>
+      {/* Logo */}
+      <div className="flex items-center gap-3 pb-4 border-b border-[#E5E5E5]">
+        <img
+          src="/logo/Icon_Insight.png"
+          alt="Logo Insight"
+          className="w-9 h-9 object-contain"
+        />
+        <h1 className="font-bold fontIntersight text-[24px] leading-tight tracking-wide">
+          Intersight
+        </h1>
       </div>
 
       {/* Social Media */}
-      <div className="flex items-center gap-4">
-        {/* Instagram */}
-        <a
-          href="https://www.instagram.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            w-10 h-10 rounded-full
-            bg-[radial-gradient(circle_at_30%_107%,#FDF497_0%,#FDF497_5%,#FD5949_45%,#D6249F_60%,#285AEB_90%)]
-            flex items-center justify-center
-            hover:scale-110 transition-all duration-300
-          "
-        >
-          <Instagram className="text-white w-5 h-5" />
-        </a>
-
-        {/* Facebook */}
-        <a
-          href="https://www.facebook.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            w-10 h-10 rounded-full
-            bg-[#1877F2]
-            flex items-center justify-center
-            hover:scale-110 transition-all duration-300
-          "
-        >
-          <img src="/icons/facebook.png" className="w-4" />
-        </a>
-
-        {/* LinkedIn */}
-        <a
-          href="https://www.linkedin.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            w-10 h-10 rounded-full
-            bg-[#0A66C2]
-            flex items-center justify-center
-            hover:scale-110 transition-all duration-300
-          "
-        >
-          <img src="/icons/linkedin.png" className="w-5" />
-        </a>
-
-        {/* YouTube */}
-        <a
-          href="https://www.youtube.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            w-10 h-10 rounded-full
-            bg-[#FF0000]
-            flex items-center justify-center
-            hover:scale-110 transition-all duration-300
-          "
-        >
-          <img src="/icons/youtube.png" className="w-5" />
-        </a>
-
-        {/* Discord */}
-        <a
-          href="https://discord.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            w-10 h-10 rounded-full
-            bg-[#5865F2]
-            flex items-center justify-center
-            hover:scale-110 transition-all duration-300
-          "
-        >
-          <img src="/icons/discord.png" className="w-5" />
-        </a>
+      <div className="flex items-center gap-3">
+        {socialLinks.map(({ href, label, bg, icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300"
+            style={{ background: bg }}
+          >
+            {icon}
+          </a>
+        ))}
       </div>
     </div>
   );
