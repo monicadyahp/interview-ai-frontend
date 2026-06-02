@@ -73,7 +73,8 @@ const LEARNING_PATHS = [
         name: "Aqilla Zeba Fakhira",
         credential: "CACC009D6X2486",
         university: "Universitas Gunadarma",
-        linkedin: "https://www.linkedin.com/in/aqilla-fakhira-873269284/?locale=en",
+        linkedin:
+          "https://www.linkedin.com/in/aqilla-fakhira-873269284/?locale=en",
         photo: "/profile/aqilla.png",
       },
     ],
@@ -164,21 +165,18 @@ function MemberCard({ member, pathColor, badgeBg, pathEmoji }) {
 
 export default function AboutPage() {
   return (
-    <div
-      className="min-h-screen w-full bg-[#faf9ff] px-4 py-20"
-      style={ff}
-    >
+    <div className="min-h-screen w-full bg-[#faf9ff] px-4 py-20" style={ff}>
       <div className="max-w-5xl mx-auto">
-
         {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-[13px] font-semibold tracking-widest uppercase text-[#fe63c8] mb-3">
+          <p className="text-[13px] font-semibold tracking-widest uppercase text-[#fe63c8] mb-3 pt-[17px] md:pt-[25px] lg:pt-[70px]">
             CC26-PSU188 · Coding Camp 2026
           </p>
           <h1
             className="text-[36px] md:text-[48px] font-bold mb-4 leading-tight"
             style={{
-              background: "linear-gradient(90deg, #071097, #fe63c8, #f5a159, #8039ff)",
+              background:
+                "linear-gradient(90deg, #071097, #fe63c8, #f5a159, #8039ff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -186,14 +184,17 @@ export default function AboutPage() {
             Tentang Kami
           </h1>
           <p className="text-[#888] text-[15px] max-w-xl mx-auto leading-relaxed">
-            Tim pengembang Intersight — 6 mahasiswa dari berbagai universitas yang
-            berkolaborasi membangun platform AI interview terbaik untuk Indonesia.
+            Tim pengembang Intersight — 6 mahasiswa dari berbagai universitas
+            yang berkolaborasi membangun platform AI interview terbaik untuk
+            Indonesia.
           </p>
 
           {/* DBS badge */}
           <div className="mt-6 inline-flex items-center gap-2 bg-white border border-[#e5e7eb] rounded-full px-5 py-2 shadow-sm">
             <span className="text-[13px] text-[#666]">Supported by</span>
-            <span className="text-[13px] font-bold text-[#8039FF]">DBS Foundation</span>
+            <span className="text-[13px] font-bold text-[#8039FF]">
+              DBS Foundation
+            </span>
             <span className="text-[#ccc]">·</span>
             <span className="text-[13px] text-[#666]">Coding Camp 2026</span>
           </div>
@@ -207,7 +208,10 @@ export default function AboutPage() {
               <div className="flex items-center gap-3 mb-6">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-sm"
-                  style={{ background: path.bg, border: `1px solid ${path.border}` }}
+                  style={{
+                    background: path.bg,
+                    border: `1px solid ${path.border}`,
+                  }}
                 >
                   {path.emoji}
                 </div>
@@ -215,7 +219,10 @@ export default function AboutPage() {
                   <p className="text-[11px] text-[#aaa] uppercase tracking-widest font-semibold">
                     Learning Path
                   </p>
-                  <h2 className="text-[18px] font-bold" style={{ color: path.color }}>
+                  <h2
+                    className="text-[18px] font-bold"
+                    style={{ color: path.color }}
+                  >
                     {path.label}
                   </h2>
                 </div>
