@@ -183,11 +183,16 @@ export default function Dashboard() {
             </svg>
             <div className="flex items-center gap-2.5">
               {/* FIX: avatar digedein */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[14px] font-bold">
-                {user?.username?.[0]?.toUpperCase() || "A"}
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[14px] font-bold">
+                {user?.avatar ? (
+                  <img src={user.avatarUrl || user.avatar} alt={user?.firstName || "User"}
+                    referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                ) : (
+                  user?.firstName?.[0]?.toUpperCase() || "U"
+                )}
               </div>
               <span className="text-[15px] font-semibold text-[#1E1E1E]">
-                {user?.username?.split(" ")[0] || "Angel"}
+                {user?.firstName || "User"}
               </span>
             </div>
           </div>
@@ -203,7 +208,7 @@ export default function Dashboard() {
             <div className="relative z-10 px-8 py-10 max-w-[540px]">
               {/* FIX: font text-[22px] → text-[28px], leading lebih ketat */}
               <h2 className="text-white text-[26px] md:text-[30px] font-bold leading-[1.2] mb-3">
-                {getGreeting()} {user?.username?.split(" ")[0] || "Angel"}, Ready to Shine{" "}
+                {getGreeting()} {user?.firstName || "User"}, Ready to Shine{" "}
                 in Your Next interview ?
               </h2>
               {/* FIX: subtitle font digedein */}

@@ -44,15 +44,15 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   // form state — pre-fill dari user
-  const [firstName, setFirstName] = useState(user?.username?.split(" ")[0] || "");
-  const [lastName, setLastName] = useState(user?.username?.split(" ").slice(1).join(" ") || "");
+  const [firstName, setFirstName] = useState(user?.firstName || "");
+  const [lastName, setLastName] = useState(user?.lastName || "");
   const [bio, setBio] = useState(user?.bio || "");
   const [education, setEducation] = useState(user?.education || "");
-  const [currentPosition, setCurrentPosition] = useState(user?.targetJob || "");
+  const [currentPosition, setCurrentPosition] = useState(user?.position || "");
   const [industry, setIndustry] = useState(user?.industry || "");
   const [country, setCountry] = useState(user?.country || "");
-  const [employmentLevel, setEmploymentLevel] = useState(user?.employmentLevel || "");
-  const [preferenceCompany, setPreferenceCompany] = useState(user?.preferenceCompany || "");
+  const [employmentLevel, setEmploymentLevel] = useState(user?.employment || "");
+  const [preferenceCompany, setPreferenceCompany] = useState(user?.preferences || "");
   const [isSaving, setIsSaving] = useState(false);
 
   if (!user) { navigate("/login"); return null; }
@@ -81,7 +81,7 @@ export default function ProfilePage() {
       title: "Pilih Foto Profil",
       input: "file",
       inputAttributes: { accept: "image/*", "aria-label": "Pilih foto" },
-      imageUrl: user.profileImage || defaultImg,
+      imageUrl: user.avatarUrl || user.avatar || defaultImg,
       imageWidth: 120, imageHeight: 120, imageAlt: "Preview",
       confirmButtonText: "Upload", confirmButtonColor: "#7B4DFF",
       showCancelButton: true,
@@ -101,7 +101,7 @@ export default function ProfilePage() {
       const reader = new FileReader();
       reader.onload = async (e) => {
         const compressed = await resizeImage(e.target.result);
-        saveToAPI({ profileImage: compressed }, "photo");
+        saveToAPI({ avatar: compressed }, "photo");
       };
       reader.readAsDataURL(file);
     }
@@ -110,14 +110,12 @@ export default function ProfilePage() {
   const saveToAPI = async (data, type = "data") => {
     setIsSaving(true);
     try {
-      const payload = {
-        profileImage: user.profileImage,
-        ...data,
-        email: user.email,
-        username: data.username || user.username || user.name,
-      };
-      const res = await axios.put(`${API_BASE_URL}/auth/profile/${user.id || user._id}`, payload);
-      setUser(res.data);
+      // Token disimpan sudah berikut prefix "Bearer " saat login → pakai apa adanya.
+      const token = localStorage.getItem("token");
+      const res = await axios.put(`${API_BASE_URL}/auth/profile`, data, {
+        headers: { Authorization: token },
+      });
+      setUser(res.data.user);
       Swal.fire({
         icon: "success",
         title: "Berhasil!",
@@ -127,23 +125,32 @@ export default function ProfilePage() {
       });
     } catch (err) {
       console.error(err);
-      Swal.fire("Gagal", "Terjadi kesalahan saat menyimpan.", "error");
+      Swal.fire(
+        "Gagal",
+        err.response?.data?.message || "Terjadi kesalahan saat menyimpan.",
+        "error",
+      );
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleSaveChanges = () => {
-    saveToAPI({
-      username: `${firstName} ${lastName}`.trim(),
-      bio,
-      education,
-      targetJob: currentPosition,
-      industry,
-      country,
-      employmentLevel,
-      preferenceCompany,
-    });
+    // Kirim memakai nama field backend. Field yang bebas kosong dikirim apa adanya;
+    // field dengan aturan ketat (firstName min 3, enum employment/preferences)
+    // hanya dikirim bila terisi agar tidak memicu error validasi.
+    const payload = {
+      lastName: lastName.trim(),
+      bio: bio.trim(),
+      education: education.trim(),
+      position: currentPosition.trim(),
+      industry: industry.trim(),
+      country: country.trim(),
+    };
+    if (firstName.trim()) payload.firstName = firstName.trim();
+    if (employmentLevel) payload.employment = employmentLevel;
+    if (preferenceCompany) payload.preferences = preferenceCompany;
+    saveToAPI(payload);
   };
 
   return (
@@ -189,10 +196,15 @@ export default function ProfilePage() {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[12px] font-bold">
-                {user?.username?.[0]?.toUpperCase() || "A"}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[12px] font-bold">
+                {user?.avatar ? (
+                  <img src={user.avatarUrl || user.avatar} alt={user?.firstName || "User"}
+                    referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                ) : (
+                  user?.firstName?.[0]?.toUpperCase() || "U"
+                )}
               </div>
-              <span className="text-[14px] font-semibold text-[#1E1E1E]">{user?.username?.split(" ")[0] || "Angel"}</span>
+              <span className="text-[14px] font-semibold text-[#1E1E1E]">{user?.firstName || "User"}</span>
             </div>
           </div>
         </div>
@@ -222,8 +234,9 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4 mb-6">
               <div className="relative">
                 <img
-                  src={user.profileImage || defaultImg}
+                  src={user.avatarUrl || user.avatar || defaultImg}
                   alt="Profile"
+                  referrerPolicy="no-referrer"
                   className="w-[80px] h-[80px] rounded-full object-cover border-2 border-[#E5E5E5]"
                 />
               </div>
@@ -311,14 +324,19 @@ export default function ProfilePage() {
               <div className="col-span-2">
                 <label className="block text-[13px] font-semibold text-[#1E1E1E] mb-2">Preferences Company</label>
                 <div className="flex gap-2 flex-wrap">
-                  {["Startup", "Corporate", "Agency", "Tech Company"].map((type) => (
-                    <button key={type} onClick={() => setPreferenceCompany(type)}
+                  {[
+                    { label: "Startup", value: "Startup" },
+                    { label: "Corporate", value: "Corporate" },
+                    { label: "Agency", value: "Agency" },
+                    { label: "Tech Company", value: "Tech-Company" },
+                  ].map(({ label, value }) => (
+                    <button key={value} onClick={() => setPreferenceCompany(value)}
                       className={`px-4 py-2 rounded-full text-[12px] font-semibold border transition ${
-                        preferenceCompany === type
+                        preferenceCompany === value
                           ? "bg-[#7B4DFF] text-white border-[#7B4DFF]"
                           : "bg-white text-[#666] border-[#E5E5E5] hover:border-[#7B4DFF]"
                       }`}>
-                      {type}
+                      {label}
                     </button>
                   ))}
                 </div>

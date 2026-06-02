@@ -15,16 +15,16 @@ const ChatAssistant = () => {
     isBot: true
   });
 
-  const [messages, setMessages] = useState([getInitialMessage(user?.username)]);
+  const [messages, setMessages] = useState([getInitialMessage(user?.firstName)]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    setMessages([getInitialMessage(user?.username)]);
+    setMessages([getInitialMessage(user?.firstName)]);
   }, [user]);
 
   const handleClearHistory = () => {
-    setMessages([getInitialMessage(user?.username)]);
+    setMessages([getInitialMessage(user?.firstName)]);
   };
 
   const isHiddenPage = location.pathname === '/interview-session'; 

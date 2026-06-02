@@ -104,8 +104,8 @@ const Header = () => {
                                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                                 style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}
                             >
-                                <img 
-                                    src={user.profileImage || `https://ui-avatars.com/api/?name=${user.username}&background=8C5EAD&color=fff`} 
+                                <img
+                                    src={user.avatarUrl || user.avatar || `https://ui-avatars.com/api/?name=${user.firstName || "User"}&background=8C5EAD&color=fff`}
                                     alt="Avatar" 
                                     referrerPolicy="no-referrer" // Tambahkan ini
                                     style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #F3EAFB' }} 
@@ -121,8 +121,8 @@ const Header = () => {
                                     textOverflow: 'ellipsis', 
                                     whiteSpace: 'nowrap' 
                                 }}>
-                                    {/* Logika: Ambil nama, pecah berdasarkan spasi, ambil kata ke-0 (paling depan) */}
-                                    {user.username ? user.username.split(' ')[0] : 'User'}
+                                    {/* Tampilkan nama depan user yang sedang login */}
+                                    {user.firstName || 'User'}
                                 </span>
 
                                 <i className={`bx bx-chevron-down ${isProfileDropdownOpen ? 'bx-rotate-180' : ''}`} style={{ color: '#888', transition: '0.3s' }}></i>
@@ -132,7 +132,7 @@ const Header = () => {
                             {isProfileDropdownOpen && (
                                 <div className="nav__profile-dropdown reveal-from-top" style={{ position: 'absolute', top: '50px', right: 0, width: '220px', backgroundColor: '#FFF', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '15px', border: '1px solid #F3EAFB', zIndex: 1100 }}>
                                     <div style={{ marginBottom: '12px', paddingBottom: '10px', borderBottom: '1px solid #F3EAFB' }}>
-                                        <p style={{ fontWeight: '600', color: '#333', margin: 0, fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.username}</p>
+                                        <p style={{ fontWeight: '600', color: '#333', margin: 0, fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{[user.firstName, user.lastName].filter(Boolean).join(' ') || 'User'}</p>
                                         <p style={{ fontSize: '0.7rem', color: '#999', margin: 0 }}>{user.email}</p>
                                     </div>
                                     

@@ -8,8 +8,8 @@ import "./App.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* Ganti dengan Client ID asli kamu */}
-    <GoogleOAuthProvider clientId="158352528695-fupam1ncdn5fonnlhndc6a7vkgioke9b.apps.googleusercontent.com">
+    {/* Client ID harus sama dengan GOOGLE_CLIENT_ID di backend .env & origins di Google Console */}
+    <GoogleOAuthProvider clientId="596272309967-7ol6vcpag8lot6tu28vq6i0nd7f2krc1.apps.googleusercontent.com">
       <AuthProvider>
         <App />
       </AuthProvider>

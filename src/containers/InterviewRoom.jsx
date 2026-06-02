@@ -47,8 +47,9 @@ const InterviewRoom = () => {
   const videoChunksRef = useRef([]);
   const [recordedVideoURL, setRecordedVideoURL] = useState(null);
   const [positionApplied, setPositionApplied] = useState("");
-  const [employmentLevel, setEmploymentLevel] = useState("");
-  const [companyType, setCompanyType] = useState("");
+  // Default mengikuti profil bila sudah diisi; jika kosong, user bebas memilih.
+  const [employmentLevel, setEmploymentLevel] = useState(user?.employment || "");
+  const [companyType, setCompanyType] = useState(user?.preferences || "");
   const [simulationLevel, setSimulationLevel] = useState("Normal");
 
   // ── 1. helper functions (harus di atas useCallback yang memakainya) ──
@@ -245,10 +246,15 @@ const InterviewRoom = () => {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[12px] font-bold">
-                {user?.username?.[0]?.toUpperCase() || "A"}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#7B4DFF] to-[#C7B5FF] flex items-center justify-center text-white text-[12px] font-bold">
+                {user?.avatar ? (
+                  <img src={user.avatarUrl || user.avatar} alt={user?.firstName || "User"}
+                    referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                ) : (
+                  user?.firstName?.[0]?.toUpperCase() || "U"
+                )}
               </div>
-              <span className="text-[14px] font-semibold text-[#1E1E1E]">{user?.username?.split(" ")[0] || "Angel"}</span>
+              <span className="text-[14px] font-semibold text-[#1E1E1E]">{user?.firstName || "User"}</span>
             </div>
           </div>
         </div>
@@ -307,10 +313,15 @@ const InterviewRoom = () => {
                     <div className="mb-4">
                       <label className="text-[15px] font-bold text-[#1E1E1E] mb-2 block">Company Type Context</label>
                       <div className="flex gap-2 flex-wrap">
-                        {["Startup","Corporate","Agency","Tech Company"].map((type) => (
-                          <button key={type} onClick={() => setCompanyType(type)}
-                            className={`px-4 py-2 rounded-full text-[13px] font-semibold border transition ${companyType === type ? "bg-[#7B4DFF] text-white border-[#7B4DFF]" : "bg-white text-[#666] border-[#E5E5E5]"}`}>
-                            {type}
+                        {[
+                          { label: "Startup", value: "Startup" },
+                          { label: "Corporate", value: "Corporate" },
+                          { label: "Agency", value: "Agency" },
+                          { label: "Tech Company", value: "Tech-Company" },
+                        ].map(({ label, value }) => (
+                          <button key={value} onClick={() => setCompanyType(value)}
+                            className={`px-4 py-2 rounded-full text-[13px] font-semibold border transition ${companyType === value ? "bg-[#7B4DFF] text-white border-[#7B4DFF]" : "bg-white text-[#666] border-[#E5E5E5]"}`}>
+                            {label}
                           </button>
                         ))}
                       </div>
