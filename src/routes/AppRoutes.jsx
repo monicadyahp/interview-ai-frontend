@@ -10,12 +10,16 @@ import HistoryPage from '../containers/HistoryPage';
 import LearningPage from '../containers/LearningPage';
 import ChatbotPage from '../containers/ChatbotPage';
 import ProfilePage from '../containers/ProfilePage';
+import ContactPage from '../containers/ContactPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Landing Page */}
       <Route path="/" element={<LandingPage />} />
+
+      {/* Contact */}
+      <Route path="/contact" element={<ContactPage />} />
 
       {/* Auth */}
       <Route path="/login" element={<LoginPage />} />
