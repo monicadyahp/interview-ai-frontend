@@ -12,12 +12,16 @@ import ChatbotPage from '../containers/ChatbotPage';
 import ProfilePage from '../containers/ProfilePage';
 import ContactPage from '../containers/ContactPage';
 import TermsRulesPage from '../containers/TermsRulesPage';
+import AboutPage from '../containers/AboutPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Landing Page */}
       <Route path="/" element={<LandingPage />} />
+
+      {/* About */}
+      <Route path="/about" element={<AboutPage />} />
 
       {/* Contact */}
       <Route path="/contact" element={<ContactPage />} />

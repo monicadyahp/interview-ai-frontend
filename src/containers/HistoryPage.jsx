@@ -178,7 +178,7 @@ export default function HistoryPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-[#F0F0F0]">
-                      {["Date", "Job Role", "Simulation Score", "Dominant Emotion", "Feedback", "Action"].map((h) => (
+                      {["Date", "Questions", "Simulation Score", "Dominant Emotion", "Feedback", "Action"].map((h) => (
                         <th key={h} className="text-left px-5 py-3.5 text-[13px] font-bold text-[#1E1E1E]" style={{ fontFamily }}>{h}</th>
                       ))}
                     </tr>
