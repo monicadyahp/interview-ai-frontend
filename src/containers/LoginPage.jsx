@@ -197,18 +197,10 @@ const LoginPage = () => {
               </p>
             )}
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px" }}>
-              <button type="button"
-                className="w-[48px] h-[48px] rounded-full flex items-center justify-center hover:scale-105 transition bg-[#1877F2]">
-                <img src="/icons/facebook.png" alt="Facebook" className="w-[26px] h-[26px] object-contain" />
-              </button>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               <button type="button"
                 className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
                 <img src="/icons/google.png" alt="Google" className="w-[22px] h-[22px] object-contain" />
-              </button>
-              <button type="button"
-                className="w-[48px] h-[48px] rounded-full border border-[#E5E5E5] flex items-center justify-center hover:scale-105 transition bg-white">
-                <img src="/icons/icloud.png" alt="iCloud" className="w-[36px] h-[36px] object-contain" />
               </button>
             </div>
 
