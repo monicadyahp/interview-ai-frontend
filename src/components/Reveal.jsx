@@ -1,18 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-
-/**
- * Reveal — animasikan elemen saat masuk viewport (scroll reveal).
- *
- * Props:
- *  - direction: "up" | "down" | "left" | "right" | "zoom"  (default "up")
- *  - delay: angka ms untuk efek bertahap (stagger)          (default 0)
- *  - as: tag/komponen pembungkus                            (default "div")
- *  - once: animasi hanya sekali (default true)
- *  - className: kelas tambahan
- *
- * Contoh:
- *  <Reveal direction="up" delay={100}> ...konten... </Reveal>
- */
 const Reveal = ({
   children,
   direction = "up",
