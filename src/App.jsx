@@ -34,7 +34,10 @@ const AppContent = () => {
       <ScrollToTop />
       <main className="main">
         {!hideLayout && <Navbar />}
-        <AppRoutes />
+        {/* key=pathname → animasi masuk diputar ulang setiap pindah halaman */}
+        <div key={pathname} className="page-enter">
+          <AppRoutes />
+        </div>
         {!hideLayout && <Footer />}
       </main>
       {!hideLayout && <ChatAssistant />}

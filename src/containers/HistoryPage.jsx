@@ -38,23 +38,93 @@ const emotionColor = (emotion) => {
   return map[emotion] || "#8B5CF6";
 };
 
+// Dropdown filter — opsi diambil dari data, pilih = auto-filter tabel
+const FilterDropdown = ({ value, options, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  return (
+    <div className="relative" ref={ref}>
+      <button onClick={() => setOpen((o) => !o)}
+        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-medium border transition ${open ? "border-[#7B4DFF] text-[#7B4DFF] bg-[#F8F5FF]" : "bg-[#F7F7FB] text-[#555] border-[#ECECEC] hover:border-[#7B4DFF]"}`}
+        style={{ fontFamily }}>
+        {value} <ChevronDown size={13} className={`transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-[calc(100%+6px)] z-30 min-w-[170px] max-h-[260px] overflow-auto bg-white rounded-[14px] border border-[#ECECEC] shadow-lg py-1">
+          {options.map((opt) => (
+            <button key={opt} onClick={() => { onChange(opt); setOpen(false); }}
+              className={`w-full text-left px-4 py-2 text-[13px] transition hover:bg-[#F5F2FF] ${value === opt ? "text-[#7B4DFF] font-semibold bg-[#F8F5FF]" : "text-[#555]"}`}
+              style={{ fontFamily }}>
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ITEMS_PER_PAGE = 4;
 
 export default function HistoryPage() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const exportAreaRef = useRef(null);
+  const tableScrollRef = useRef(null);
+  const trackRef = useRef(null);
+  const dragRef = useRef(null);
+  const [scrollInfo, setScrollInfo] = useState({ ratio: 1, pos: 0 });
 
   const [histories, setHistories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedHistory, setSelectedHistory] = useState(null);
   const [search, setSearch] = useState("");
-  const [filterTime] = useState("All Time");
-  const [filterRole] = useState("All Roles");
-  const [filterMore] = useState("More Times");
+  const [filterTime, setFilterTime] = useState("All Time");
+  const [filterRole, setFilterRole] = useState("All Roles");
+  const [filterEmotion, setFilterEmotion] = useState("All Emotions");
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => { if (user?.id) loadHistory(); }, [user]); // eslint-disable-line
+
+  // Hitung ukuran & posisi thumb scrollbar custom. Dibuat manual karena iOS Safari
+  // menyembunyikan scrollbar native (tidak menghormati ::-webkit-scrollbar).
+  const updateScrollInfo = () => {
+    const el = tableScrollRef.current;
+    if (!el) return;
+    const { scrollWidth, clientWidth, scrollLeft } = el;
+    const ratio = scrollWidth > 0 ? clientWidth / scrollWidth : 1;
+    const maxScroll = scrollWidth - clientWidth;
+    const pos = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+    setScrollInfo({ ratio: Math.min(ratio, 1), pos });
+  };
+
+  useEffect(() => {
+    updateScrollInfo();
+    window.addEventListener("resize", updateScrollInfo);
+    return () => window.removeEventListener("resize", updateScrollInfo);
+  }, [histories, search, currentPage, isLoading]);
+
+  // Drag thumb untuk menggeser tabel ke samping
+  const onThumbDown = (e) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    dragRef.current = { startX: e.clientX, startScrollLeft: tableScrollRef.current?.scrollLeft || 0 };
+  };
+  const onThumbMove = (e) => {
+    if (!dragRef.current || !tableScrollRef.current || !trackRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const scale = tableScrollRef.current.scrollWidth / trackRef.current.clientWidth;
+    tableScrollRef.current.scrollLeft = dragRef.current.startScrollLeft + dx * scale;
+  };
+  const onThumbUp = (e) => {
+    dragRef.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+  };
 
   const loadHistory = async () => {
     setIsLoading(true);
@@ -96,10 +166,33 @@ export default function HistoryPage() {
   const dominantEmotion = (() => { if (!histories.length) return "—"; const c = {}; histories.forEach((h) => { c[h.emotion] = (c[h.emotion] || 0) + 1; }); return Object.keys(c).reduce((a, b) => c[a] > c[b] ? a : b); })();
   const streak = (() => { if (!histories.length) return 0; const dates = [...new Set(histories.map((h) => new Date(h.createdAt).toLocaleDateString("en-CA")))].sort().reverse(); let s = 1; for (let i = 0; i < dates.length - 1; i++) { if ((new Date(dates[i]) - new Date(dates[i + 1])) / 86400000 === 1) s++; else break; } return s; })();
 
+  // Opsi dropdown diambil dari data yang ada
+  const roleOptions = ["All Roles", ...Array.from(new Set(histories.map((h) => h.positionApplied).filter(Boolean)))];
+  const emotionOptions = ["All Emotions", ...Array.from(new Set(histories.map((h) => h.emotion).filter(Boolean)))];
+  const timeOptions = ["All Time", "Today", "Last 7 Days", "Last 30 Days"];
+
+  // Reset ke halaman 1 setiap kali filter berubah
+  const applyFilter = (setter) => (val) => { setter(val); setCurrentPage(1); };
+
+  const withinTimeFilter = (createdAt) => {
+    if (filterTime === "All Time") return true;
+    const created = new Date(createdAt);
+    const now = new Date();
+    if (filterTime === "Today") return created.toDateString() === now.toDateString();
+    const diffDays = (now - created) / 86400000;
+    if (filterTime === "Last 7 Days") return diffDays <= 7;
+    if (filterTime === "Last 30 Days") return diffDays <= 30;
+    return true;
+  };
+
   // Filter & paginate
   const filtered = histories.filter((h) => {
     const q = search.toLowerCase();
-    return !q || (h.question?.toLowerCase().includes(q)) || (h.emotion?.toLowerCase().includes(q));
+    const matchSearch = !q || (h.question?.toLowerCase().includes(q)) || (h.emotion?.toLowerCase().includes(q)) || (h.positionApplied?.toLowerCase().includes(q));
+    const matchRole = filterRole === "All Roles" || h.positionApplied === filterRole;
+    const matchEmotion = filterEmotion === "All Emotions" || h.emotion === filterEmotion;
+    const matchTime = withinTimeFilter(h.createdAt);
+    return matchSearch && matchRole && matchEmotion && matchTime;
   });
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -138,27 +231,24 @@ export default function HistoryPage() {
       <main className="flex-1 flex flex-col min-w-0 lg:ml-[240px]">
         <DashboardTopBar />
 
-        <div className="flex-1 px-6 py-6 overflow-auto">
+        <div className="flex-1 px-4 sm:px-6 py-5 sm:py-6 overflow-auto">
           <h1 className="text-[24px] font-bold text-[#1E1E1E] mb-1" style={{ fontFamily }}>Interview History</h1>
           <p className="text-[14px] text-[#777] mb-6" style={{ fontFamily }}>Review your past simulation interview performances and track your progress.</p>
 
           {/* Main Card */}
-          <div className="bg-white rounded-[20px] border border-[#ECECEC] overflow-hidden mb-5">
+          <div className="bg-white rounded-[20px] border border-[#ECECEC] mb-5">
 
             {/* Search + Filter bar */}
-            <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F0F0F0] flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-4 border-b border-[#F0F0F0] flex-wrap">
               <div className="flex items-center gap-2 bg-[#F7F7FB] rounded-full px-4 py-2 flex-1 min-w-[180px] max-w-[280px]">
                 <Search size={14} className="text-[#999]" />
                 <input type="text" placeholder="Search Simulation..."
                   value={search} onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
                   className="bg-transparent outline-none text-[13px] text-[#555] w-full" style={{ fontFamily }} />
               </div>
-              {[["All Time", filterTime], ["All Roles", filterRole], ["More Times", filterMore]].map(([val]) => (
-                <button key={val} className="flex items-center gap-1.5 bg-[#F7F7FB] rounded-full px-4 py-2 text-[13px] font-medium text-[#555] border border-[#ECECEC] hover:border-[#7B4DFF] transition"
-                  style={{ fontFamily }}>
-                  {val} <ChevronDown size={13} />
-                </button>
-              ))}
+              <FilterDropdown value={filterTime} options={timeOptions} onChange={applyFilter(setFilterTime)} />
+              <FilterDropdown value={filterRole} options={roleOptions} onChange={applyFilter(setFilterRole)} />
+              <FilterDropdown value={filterEmotion} options={emotionOptions} onChange={applyFilter(setFilterEmotion)} />
             </div>
 
             {/* Table */}
@@ -175,10 +265,16 @@ export default function HistoryPage() {
               </div>
             ) : (
               <>
-                <table className="w-full">
+                {/* Swipe hint (mobile only) */}
+                <p className="md:hidden text-[11px] text-[#A99Bd0] text-center pt-3 pb-1" style={{ fontFamily }}>
+                  ← Geser tabel ke samping untuk lihat detail →
+                </p>
+                {/* Table — scrolls horizontally on mobile/tablet to reveal all columns */}
+                <div className="table-scroll" ref={tableScrollRef} onScroll={updateScrollInfo}>
+                <table className="w-full min-w-[820px]">
                   <thead>
                     <tr className="border-b border-[#F0F0F0]">
-                      {["Date", "Questions", "Simulation Score", "Dominant Emotion", "Feedback", "Action"].map((h) => (
+                      {["Date", "Questions", "Position Applied", "Simulation Score", "Dominant Emotion", "Feedback", "Action"].map((h) => (
                         <th key={h} className="text-left px-5 py-3.5 text-[13px] font-bold text-[#1E1E1E]" style={{ fontFamily }}>{h}</th>
                       ))}
                     </tr>
@@ -200,7 +296,12 @@ export default function HistoryPage() {
                           </td>
                           <td className="px-5 py-4">
                             <p className="text-[13px] font-semibold text-[#1E1E1E]" style={{ fontFamily }}>
-                              {item.positionApplied || item.question?.substring(0, 20) + "..." || "—"}
+                              {item.question ? item.question.substring(0, 24) + (item.question.length > 24 ? "…" : "") : "—"}
+                            </p>
+                          </td>
+                          <td className="px-5 py-4">
+                            <p className="text-[13px] font-semibold text-[#1E1E1E]" style={{ fontFamily }}>
+                              {item.positionApplied || "—"}
                             </p>
                           </td>
                           <td className="px-5 py-4">
@@ -235,9 +336,26 @@ export default function HistoryPage() {
                     })}
                   </tbody>
                 </table>
+                </div>
+
+                {/* Custom scrollbar (mobile) — terlihat di semua browser termasuk iOS.
+                    Hanya tampil bila tabel memang lebih lebar dari layar. */}
+                {scrollInfo.ratio < 0.999 && (
+                  <div ref={trackRef}
+                    className="md:hidden mx-4 mt-2 mb-1 h-2 rounded-full bg-[#EFEDF7] relative touch-none">
+                    <div
+                      onPointerDown={onThumbDown} onPointerMove={onThumbMove} onPointerUp={onThumbUp} onPointerCancel={onThumbUp}
+                      className="absolute top-0 h-2 rounded-full bg-[#7B4DFF] cursor-grab active:cursor-grabbing"
+                      style={{
+                        width: `${Math.max(scrollInfo.ratio * 100, 14)}%`,
+                        left: `${scrollInfo.pos * (100 - Math.max(scrollInfo.ratio * 100, 14))}%`,
+                      }}
+                    />
+                  </div>
+                )}
 
                 {/* Pagination */}
-                <div className="flex items-center justify-between px-5 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-4">
                   <p className="text-[13px] text-[#999]" style={{ fontFamily }}>
                     Showing {Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, filtered.length)}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length} results
                   </p>
@@ -264,7 +382,7 @@ export default function HistoryPage() {
           </div>
 
           {/* Stat Cards */}
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {[
               { label: "Simulation Score", value: `${avgScore}/100`, sub: `+${Math.min(avgScore,10)}% from last week`, subColor: "#22C55E", icon: "/icons/simulationscore.png" },
               { label: "Total Simulations", value: `${histories.length} Sessions`, sub: `+${Math.min(histories.length,3)} from last week`, subColor: "#22C55E", icon: "/icons/totalsimulations.png" },
@@ -291,7 +409,7 @@ export default function HistoryPage() {
             onClick={() => setSelectedHistory(null)}>
             <div className="bg-white rounded-[24px] w-full max-w-[680px] max-h-[90vh] overflow-y-auto shadow-2xl"
               onClick={(e) => e.stopPropagation()}>
-              <div className="sticky top-0 bg-white border-b border-[#F0F0F0] px-6 py-4 flex items-center justify-between rounded-t-[24px]">
+              <div className="sticky top-0 z-10 bg-white border-b border-[#F0F0F0] px-4 sm:px-6 py-4 flex items-center justify-between gap-2 flex-wrap rounded-t-[24px]">
                 <h3 className="text-[17px] font-bold text-[#1E1E1E]" style={{ fontFamily }}>Detail Riwayat</h3>
                 <div className="flex items-center gap-2">
                   <button onClick={exportImage}
@@ -304,14 +422,19 @@ export default function HistoryPage() {
                     className="w-8 h-8 rounded-full bg-[#F7F7FB] flex items-center justify-center text-[#555] hover:bg-[#ECECEC] transition text-lg font-bold">×</button>
                 </div>
               </div>
-              <div className="p-6">
-                <div className="flex gap-4 mb-5">
-                  <div className="w-[140px] h-[105px] rounded-[14px] overflow-hidden border-2 border-[#7B4DFF] flex-shrink-0 bg-[#F7F7FB]">
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row gap-4 mb-5">
+                  <div className="w-full sm:w-[140px] h-[180px] sm:h-[105px] rounded-[14px] overflow-hidden border-2 border-[#7B4DFF] flex-shrink-0 bg-[#F7F7FB]">
                     {selectedHistory.userPhoto
                       ? <img src={selectedHistory.userPhoto} alt="User" className="w-full h-full object-cover" />
                       : <div className="w-full h-full flex items-center justify-center text-[#999] text-[12px]">No Photo</div>}
                   </div>
                   <div className="flex-1 bg-[#FAFAFA] rounded-[14px] p-4 border border-[#ECECEC]">
+                    {selectedHistory.positionApplied && (
+                      <p className="text-[12px] font-semibold text-[#1E1E1E] mb-2" style={{ fontFamily }}>
+                        <span className="text-[#7B4DFF]">Posisi Dilamar:</span> {selectedHistory.positionApplied}
+                      </p>
+                    )}
                     <p className="text-[11px] font-bold text-[#7B4DFF] mb-1" style={{ fontFamily }}>PERTANYAAN ({selectedHistory.duration}s)</p>
                     <p className="text-[14px] font-semibold text-[#1E1E1E] leading-relaxed" style={{ fontFamily }}>"{selectedHistory.question}"</p>
                   </div>

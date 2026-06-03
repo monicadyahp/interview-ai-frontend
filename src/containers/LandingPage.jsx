@@ -8,6 +8,7 @@ import Testimonials from "../section/Testimonials";
 import CTASection from "../section/CTASection";
 import FAQSection from "../section/FAQSection";
 import HeroSection from "../section/HeroSection";
+import Reveal from "../components/Reveal";
 
 const LandingPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -74,13 +75,13 @@ const LandingPage = () => {
         }
       `}</style>
       <HeroSection />
-      <TrustedBy />
-      <WhyQualified />
-      <Everything />
-      <HowItWorks />
-      <Testimonials />
-      <FAQSection />
-      <CTASection />
+      <Reveal direction="up"><TrustedBy /></Reveal>
+      <Reveal direction="up"><WhyQualified /></Reveal>
+      <Reveal direction="up"><Everything /></Reveal>
+      <Reveal direction="up"><HowItWorks /></Reveal>
+      <Reveal direction="up"><Testimonials /></Reveal>
+      <Reveal direction="up"><FAQSection /></Reveal>
+      <Reveal direction="up"><CTASection /></Reveal>
     </>
   );
 };
