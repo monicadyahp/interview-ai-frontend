@@ -5,7 +5,6 @@ import { sendFrameToPrediction } from "../services/api";
 const InterviewSession = () => {
   const webcamRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [timer, setTimer] = useState(5);
   const [isCounting, setIsCounting] = useState(false);
   const [question] = useState("Sebutkan kelebihan dan kekurangan Anda?");
   const [result, setResult] = useState(null);
@@ -26,16 +25,25 @@ const InterviewSession = () => {
 
   useEffect(() => {
     let interval;
-    if (isCounting && timer > 0) {
-      interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
-    } else if (timer === 0) {
-      setTimeout(() => {
+    let firstCaptureTimeout;
+
+    if (isCounting) {
+      // jalankan deteksi pertama kali setelah efek selesai
+      firstCaptureTimeout = setTimeout(() => {
         handleAutoCapture();
-        setIsCounting(false);
       }, 0);
+
+      // deteksi setiap 2 detik
+      interval = setInterval(() => {
+        handleAutoCapture();
+      }, 5000);
     }
-    return () => clearInterval(interval);
-  }, [isCounting, timer, handleAutoCapture]);
+
+    return () => {
+      if (firstCaptureTimeout) clearTimeout(firstCaptureTimeout);
+      if (interval) clearInterval(interval);
+    };
+  }, [isCounting, handleAutoCapture]);
 
   // Ganti bagian return di InterviewSession.jsx menjadi ini:
   return (
@@ -50,23 +58,24 @@ const InterviewSession = () => {
         }}
       >
         <h3 style={{ color: "#1a73e8" }}>{question}</h3>
-        {isCounting && <h2 style={{ color: "red" }}>Mulai dalam: {timer}s</h2>}
+        {isCounting && (
+          <h2 style={{ color: "green" }}>
+            Deteksi emosi aktif (setiap 2 detik)
+          </h2>
+        )}
       </div>
 
       <WebcamOverlay webcamRef={webcamRef} />
 
       <div style={{ marginTop: "20px" }}>
-        {!isCounting && (
-          <button
-            onClick={() => {
-              setIsCounting(true);
-              setTimer(5);
-            }}
-            className="button"
-          >
-            Mulai Menjawab
-          </button>
-        )}
+        <button
+          onClick={() => {
+            setIsCounting((prev) => !prev);
+          }}
+          className="button"
+        >
+          {isCounting ? "Stop Interview" : "Mulai Menjawab"}
+        </button>
       </div>
       {/* --- LOGIKA LOADING --- */}
       {isLoading && (
@@ -102,17 +111,21 @@ const InterviewSession = () => {
           <h4 style={{ color: "var(--primary-color)" }}>
             Emosi Terdeteksi:{" "}
             {result.predicted_class
-              ? result.predicted_class.charAt(0).toUpperCase() + result.predicted_class.slice(1)
+              ? result.predicted_class.charAt(0).toUpperCase() +
+                result.predicted_class.slice(1)
               : "—"}
           </h4>
           {result.confidence != null && (
-            <p style={{ color: "#7B4DFF", fontWeight: "bold", margin: "4px 0" }}>
+            <p
+              style={{ color: "#7B4DFF", fontWeight: "bold", margin: "4px 0" }}
+            >
               Confidence: {(result.confidence * 100).toFixed(2)}%
             </p>
           )}
           {result.meets_confidence_threshold === false && (
             <p style={{ color: "#EF4444", fontSize: "13px" }}>
-              Wajah kurang terlihat jelas. Pastikan pencahayaan baik dan wajah menghadap kamera.
+              Wajah kurang terlihat jelas. Pastikan pencahayaan baik dan wajah
+              menghadap kamera.
             </p>
           )}
           <p style={{ fontStyle: "italic", color: "#555", marginTop: "8px" }}>
