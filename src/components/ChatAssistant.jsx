@@ -20,16 +20,20 @@ const ChatAssistant = () => {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    setMessages([getInitialMessage(user?.username)]);
-  }, [user]);
+    const name = user?.username;
+    setTimeout(() => setMessages([getInitialMessage(name)]), 0);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
+
+  const isHiddenPage = location.pathname === '/interview-session';
 
   const handleClearHistory = () => {
     setMessages([getInitialMessage(user?.username)]);
   };
 
-  const isHiddenPage = location.pathname === '/interview-session'; 
-  if (isHiddenPage) return null;
-  
   const quickReplies = [
     { label: "👋 Perkenalan", value: "Tips perkenalan diri profesional" },
     { label: "😰 Gugup", value: "Cara mengatasi gugup interview" },
@@ -40,9 +44,7 @@ const ChatAssistant = () => {
     { label: "🎯 Kelebihan", value: "Menonjolkan kelebihan diri" },
   ];
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]); // Scroll juga saat loading muncul
+  if (isHiddenPage) return null;
 
   const sendMessage = async (text) => {
     const userMsg = { text: text, isBot: false };
@@ -53,7 +55,13 @@ const ChatAssistant = () => {
       const res = await axios.post(`${API_BASE_URL}/chatbot`, { message: text });
       setMessages(prev => [...prev, { text: res.data.reply, isBot: true }]);
     } catch (err) {
-      setMessages(prev => [...prev, { text: "Koneksi terputus. Coba lagi ya!", isBot: true }]);
+      const status = err.response?.status;
+      let msg = "Koneksi terputus. Coba lagi ya!";
+      if (status === 400) msg = "Pesan tidak valid. Coba kirim ulang.";
+      else if (status === 401) msg = "Akses ditolak. Hubungi tim kami.";
+      else if (status === 422) msg = "Format pesan tidak sesuai. Coba lagi.";
+      else if (status === 500) msg = "Maaf, asisten HRD sedang sibuk. Silakan coba beberapa saat lagi.";
+      setMessages(prev => [...prev, { text: msg, isBot: true }]);
     } finally {
       setIsLoading(false);
     }

@@ -6,9 +6,10 @@ import React, {
   useCallback,
 } from "react";
 import axios from "axios";
+import * as faceapi from "face-api.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { API_BASE_URL, AI_URL, INTERVIEW_QUESTIONS } from "../utils/constants";
+import { API_BASE_URL, INTERVIEW_QUESTIONS } from "../utils/constants";
 import WebcamOverlay from "../components/WebcamOverlay";
 import Swal from "sweetalert2";
 import {
@@ -61,9 +62,13 @@ const InterviewRoom = () => {
   const [userAnswer, setUserAnswer] = useState("");
   const [emotionLogs, setEmotionLogs] = useState([]);
   const [liveEmotion, setLiveEmotion] = useState("Standby");
+  const [liveSuggestion, setLiveSuggestion] = useState("");
   const [capturedUserPhoto, setCapturedUserPhoto] = useState(null);
   const mediaRecorderRef = useRef(null);
   const videoChunksRef = useRef([]);
+  const endedManuallyRef = useRef(false);
+  const hasSavedRef = useRef(false);
+  const faceModelsLoadedRef = useRef(false);
   const [recordedVideoURL, setRecordedVideoURL] = useState(null);
   const [positionApplied, setPositionApplied] = useState("");
   // Auto-select dari profil user (jika sudah diisi di halaman Setting)
@@ -72,9 +77,18 @@ const InterviewRoom = () => {
   );
   const [companyType, setCompanyType] = useState(user?.preferenceCompany || "");
   const [simulationLevel, setSimulationLevel] = useState("Normal");
+  const [isMuted, setIsMuted] = useState(false);
+  const [isCameraOff, setIsCameraOff] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackScore, setFeedbackScore] = useState(null);
   const [feedbackNote, setFeedbackNote] = useState("");
+  const [cameraStatus, setCameraStatus] = useState(
+    () => (navigator.permissions ? "checking" : "prompt"),
+  );
+  const [micStatus, setMicStatus] = useState(
+    () => (navigator.permissions ? "checking" : "prompt"),
+  );
+  const [connectionStatus, setConnectionStatus] = useState("checking");
 
   const calculateStats = useCallback(() => {
     if (!emotionLogs.length) return [];
@@ -92,19 +106,7 @@ const InterviewRoom = () => {
     const stats = calculateStats();
     if (!stats.length) return null;
     const dominant = stats.reduce((p, c) => (p.value > c.value ? p : c));
-    const messages = {
-      Happy: "Amazing! Your positive energy shines naturally.",
-      Neutral: "You look calm and professional.",
-      Sad: "Try to relax more and show enthusiasm.",
-      Fear: "Take a deep breath. You're prepared.",
-      Surprise: "Your expression shows genuine interest.",
-      Disgust: "Try to stay more positive and composed.",
-      Angry: "Stay calm and focus on professional answers.",
-    };
-    return {
-      ...dominant,
-      message: messages[dominant.label] || "Keep improving your confidence!",
-    };
+    return dominant;
   }, [calculateStats]);
 
   const startRecording = useCallback(() => {
@@ -126,7 +128,7 @@ const InterviewRoom = () => {
   }, []);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current?.state !== "inactive")
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive")
       mediaRecorderRef.current.stop();
   }, []);
 
@@ -139,7 +141,7 @@ const InterviewRoom = () => {
       await axios.post(`${API_BASE_URL}/history/save`, {
         userId: user._id || user.id,
         emotion: dominant.label,
-        motivation: dominant.message,
+        motivation: liveSuggestion || "",
         confidence: dominant.value / 100,
         allStats: stats,
         question: allQuestions[currentQuestionIndex],
@@ -165,28 +167,68 @@ const InterviewRoom = () => {
     positionApplied,
     feedbackNote,
     feedbackScore,
+    liveSuggestion,
     getDominantEmotion,
     calculateStats,
   ]);
+
+  const cropFaceFromBase64 = useCallback(async (base64Src) => {
+    if (!faceModelsLoadedRef.current) return base64Src;
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          const detection = await faceapi.detectSingleFace(
+            img,
+            new faceapi.TinyFaceDetectorOptions()
+          );
+          if (!detection) { resolve(base64Src); return; }
+          const { x, y, width, height } = detection.box;
+          const pad = Math.round(Math.min(width, height) * 0.3);
+          const sx = Math.max(0, Math.round(x - pad));
+          const sy = Math.max(0, Math.round(y - pad));
+          const sw = Math.min(img.width - sx, Math.round(width + pad * 2));
+          const sh = Math.min(img.height - sy, Math.round(height + pad * 2));
+          const canvas = document.createElement("canvas");
+          canvas.width = sw;
+          canvas.height = sh;
+          canvas.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+          resolve(canvas.toDataURL("image/jpeg", 0.8));
+        } catch {
+          resolve(base64Src);
+        }
+      };
+      img.onerror = () => resolve(base64Src);
+      img.src = base64Src;
+    });
+  }, []);
 
   const captureFrame = useCallback(async () => {
     if (!webcamRef.current || !user || status !== "RECORDING") return;
     const imageSrc = webcamRef.current.getScreenshot();
     if (!imageSrc) return;
     try {
-      const blob = await fetch(imageSrc).then((r) => r.blob());
-      const formData = new FormData();
-      formData.append("userId", user.id);
-      formData.append("file", blob);
-      const response = await axios.post(`${AI_URL}/predict`, formData);
+      const croppedBase64 = await cropFaceFromBase64(imageSrc);
+      const response = await axios.post(`${API_BASE_URL}/predict`, {
+        image_base64: croppedBase64,
+      });
       if (response.data) {
-        setLiveEmotion(response.data.emotion);
-        setEmotionLogs((prev) => [...prev, response.data.emotion]);
+        const raw = response.data.predicted_class || response.data.emotion || "";
+        const emotion = raw.charAt(0).toUpperCase() + raw.slice(1);
+        if (response.data.meets_confidence_threshold !== false) {
+          setLiveEmotion(emotion);
+          setEmotionLogs((prev) => [...prev, emotion]);
+        }
+        if (response.data.suggestion) setLiveSuggestion(response.data.suggestion);
       }
     } catch (e) {
-      console.error("AI Error:", e);
+      if (e.response?.status === 429) {
+        console.warn("Rate limit — frame dikirim terlalu cepat");
+      } else {
+        console.error("AI Error:", e.message);
+      }
     }
-  }, [user, status]);
+  }, [user, status, cropFaceFromBase64]);
 
   const handleReset = useCallback(() => {
     setStatus("IDLE");
@@ -196,7 +238,51 @@ const InterviewRoom = () => {
     setLiveEmotion("Standby");
     setUserAnswer("");
     setCapturedUserPhoto(null);
+    setIsMuted(false);
+    setIsCameraOff(false);
+    setLiveSuggestion("");
+    hasSavedRef.current = false;
   }, []);
+
+  const handleToggleMute = useCallback(() => {
+    const newMuted = !isMuted;
+    const stream = webcamRef.current?.video?.srcObject;
+    if (stream) {
+      stream.getAudioTracks().forEach((track) => { track.enabled = !newMuted; });
+    }
+    setIsMuted(newMuted);
+    if (newMuted) {
+      Swal.fire({
+        title: "Mikrofon Dinonaktifkan",
+        text: "Mikrofon kamu sedang dalam kondisi mute. Aktifkan kembali untuk melanjutkan proses interview.",
+        icon: "warning",
+        confirmButtonColor: "#7B4DFF",
+        confirmButtonText: "Mengerti",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+  }, [isMuted]);
+
+  const handleToggleCamera = useCallback(() => {
+    const newCameraOff = !isCameraOff;
+    const stream = webcamRef.current?.video?.srcObject;
+    if (stream) {
+      stream.getVideoTracks().forEach((track) => { track.enabled = !newCameraOff; });
+    }
+    setIsCameraOff(newCameraOff);
+    if (newCameraOff) {
+      Swal.fire({
+        title: "Kamera Dinonaktifkan",
+        text: "Kamera kamu sedang tidak aktif. Aktifkan kembali kamera untuk melanjutkan proses interview.",
+        icon: "warning",
+        confirmButtonColor: "#7B4DFF",
+        confirmButtonText: "Aktifkan Kamera",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+  }, [isCameraOff]);
 
   const handleAddNewQuestion = useCallback(() => {
     if (tempQuestion.trim()) {
@@ -208,15 +294,78 @@ const InterviewRoom = () => {
     }
   }, [tempQuestion, allQuestions]);
 
+  const checkConnection = useCallback(() => {
+    if (!navigator.onLine) { setConnectionStatus("offline"); return; }
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn) {
+      if (conn.effectiveType === "4g" || (conn.downlink && conn.downlink >= 1)) {
+        setConnectionStatus("fast");
+      } else {
+        setConnectionStatus("slow");
+      }
+    } else {
+      setConnectionStatus("fast");
+    }
+  }, []);
+
+  useEffect(() => {
+    const toStatus = (s) =>
+      s === "granted" ? "ready" : s === "denied" ? "blocked" : "prompt";
+
+    const queryPermission = (name, setter) => {
+      try {
+        navigator.permissions
+          .query({ name })
+          .then((r) => {
+            setter(toStatus(r.state));
+            r.onchange = () => setter(toStatus(r.state));
+          })
+          .catch(() => setter("unavailable"));
+      } catch {
+        setter("unavailable");
+      }
+    };
+
+    if (navigator.permissions) {
+      queryPermission("camera", setCameraStatus);
+      queryPermission("microphone", setMicStatus);
+    }
+
+    const initTimeout = setTimeout(checkConnection, 0);
+    window.addEventListener("online", checkConnection);
+    window.addEventListener("offline", checkConnection);
+    const conn =
+      navigator.connection ||
+      navigator.mozConnection ||
+      navigator.webkitConnection;
+    if (conn) conn.addEventListener("change", checkConnection);
+    return () => {
+      clearTimeout(initTimeout);
+      window.removeEventListener("online", checkConnection);
+      window.removeEventListener("offline", checkConnection);
+      if (conn) conn.removeEventListener("change", checkConnection);
+    };
+  }, [checkConnection]);
+
+  useEffect(() => {
+    faceapi.nets.tinyFaceDetector
+      .loadFromUri(
+        "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights"
+      )
+      .then(() => { faceModelsLoadedRef.current = true; })
+      .catch(() => console.warn("Face model gagal dimuat, menggunakan frame penuh"));
+  }, []);
+
   useEffect(() => {
     if (!user) navigate("/login");
   }, [user, navigate]);
 
   useEffect(() => {
-    if (status !== "RESULT" || !user) return;
+    if (status !== "RESULT" || !user || hasSavedRef.current) return;
+    hasSavedRef.current = true;
     const timeout = setTimeout(() => saveFinalResultToDB(), 0);
     return () => clearTimeout(timeout);
-  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [status, user, saveFinalResultToDB]);
 
   useEffect(() => {
     let interval;
@@ -229,7 +378,7 @@ const InterviewRoom = () => {
         setStatus("RECORDING");
         setTimer(selectedDuration);
         startRecording();
-      } else if (status === "RECORDING") {
+      } else if (status === "RECORDING" && !endedManuallyRef.current) {
         setStatus("RESULT");
         stopRecording();
       }
@@ -239,9 +388,24 @@ const InterviewRoom = () => {
 
   useEffect(() => {
     if (status !== "RECORDING") return;
-    const captureInterval = setInterval(captureFrame, 1000);
+    const captureInterval = setInterval(captureFrame, 5000);
     return () => clearInterval(captureInterval);
   }, [status, captureFrame]);
+
+  useEffect(() => {
+    if (status !== "RECORDING" || connectionStatus !== "offline") return;
+    Swal.fire({
+      title: "Koneksi Terputus!",
+      text: "Koneksi internet kamu terputus. Proses interview dibatalkan. Periksa koneksi internet dan coba lagi.",
+      icon: "error",
+      confirmButtonColor: "#7B4DFF",
+      confirmButtonText: "Restart Interview",
+      allowOutsideClick: false,
+    }).then(() => {
+      stopRecording();
+      handleReset();
+    });
+  }, [connectionStatus, status, stopRecording, handleReset]);
 
   if (!user) return null;
 
@@ -415,7 +579,19 @@ const InterviewRoom = () => {
                             Open your camera to begin the session
                           </p>
                           <button
-                            onClick={() => setCameraOpen(true)}
+                            onClick={() => {
+                              if (cameraStatus === "blocked") {
+                                Swal.fire({
+                                  title: "Kamera Diblokir",
+                                  html: "Akses kamera diblokir oleh browser.<br/>Buka <b>Settings → Site Permissions → Camera</b> dan ubah ke <b>Allow</b>.",
+                                  icon: "error",
+                                  confirmButtonColor: "#7B4DFF",
+                                  confirmButtonText: "Mengerti",
+                                });
+                                return;
+                              }
+                              setCameraOpen(true);
+                            }}
                             className="px-8 py-3 rounded-full text-white font-bold text-[15px] hover:opacity-90 transition shadow-lg"
                             style={{
                               background:
@@ -428,7 +604,42 @@ const InterviewRoom = () => {
                         </div>
                       </>
                     ) : (
-                      <WebcamOverlay webcamRef={webcamRef} />
+                      <WebcamOverlay
+                        webcamRef={webcamRef}
+                        onUserMediaError={(err) => {
+                          const isPermission = err.name === "NotAllowedError" || err.name === "PermissionDeniedError";
+                          const isNoDevice = err.name === "NotFoundError" || err.name === "DevicesNotFoundError";
+                          if (isPermission) {
+                            setCameraStatus("blocked");
+                            setMicStatus("blocked");
+                            Swal.fire({
+                              title: "Akses Kamera & Mikrofon Ditolak",
+                              html: "Izin kamera/mikrofon ditolak oleh browser.<br/>Buka <b>Settings → Site Permissions</b> dan ubah Camera & Microphone ke <b>Allow</b>.",
+                              icon: "error",
+                              confirmButtonColor: "#7B4DFF",
+                              confirmButtonText: "Mengerti",
+                            });
+                          } else if (isNoDevice) {
+                            setCameraStatus("unavailable");
+                            Swal.fire({
+                              title: "Kamera Tidak Ditemukan",
+                              text: "Tidak ada perangkat kamera yang terdeteksi. Pastikan kamera terhubung dengan benar.",
+                              icon: "error",
+                              confirmButtonColor: "#7B4DFF",
+                              confirmButtonText: "Mengerti",
+                            });
+                          } else {
+                            setCameraStatus("error");
+                            Swal.fire({
+                              title: "Kamera Tidak Dapat Digunakan",
+                              text: "Kamera sedang digunakan aplikasi lain atau terjadi kesalahan hardware. Tutup aplikasi lain yang menggunakan kamera.",
+                              icon: "error",
+                              confirmButtonColor: "#7B4DFF",
+                              confirmButtonText: "Mengerti",
+                            });
+                          }
+                        }}
+                      />
                     )}
                   </div>
 
@@ -591,41 +802,34 @@ const InterviewRoom = () => {
                     </p>
                     <div className="flex flex-col gap-3">
                       {[
-                        {
-                          icon: "/icons/techmicrophone.png",
-                          label: "Microphone Access",
-                        },
-                        {
-                          icon: "/icons/techcamera.png",
-                          label: "Camera Access",
-                        },
-                        {
-                          icon: "/icons/techconnection.png",
-                          label: "Connection Access",
-                        },
-                      ].map((item) => (
-                        <div
-                          key={item.label}
-                          className="flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-2">
-                            <img
-                              src={item.icon}
-                              alt={item.label}
-                              className="w-4 h-4 object-contain"
-                            />
-                            <span
-                              className="text-[14px] text-[#555]"
-                              style={{ fontFamily }}
-                            >
-                              {item.label}
+                        { icon: "/icons/techmicrophone.png", label: "Microphone Access", status: micStatus },
+                        { icon: "/icons/techcamera.png", label: "Camera Access", status: cameraStatus },
+                        { icon: "/icons/techconnection.png", label: "Connection Access", status: connectionStatus },
+                      ].map((item) => {
+                        const badgeMap = {
+                          ready:       { text: "READY",     cls: "text-green-500 bg-green-50" },
+                          fast:        { text: "READY",     cls: "text-green-500 bg-green-50" },
+                          slow:        { text: "SLOW",      cls: "text-yellow-600 bg-yellow-50" },
+                          prompt:      { text: "ALLOW",     cls: "text-yellow-600 bg-yellow-50" },
+                          blocked:     { text: "BLOCKED",   cls: "text-red-500 bg-red-50" },
+                          unavailable: { text: "NO DEVICE", cls: "text-red-500 bg-red-50" },
+                          error:       { text: "ERROR",     cls: "text-red-500 bg-red-50" },
+                          offline:     { text: "OFFLINE",   cls: "text-red-500 bg-red-50" },
+                          checking:    { text: "...",       cls: "text-gray-400 bg-gray-50" },
+                        };
+                        const badge = badgeMap[item.status] || badgeMap.checking;
+                        return (
+                          <div key={item.label} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" />
+                              <span className="text-[14px] text-[#555]" style={{ fontFamily }}>{item.label}</span>
+                            </div>
+                            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${badge.cls}`}>
+                              {badge.text}
                             </span>
                           </div>
-                          <span className="text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded-full">
-                            READY
-                          </span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -641,8 +845,77 @@ const InterviewRoom = () => {
                         });
                         return;
                       }
+                      if (!employmentLevel) {
+                        Swal.fire({
+                          title: "Employment Level wajib dipilih",
+                          text: "Pilih dulu jenis pekerjaan yang kamu lamar sebelum memulai simulasi.",
+                          icon: "warning",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Oke",
+                        });
+                        return;
+                      }
+                      if (!companyType) {
+                        Swal.fire({
+                          title: "Company Type Context wajib dipilih",
+                          text: "Pilih dulu tipe perusahaan yang kamu tuju sebelum memulai simulasi.",
+                          icon: "warning",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Oke",
+                        });
+                        return;
+                      }
+                      if (micStatus === "blocked" || micStatus === "unavailable") {
+                        Swal.fire({
+                          title: "Mikrofon Tidak Dapat Diakses",
+                          html: "Mikrofon kamu diblokir atau tidak ditemukan.<br/>Buka <b>Settings → Site Permissions → Microphone</b> dan ubah ke <b>Allow</b>.",
+                          icon: "error",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Mengerti",
+                        });
+                        return;
+                      }
+                      if (cameraStatus === "blocked" || cameraStatus === "unavailable" || cameraStatus === "error") {
+                        Swal.fire({
+                          title: "Kamera Tidak Dapat Diakses",
+                          html: "Kamera kamu diblokir atau tidak ditemukan.<br/>Buka <b>Settings → Site Permissions → Camera</b> dan ubah ke <b>Allow</b>.",
+                          icon: "error",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Mengerti",
+                        });
+                        return;
+                      }
+                      if (connectionStatus === "offline") {
+                        Swal.fire({
+                          title: "Tidak Ada Koneksi Internet",
+                          text: "Periksa koneksi internet kamu sebelum memulai simulasi.",
+                          icon: "error",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Mengerti",
+                        });
+                        return;
+                      }
                       if (!cameraOpen) {
-                        setCameraOpen(true);
+                        Swal.fire({
+                          title: "Kamera belum aktif",
+                          text: "Aktifkan kamera terlebih dahulu sebelum memulai simulasi.",
+                          icon: "warning",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Aktifkan Kamera",
+                        }).then(() => {
+                          setCameraOpen(true);
+                        });
+                        return;
+                      }
+                      if (!webcamRef.current?.video?.srcObject) {
+                        Swal.fire({
+                          title: "Kamera belum siap",
+                          text: "Tunggu sebentar hingga kamera benar-benar aktif dan terdeteksi, lalu coba lagi.",
+                          icon: "info",
+                          confirmButtonColor: "#7B4DFF",
+                          confirmButtonText: "Oke",
+                        });
+                        return;
                       }
                       setStatus("PREPARE");
                       setTimer(5);
@@ -715,12 +988,21 @@ const InterviewRoom = () => {
                     {String(Math.floor(timer / 60)).padStart(2, "0")}:
                     {String(timer % 60).padStart(2, "0")}
                   </span>
-                  <span
-                    className="hidden md:inline text-[13px] text-[#999] ml-2"
-                    style={{ fontFamily }}
-                  >
-                    | Your words will appear here as you speak...
-                  </span>
+                  {liveSuggestion ? (
+                    <span
+                      className="hidden md:inline text-[13px] text-[#7B4DFF] ml-2 italic"
+                      style={{ fontFamily }}
+                    >
+                      | {liveSuggestion}
+                    </span>
+                  ) : (
+                    <span
+                      className="hidden md:inline text-[13px] text-[#999] ml-2"
+                      style={{ fontFamily }}
+                    >
+                      | Your words will appear here as you speak...
+                    </span>
+                  )}
                 </div>
               )}
 
@@ -733,7 +1015,7 @@ const InterviewRoom = () => {
                         <video
                           controls
                           playsInline
-                          className="w-full h-full object-cover scale-x-[-1]"
+                          className="w-full h-full object-cover"
                         >
                           <source src={recordedVideoURL} type="video/webm" />
                         </video>
@@ -753,6 +1035,14 @@ const InterviewRoom = () => {
                         </h1>
                         <p className="text-[16px] mt-2" style={{ fontFamily }}>
                           Prepare your answer...
+                        </p>
+                      </div>
+                    )}
+                    {status === "RECORDING" && isCameraOff && (
+                      <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-10">
+                        <Camera size={36} className="text-white/40 mb-3" />
+                        <p className="text-white/60 text-[14px]" style={{ fontFamily }}>
+                          Kamera Dinonaktifkan
                         </p>
                       </div>
                     )}
@@ -786,19 +1076,23 @@ const InterviewRoom = () => {
                     <div className="bg-white rounded-[20px] border border-[#ECECEC] px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="flex items-center justify-center gap-4">
                         <div className="flex flex-col items-center gap-1">
-                          <button className="w-11 h-11 rounded-full bg-[#F3F3F7] flex items-center justify-center hover:bg-[#ECECEC] transition">
-                            <Mic size={18} className="text-[#555]" />
+                          <button
+                            onClick={handleToggleMute}
+                            className={`w-11 h-11 rounded-full flex items-center justify-center transition ${isMuted ? "bg-red-100 hover:bg-red-200" : "bg-[#F3F3F7] hover:bg-[#ECECEC]"}`}
+                          >
+                            <Mic size={18} className={isMuted ? "text-red-500" : "text-[#555]"} />
                           </button>
                           <span
                             className="text-[11px] text-[#999]"
                             style={{ fontFamily }}
                           >
-                            Mute
+                            {isMuted ? "Unmute" : "Mute"}
                           </span>
                         </div>
                         <div className="flex flex-col items-center gap-1">
                           <button
                             onClick={() => {
+                              endedManuallyRef.current = true;
                               stopRecording();
                               setShowFeedback(true);
                             }}
@@ -814,14 +1108,17 @@ const InterviewRoom = () => {
                           </span>
                         </div>
                         <div className="flex flex-col items-center gap-1">
-                          <button className="w-11 h-11 rounded-full bg-[#F3F3F7] flex items-center justify-center hover:bg-[#ECECEC] transition">
-                            <Camera size={18} className="text-[#555]" />
+                          <button
+                            onClick={handleToggleCamera}
+                            className={`w-11 h-11 rounded-full flex items-center justify-center transition ${isCameraOff ? "bg-red-100 hover:bg-red-200" : "bg-[#F3F3F7] hover:bg-[#ECECEC]"}`}
+                          >
+                            <Camera size={18} className={isCameraOff ? "text-red-500" : "text-[#555]"} />
                           </button>
                           <span
                             className="text-[11px] text-[#999]"
                             style={{ fontFamily }}
                           >
-                            Camera
+                            {isCameraOff ? "Cam Off" : "Camera"}
                           </span>
                         </div>
                       </div>
@@ -1047,12 +1344,14 @@ const InterviewRoom = () => {
                             >
                               Dominant: {getDominantEmotion().label}
                             </p>
-                            <p
-                              className="text-[11px] opacity-90 mt-1"
-                              style={{ fontFamily }}
-                            >
-                              "{getDominantEmotion().message}"
-                            </p>
+                            {liveSuggestion && (
+                              <p
+                                className="text-[11px] opacity-90 mt-1"
+                                style={{ fontFamily }}
+                              >
+                                "{liveSuggestion}"
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
@@ -1124,6 +1423,7 @@ const InterviewRoom = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => {
+                  endedManuallyRef.current = false;
                   setShowFeedback(false);
                   setStatus("RESULT");
                 }}
@@ -1134,6 +1434,7 @@ const InterviewRoom = () => {
               </button>
               <button
                 onClick={() => {
+                  endedManuallyRef.current = false;
                   setShowFeedback(false);
                   setStatus("RESULT");
                 }}

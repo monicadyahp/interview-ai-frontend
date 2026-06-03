@@ -1,7 +1,7 @@
 import React from 'react';
 import Webcam from 'react-webcam';
 
-const WebcamOverlay = ({ webcamRef }) => {
+const WebcamOverlay = ({ webcamRef, onUserMediaError }) => {
     return (
         <div className="scan__camera-container" style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
             <Webcam
@@ -10,7 +10,8 @@ const WebcamOverlay = ({ webcamRef }) => {
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
                 className="scan__video"
-                mirrored={true} 
+                mirrored={true}
+                onUserMediaError={onUserMediaError}
                 style={{ 
                     width: '100%', 
                     height: '100%', 

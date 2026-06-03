@@ -60,8 +60,14 @@ export default function ChatbotPage() {
     try {
       const res = await axios.post(`${API_BASE_URL}/chatbot`, { message: text });
       setMessages((prev) => [...prev, { text: res.data.reply, isBot: true }]);
-    } catch {
-      setMessages((prev) => [...prev, { text: "Connection lost. Please try again!", isBot: true }]);
+    } catch (err) {
+      const status = err.response?.status;
+      let msg = "Connection lost. Please try again!";
+      if (status === 400) msg = "Pesan tidak valid. Coba kirim ulang.";
+      else if (status === 401) msg = "Akses ditolak. Hubungi tim kami.";
+      else if (status === 422) msg = "Format pesan tidak sesuai. Coba lagi.";
+      else if (status === 500) msg = "Maaf, asisten HRD sedang sibuk. Silakan coba beberapa saat lagi.";
+      setMessages((prev) => [...prev, { text: msg, isBot: true }]);
     } finally {
       setIsLoading(false);
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import WebcamOverlay from "../components/WebcamOverlay";
 import { sendFrameToPrediction } from "../services/api";
 
@@ -7,37 +7,35 @@ const InterviewSession = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(5);
   const [isCounting, setIsCounting] = useState(false);
-  const [question, setQuestion] = useState(
-    "Sebutkan kelebihan dan kekurangan Anda?",
-  );
+  const [question] = useState("Sebutkan kelebihan dan kekurangan Anda?");
   const [result, setResult] = useState(null);
+
+  const handleAutoCapture = useCallback(async () => {
+    setIsLoading(true);
+    setResult(null);
+    try {
+      const imageBase64 = webcamRef.current.getScreenshot();
+      const data = await sendFrameToPrediction(imageBase64);
+      setResult(data);
+    } catch (error) {
+      console.error("Gagal menganalisis:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     let interval;
     if (isCounting && timer > 0) {
       interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     } else if (timer === 0) {
-      handleAutoCapture();
-      setIsCounting(false);
+      setTimeout(() => {
+        handleAutoCapture();
+        setIsCounting(false);
+      }, 0);
     }
     return () => clearInterval(interval);
-  }, [isCounting, timer]);
-
-  const handleAutoCapture = async () => {
-    setIsLoading(true); // Mulai loading tepat setelah timer habis
-    setResult(null); // Reset hasil sebelumnya jika ada
-
-    try {
-      const imageSrc = webcamRef.current.getScreenshot();
-      const blob = await fetch(imageSrc).then((res) => res.blob());
-      const data = await sendFrameToPrediction(blob);
-      setResult(data);
-    } catch (error) {
-      console.error("Gagal menganalisis:", error);
-    } finally {
-      setIsLoading(false); // Matikan loading setelah data didapat atau error
-    }
-  };
+  }, [isCounting, timer, handleAutoCapture]);
 
   // Ganti bagian return di InterviewSession.jsx menjadi ini:
   return (
@@ -91,7 +89,6 @@ const InterviewSession = () => {
         </div>
       )}
 
-      {/* --- HASIL ANALISIS --- */}
       {result && !isLoading && (
         <div
           style={{
@@ -102,28 +99,24 @@ const InterviewSession = () => {
             background: "#F8F5FA",
           }}
         >
-          {/* ... isi hasil analisis kamu ... */}
-        </div>
-      )}
-      {/* --- PERBAIKAN LOGIKA HASIL --- */}
-      {result && (
-        <div
-          style={{
-            marginTop: "20px",
-            border: "1px solid #EFE9F5",
-            padding: "20px",
-            borderRadius: "15px",
-            background: "#F8F5FA",
-          }}
-        >
           <h4 style={{ color: "var(--primary-color)" }}>
-            Hasil Analisis: {result.emotion}
+            Emosi Terdeteksi:{" "}
+            {result.predicted_class
+              ? result.predicted_class.charAt(0).toUpperCase() + result.predicted_class.slice(1)
+              : "—"}
           </h4>
-
-          {/* --- PERBAIKAN DI SINI --- */}
-          <p style={{ fontStyle: "italic", color: "#555" }}>
-            "{result.motivation_quote || result.motivation || "Tetap semangat!"}
-            "
+          {result.confidence != null && (
+            <p style={{ color: "#7B4DFF", fontWeight: "bold", margin: "4px 0" }}>
+              Confidence: {(result.confidence * 100).toFixed(2)}%
+            </p>
+          )}
+          {result.meets_confidence_threshold === false && (
+            <p style={{ color: "#EF4444", fontSize: "13px" }}>
+              Wajah kurang terlihat jelas. Pastikan pencahayaan baik dan wajah menghadap kamera.
+            </p>
+          )}
+          <p style={{ fontStyle: "italic", color: "#555", marginTop: "8px" }}>
+            "{result.suggestion || "Tetap semangat!"}"
           </p>
         </div>
       )}
