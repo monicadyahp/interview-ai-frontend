@@ -1109,7 +1109,11 @@ export default function HistoryPage() {
                         lineHeight: 1.5,
                       }}
                     >
-                      {selectedHistory.answer || "—"}
+                      {selectedHistory.answer
+                        ? selectedHistory.answer.length > 200
+                          ? selectedHistory.answer.substring(0, 200) + "..."
+                          : selectedHistory.answer
+                        : "—"}
                     </p>
                   </div>
                   {/* Analisis Ekspresi */}

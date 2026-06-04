@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { API_BASE_URL } from '../utils/constants';
 import { AuthContext } from '../context/AuthContext';
+import ReactMarkdown from 'react-markdown';
 
 const ChatAssistant = () => {
   const { user } = useContext(AuthContext);
@@ -110,12 +111,27 @@ const ChatAssistant = () => {
               <div key={i} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
                 <div className={`flex gap-3 sm:gap-4 max-w-[90%] sm:max-w-[85%] ${msg.isBot ? 'flex-row' : 'flex-row-reverse'}`}>
                   {msg.isBot && <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-[10px] border border-slate-200 mt-1">🤖</div>}
-                  <div className={`p-4 sm:p-5 text-[12px] sm:text-[13px] leading-relaxed shadow-sm break-words whitespace-pre-wrap ${
-                    msg.isBot 
-                      ? 'bg-slate-50 text-slate-600 rounded-2xl rounded-tl-none border border-slate-100' 
+                  <div className={`p-4 sm:p-5 text-[12px] sm:text-[13px] leading-relaxed shadow-sm break-words ${
+                    msg.isBot
+                      ? 'bg-slate-50 text-slate-600 rounded-2xl rounded-tl-none border border-slate-100'
                       : 'bg-[#8C5EAD] text-white rounded-2xl rounded-tr-none font-medium'
                   }`}>
-                    {msg.text}
+                    {msg.isBot ? (
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                          strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                          ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-1">{children}</ul>,
+                          ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-1">{children}</ol>,
+                          li: ({ children }) => <li>{children}</li>,
+                          h1: ({ children }) => <p className="font-bold text-[13px] sm:text-[14px] mb-1">{children}</p>,
+                          h2: ({ children }) => <p className="font-bold text-[13px] sm:text-[14px] mb-1">{children}</p>,
+                          h3: ({ children }) => <p className="font-bold mb-1">{children}</p>,
+                        }}
+                      >
+                        {msg.text}
+                      </ReactMarkdown>
+                    ) : msg.text}
                   </div>
                 </div>
               </div>

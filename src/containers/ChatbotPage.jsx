@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { API_BASE_URL } from "../utils/constants";
 import { Send, Mic, Paperclip } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import DashboardFooter from "../layout/DashboardFooter";
 import DashboardTopBar from "../components/DashboardTopBar";
 
@@ -156,8 +157,15 @@ export default function ChatbotPage() {
                   </div>
 
                   {/* Initial bot message */}
-                  <div className="bg-[#F3ECFF] rounded-[16px] rounded-tl-none px-4 sm:px-5 py-3.5 max-w-full sm:max-w-[400px]">
-                    <p className="text-[14px] text-[#444]" style={{ fontFamily }}>{messages[0].text}</p>
+                  <div className="bg-[#F3ECFF] rounded-[16px] rounded-tl-none px-4 sm:px-5 py-3.5 max-w-full sm:max-w-[400px] text-[14px] text-[#444]" style={{ fontFamily }}>
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                        strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                      }}
+                    >
+                      {messages[0].text}
+                    </ReactMarkdown>
                   </div>
 
                   {/* Quick topic chips — warna-warni */}
@@ -196,7 +204,22 @@ export default function ChatbotPage() {
                             ? "bg-[#F3ECFF] text-[#333] rounded-tl-none"
                             : "bg-[#F0F0F5] text-[#333] rounded-tr-none"
                         }`} style={{ fontFamily }}>
-                          {msg.text}
+                          {msg.isBot ? (
+                            <ReactMarkdown
+                              components={{
+                                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                                ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-1">{children}</ul>,
+                                ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 space-y-1">{children}</ol>,
+                                li: ({ children }) => <li>{children}</li>,
+                                h1: ({ children }) => <p className="font-bold text-[15px] mb-1">{children}</p>,
+                                h2: ({ children }) => <p className="font-bold text-[14px] mb-1">{children}</p>,
+                                h3: ({ children }) => <p className="font-bold mb-1">{children}</p>,
+                              }}
+                            >
+                              {msg.text}
+                            </ReactMarkdown>
+                          ) : msg.text}
                         </div>
                       </div>
                     </div>
