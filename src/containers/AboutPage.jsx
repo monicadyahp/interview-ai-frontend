@@ -18,6 +18,8 @@ const LEARNING_PATHS = [
         university: "Universitas Mercu Buana",
         linkedin: "https://www.linkedin.com/in/monica-dyah-pudyowati/",
         photo: "/profile/monica.png",
+        offsetX: 4,
+        offsetY: -4,
       },
       {
         name: "Via Angelya",
@@ -25,6 +27,7 @@ const LEARNING_PATHS = [
         university: "Universitas Gunadarma",
         linkedin: "https://www.linkedin.com/in/viaangelya/",
         photo: "/profile/angel.png",
+        offsetX: 3,
       },
     ],
   },
@@ -43,6 +46,8 @@ const LEARNING_PATHS = [
         university: "Universitas Gunadarma",
         linkedin: "https://www.linkedin.com/in/syasmi-permata-oktavia/",
         photo: "/profile/syasmi.png",
+        offsetX: -2,
+        offsetY: -3,
       },
       {
         name: "Prasetyo Dio",
@@ -100,15 +105,20 @@ function MemberCard({ member, pathColor, badgeBg, pathEmoji }) {
       {/* Photo */}
       <div className="relative mb-4">
         <div
-          className="w-24 h-24 rounded-full overflow-hidden border-[3px] shadow-md"
+          className="w-24 h-24 rounded-full overflow-hidden border-[3px] shadow-md relative"
           style={{ borderColor: pathColor }}
         >
           {!imgError ? (
             <img
               src={member.photo}
               alt={member.name}
-              className="w-full h-full object-cover"
+              className="absolute w-full h-full object-cover object-center inset-0"
               onError={() => setImgError(true)}
+              style={{
+                transform: `translate(${member.offsetX || 0}px, ${
+                  member.offsetY || 0
+                }px)`,
+              }}
             />
           ) : (
             <div
