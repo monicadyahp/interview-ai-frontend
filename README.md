@@ -2,6 +2,8 @@
 
 Selamat datang di repositori sisi Frontend untuk **InterSight** (Capstone Team: `CC26-PSU188`). Aplikasi web ini dirancang menggunakan **React.js** dan dibundel dengan **Vite** untuk memberikan pengalaman antarmuka pengguna yang cepat, responsif, dan interaktif dalam melakukan simulasi wawancara kerja berbasis kecerdasan buatan.
 
+Link Live Production Deployment: https://interview-ai-frontend-indol.vercel.app
+
 ---
 
 ## 🚀 1. Fitur Utama Antarmuka (UI/UX Features)
