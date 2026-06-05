@@ -1,10 +1,4 @@
-```markdown
 # 💻 Interview-AI Assistant: Frontend Web Application (InterSight)
-
-[![Production Deployment](https://img.shields.io/badge/Deploy-Vercel-black?style=flat&logo=vercel)](https://interview-ai-frontend-indol.vercel.app)
-[![React Version](https://img.shields.io/badge/React-18.x-blue?style=flat&logo=react)](https://react.dev)
-[![Bundler](https://img.shields.io/badge/Bundler-Vite-646CFF?style=flat&logo=vite)](https://vitejs.dev)
-[![Styling](https://img.shields.io/badge/Styling-Tailwind%20CSS-06B6D4?style=flat&logo=tailwindcss)](https://tailwindcss.com)
 
 Selamat datang di repositori sisi Frontend untuk **InterSight** (Capstone Team: `CC26-PSU188`). Aplikasi web ini dirancang menggunakan **React.js** dan dibundel dengan **Vite** untuk memberikan pengalaman antarmuka pengguna yang cepat, responsif, dan interaktif dalam melakukan simulasi wawancara kerja berbasis kecerdasan buatan.
 
@@ -13,6 +7,7 @@ Selamat datang di repositori sisi Frontend untuk **InterSight** (Capstone Team: 
 ## 🚀 1. Fitur Utama Antarmuka (UI/UX Features)
 
 Aplikasi web InterSight Frontend mengimplementasikan kriteria *learning path* secara komprehensif, meliputi:
+
 * **Slicing UI & Responsiveness:** Desain tata letak komponen (*layout*) yang responsif menggunakan **Tailwind CSS**, memastikan aplikasi berjalan dengan optimal di berbagai ukuran layar perangkat (Desktop, Tablet, dan Mobile).
 * **Interactive Simulation Arena:** Fitur utama tempat pengguna dapat melihat skenario soal pewawancara, melakukan pengetikan draf jawaban secara mandiri, dan mengaktifkan kamera lokal untuk analisis ekspresi wajah.
 * **Real-Time Emotion Display UI:** Menampilkan kotak pelacakan emosi secara visual yang bergerak dinamis di atas perangkat pengguna (melalui *networking calls* ke API model AI).
@@ -24,6 +19,7 @@ Aplikasi web InterSight Frontend mengimplementasikan kriteria *learning path* se
 ## 🛠️ 2. Arsitektur Komponen & Tech Stack
 
 Sisi Frontend dikembangkan menggunakan kombinasi alat dan pustaka modern berstandar industri:
+
 1. **React.js (JavaScript):** Library utama untuk membangun antarmuka berbasis komponen (*component-based UI*).
 2. **Vite:** *Module bundler* generasi terbaru untuk mempercepat proses pengembangan lingkungan lokal (*HMR*) dan optimasi kompilasi produksi.
 3. **Tailwind CSS & Bootstrap:** Framework utilitas CSS untuk mempercepat proses *styling* antarmuka yang modern, konsisten, dan rapi.
@@ -36,11 +32,13 @@ Sisi Frontend dikembangkan menggunakan kombinasi alat dan pustaka modern berstan
 Ikuti langkah-langkah di bawah ini untuk memasang dan menjalankan server pengembangan Frontend di komputer Anda:
 
 ### Prasyarat (Prerequisites)
+
 Pastikan Anda sudah menginstal **Node.js** (versi rekomendasi: v18.x atau yang terbaru) dan **npm** (Node Package Manager).
 
 ### 1. Kloning Repositori
+
 ```bash
-git clone [https://github.com/monicadyahp/interview-ai-frontend.git](https://github.com/monicadyahp/interview-ai-frontend.git)
+git clone https://github.com/monicadyahp/interview-ai-frontend.git
 cd interview-ai-frontend
 
 ```
@@ -66,7 +64,7 @@ cp .env.example .env
 Isi di dalam file `.env`:
 
 ```env
-VITE_API_BASE_URL=[https://alamat-api-backend-anda.com](https://alamat-api-backend-anda.com)
+VITE_API_BASE_URL=https://alamat-api-backend-anda.com
 
 ```
 
@@ -124,7 +122,3 @@ Bagian Frontend dan Slicing UI aplikasi InterSight ini dikembangkan sepenuhnya d
 * **Dio Prasetyo** (Fullstack Developer - CFCC290D6Y1707)
 
 > **Note:** Aplikasi ini dideploy secara otomatis menggunakan integrasi CI/CD Vercel Git Integration pada tautan produksi resmi kami.
-
-```
-
-```
